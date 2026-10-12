@@ -3,7 +3,7 @@
 A bilingual (Arabic / English) public catalogue of credit cards from Saudi banks, in which every figure on the page traces back to the bank that published it.
 
 SWE 444 — Software Construction Laboratory · King Saud University · 2026/2027 Semester 1
-Backlog and Sprint plan: **Linear → Sift** (issues `BRO-…`).
+Backlog and Sprint plan: **Linear → Sift** (issues `SFT-…`).
 
 ---
 
@@ -51,11 +51,11 @@ A package depends on another with `"@sift/schema": "workspace:*"` in its `packag
 **Branches.** Never commit to `main` — it is protected and only changes through reviewed pull requests. Name branches after the Linear issue:
 
 ```
-bro-7-nextjs-tailwind
-bro-6-postgres-prisma
+sft-7-nextjs-tailwind
+sft-6-postgres-prisma
 ```
 
-**Pull requests.** Put the Linear ID in the title (`BRO-7: Configure Next.js with TypeScript and Tailwind`) so Linear links the PR to the issue. One approving review is required to merge; pipeline work (S-41, S-44, S-50) needs two. The PR template carries the Definition of Done — tick it honestly.
+**Pull requests.** Put the Linear ID in the title (`SFT-7: Configure Next.js with TypeScript and Tailwind`) so Linear links the PR to the issue. One approving review is required to merge; pipeline work (S-41, S-44, S-50) needs two. The PR template carries the Definition of Done — tick it honestly.
 
 **Secrets.** Database URLs, AI keys and email keys go in `.env` (git-ignored) and in the hosting platform's environment settings. Never commit them. When a package needs a new variable, add it with a dummy value to that package's `.env.example`.
 

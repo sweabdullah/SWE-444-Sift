@@ -5,7 +5,7 @@ import prettier from "eslint-config-prettier";
 import globals from "globals";
 
 // One lint configuration for the whole monorepo.
-// apps/web will extend this with Next.js rules when T-3 (BRO-7) lands.
+// apps/web will extend this with Next.js rules when T-3 (SFT-7) lands.
 export default tseslint.config(
   {
     ignores: ["**/node_modules/**", "**/dist/**", "**/.next/**", "**/out/**", "**/coverage/**"],

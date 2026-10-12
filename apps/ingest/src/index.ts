@@ -5,7 +5,7 @@
  * crawl takes minutes and serverless request timeouts would kill it mid-run.
  * The worker writes to the database; it never serves a page.
  *
- * Placeholder entry point. The service and its scheduler arrive in Sprint 6 (T-10, BRO-52).
+ * Placeholder entry point. The service and its scheduler arrive in Sprint 6 (T-10, SFT-52).
  */
 import { LOCALES } from "@sift/schema";
 
