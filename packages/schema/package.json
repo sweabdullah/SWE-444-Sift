@@ -1,0 +1,13 @@
+{
+  "name": "@sift/schema",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared domain types and validation (Zod), defined once and used by web and ingest.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  }
+}

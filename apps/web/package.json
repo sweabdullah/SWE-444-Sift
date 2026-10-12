@@ -1,0 +1,16 @@
+{
+  "name": "@sift/web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Public web app (Next.js) \u2014 catalogue, comparison, accounts, admin. Placeholder until T-3 (BRO-7).",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@sift/schema": "workspace:*"
+  }
+}
