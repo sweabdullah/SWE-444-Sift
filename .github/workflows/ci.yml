@@ -7,10 +7,10 @@ on:
   push:
     branches: [main]
 
-# A newer push to the same PR or branch cancels the run it supersedes.
+# A newer push to the same PR cancels the run it supersedes; pushes to main always run to completion.
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
