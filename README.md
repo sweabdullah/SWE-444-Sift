@@ -33,6 +33,8 @@ That's the whole setup. If `pnpm build` passes on a fresh clone, your environmen
 
 Run `pnpm check` before you open a pull request.
 
+**Deployment.** Pull requests get a Vercel preview, and merges to `main` deploy to production, in both cases only after `pnpm check` passes in GitHub Actions. Setup, environment variables, rollback and verification: [`docs/deploy.md`](docs/deploy.md).
+
 ## Repository layout
 
 ```
