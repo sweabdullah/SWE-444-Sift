@@ -20,14 +20,14 @@ pnpm build
 
 That's the whole setup. If `pnpm build` passes on a fresh clone, your environment is right.
 
-| Command             | What it does                                    |
-| ------------------- | ----------------------------------------------- |
-| `pnpm build`        | Builds every package, in dependency order       |
-| `pnpm lint`         | ESLint over the whole repo                      |
-| `pnpm format`       | Rewrites files with Prettier                    |
-| `pnpm format:check` | Fails if any file isn't Prettier-formatted      |
-| `pnpm typecheck`    | Strict TypeScript check of every package        |
-| `pnpm check`        | Everything CI runs: format check → lint → build |
+| Command             | What it does                                                    |
+| ------------------- | --------------------------------------------------------------- |
+| `pnpm build`        | Builds every package, in dependency order                       |
+| `pnpm lint`         | ESLint over the whole repo                                      |
+| `pnpm format`       | Rewrites files with Prettier                                    |
+| `pnpm format:check` | Fails if any file isn't Prettier-formatted                      |
+| `pnpm typecheck`    | Strict TypeScript check of every package                        |
+| `pnpm check`        | Format check → lint → build (CI also runs tests and migrations) |
 
 Run `pnpm check` before you open a pull request.
 
@@ -55,7 +55,7 @@ sft-7-nextjs-tailwind
 sft-6-postgres-prisma
 ```
 
-**Pull requests.** Put the Linear ID in the title (`SFT-7: Configure Next.js with TypeScript and Tailwind`) so Linear links the PR to the issue. One approving review is required to merge; pipeline work (S-41, S-44, S-50) needs two. The PR template carries the Definition of Done — tick it honestly.
+**Pull requests.** Put the Linear ID in the title (`SFT-7: Configure Next.js with TypeScript and Tailwind`) so Linear links the PR to the issue. Team rule (GitHub does not enforce it on our plan): every PR needs one approving review before merge, and pipeline work (S-41 = SFT-50, S-44 = SFT-56, S-50 = SFT-71) needs two. The PR template carries the Definition of Done — tick it honestly.
 
 **AI-drafted PRs.** A pull request drafted by an AI agent is a draft for the lane owner, nothing more. The lane owner must read and understand every line, modify it as needed, and approve it before merge. Academic integrity requires this — never merge on the AI's word.
 
