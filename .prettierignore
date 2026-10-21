@@ -4,3 +4,4 @@ dist
 out
 coverage
 pnpm-lock.yaml
+apps/ingest/fixtures/banks

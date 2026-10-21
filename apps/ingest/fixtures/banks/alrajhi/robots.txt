@@ -1,0 +1,5 @@
+User-agent: * 
+Allow: /
+Disallow: /sitecore/*
+Disallow: /not-found
+Sitemap: https://www.alrajhibank.com.sa/sitemap.xml

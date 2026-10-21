@@ -1,0 +1,5 @@
+User-Agent: *
+Disallow:http://65.2.46.195:8080
+Disallow:/about-us/riyad-bank-pmi
+Disallow:/*-v1/
+Sitemap: http://www.riyadbank.com:8080/sitemap.xml

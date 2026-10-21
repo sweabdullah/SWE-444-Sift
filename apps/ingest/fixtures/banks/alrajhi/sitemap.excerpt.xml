@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!-- sift-fixture excerpt | source: https://www.alrajhibank.com.sa/sitemap.xml | fetchedAt: 2026-10-21T09:44:23Z | original had 4630 <url> entries; kept the first 5 plus every <loc> matching regex /Personal/Cards (69 kept). Local testing only; see fixtures/README.md -->
+<urlset xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.alrajhibank.com.sa/</loc>
+    <lastmod>2025-09-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal</loc>
+    <lastmod>2025-07-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Business</loc>
+    <lastmod>2025-07-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Business" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Business" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards</loc>
+    <lastmod>2025-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards</loc>
+    <lastmod>2025-09-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/cards-comparison</loc>
+    <lastmod>2025-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/cards-comparison" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/cards-comparison" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/cards-comparison</loc>
+    <lastmod>2026-03-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/cards-comparison" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/cards-comparison" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Apple-Pay</loc>
+    <lastmod>2025-09-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Apple-Pay" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Apple-Pay" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Apple-Pay</loc>
+    <lastmod>2025-09-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Apple-Pay" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Apple-Pay" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Google-Pay</loc>
+    <lastmod>2025-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Google-Pay" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Google-Pay" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Google-Pay</loc>
+    <lastmod>2025-09-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Google-Pay" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Google-Pay" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Mada-Pay</loc>
+    <lastmod>2025-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Mada-Pay" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Mada-Pay" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Mada-Pay</loc>
+    <lastmod>2025-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Mada-Pay" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Mada-Pay" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Samsung-Pay</loc>
+    <lastmod>2025-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Samsung-Pay" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Samsung-Pay" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Samsung-Pay</loc>
+    <lastmod>2025-07-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Samsung-Pay" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Samsung-Pay" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Airport-Transfers-Service</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Airport-Transfers-Service" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Airport-Transfers-Service" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Airport-Transfers-Service</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Airport-Transfers-Service" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Airport-Transfers-Service" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Free-valet-parking-service</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Free-valet-parking-service" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Free-valet-parking-service" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Free-valet-parking-service</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Free-valet-parking-service" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Free-valet-parking-service" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Padel</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Padel" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Padel" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Padel</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Padel" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Padel" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Visa-ENTERTAINER</loc>
+    <lastmod>2025-11-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Visa-ENTERTAINER" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Visa-ENTERTAINER" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Visa-ENTERTAINER</loc>
+    <lastmod>2025-11-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Visa-ENTERTAINER" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Visa-ENTERTAINER" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Visa-Airport-Companion</loc>
+    <lastmod>2025-12-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Visa-Airport-Companion" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Visa-Airport-Companion" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Visa-Airport-Companion</loc>
+    <lastmod>2025-12-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Visa-Airport-Companion" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Visa-Airport-Companion" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Credit-Card-Streak</loc>
+    <lastmod>2025-08-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Credit-Card-Streak" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Card-Streak" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Card-Streak</loc>
+    <lastmod>2025-08-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Credit-Card-Streak" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Card-Streak" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Miles-Card/Flynas-signature-credit-card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Miles-Card/Flynas-signature-credit-card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Miles-Card/Flynas-signature-credit-card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Miles-Card/Flynas-signature-credit-card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Miles-Card/Flynas-signature-credit-card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Miles-Card/Flynas-signature-credit-card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Miles-Card/AlFursan-infinite-credit-card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Miles-Card/AlFursan-infinite-credit-card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Miles-Card/AlFursan-infinite-credit-card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Miles-Card/AlFursan-infinite-credit-card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Miles-Card/AlFursan-infinite-credit-card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Miles-Card/AlFursan-infinite-credit-card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Miles-Card/AlFursan-Platinum-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Miles-Card/AlFursan-Platinum-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Miles-Card/AlFursan-Platinum-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Miles-Card/AlFursan-Platinum-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Miles-Card/AlFursan-Platinum-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Miles-Card/AlFursan-Platinum-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/Marriott-Bonvoy</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/Marriott-Bonvoy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/Marriott-Bonvoy" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/Marriott-Bonvoy</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/Marriott-Bonvoy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/Marriott-Bonvoy" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/Platinum-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/Platinum-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/Platinum-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/Platinum-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/Platinum-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/Platinum-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/Infinite-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/Infinite-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/Infinite-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/Infinite-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/Infinite-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/Infinite-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/Signature-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/Signature-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/Signature-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/Signature-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/Signature-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/Signature-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/SELECTIVE-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/SELECTIVE-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/SELECTIVE-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/SELECTIVE-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/SELECTIVE-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/SELECTIVE-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Charge-Credit-Card/Platinum-Charge-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Charge-Credit-Card/Platinum-Charge-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Charge-Credit-Card/Platinum-Charge-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Charge-Credit-Card/Platinum-Charge-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Charge-Credit-Card/Platinum-Charge-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Charge-Credit-Card/Platinum-Charge-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Charge-Credit-Card/Infinite-Charge-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Charge-Credit-Card/Infinite-Charge-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Charge-Credit-Card/Infinite-Charge-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Charge-Credit-Card/Infinite-Charge-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Charge-Credit-Card/Infinite-Charge-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Charge-Credit-Card/Infinite-Charge-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Charge-Credit-Card/Classic-Charge-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Charge-Credit-Card/Classic-Charge-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Charge-Credit-Card/Classic-Charge-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Charge-Credit-Card/Classic-Charge-Credit-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Charge-Credit-Card/Classic-Charge-Credit-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Charge-Credit-Card/Classic-Charge-Credit-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Lite-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Lite-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Lite-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Lite-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Lite-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Lite-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Travel-Plus-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Travel-Plus-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Travel-Plus-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Travel-Plus-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Travel-Plus-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Travel-Plus-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Gamers-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Gamers-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Gamers-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Gamers-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Gamers-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Gamers-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Tasawaq-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Tasawaq-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Tasawaq-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Tasawaq-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Tasawaq-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Tasawaq-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Digital-Cashback-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Digital-Cashback-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Digital-Cashback-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Digital-Cashback-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Prepaid-Cards/Digital-Cashback-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Prepaid-Cards/Digital-Cashback-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Cashback-Cards/Signature-Cashback-Plus-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Cashback-Cards/Signature-Cashback-Plus-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Cashback-Cards/Signature-Cashback-Plus-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Cashback-Cards/Signature-Cashback-Plus-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Cashback-Cards/Signature-Cashback-Plus-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Cashback-Cards/Signature-Cashback-Plus-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Cashback-Cards/Platinum-Cashback-Plus-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Cashback-Cards/Platinum-Cashback-Plus-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Cashback-Cards/Platinum-Cashback-Plus-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Cashback-Cards/Platinum-Cashback-Plus-Card</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Cashback-Cards/Platinum-Cashback-Plus-Card" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Cashback-Cards/Platinum-Cashback-Plus-Card" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/Ring/Ring</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Ring/Ring" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Ring/Ring" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/Ring/Ring</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/Ring/Ring" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/Ring/Ring" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/Personal/Cards/SWAR-Pro/SWAR-Pro</loc>
+    <lastmod>2026-07-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/SWAR-Pro/SWAR-Pro" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/SWAR-Pro/SWAR-Pro" />
+  </url>
+  <url>
+    <loc>https://www.alrajhibank.com.sa/en/Personal/Cards/SWAR-Pro/SWAR-Pro</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.alrajhibank.com.sa/Personal/Cards/SWAR-Pro/SWAR-Pro" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.alrajhibank.com.sa/en/Personal/Cards/SWAR-Pro/SWAR-Pro" />
+  </url>
+</urlset>

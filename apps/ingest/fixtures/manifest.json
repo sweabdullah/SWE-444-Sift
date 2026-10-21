@@ -1,0 +1,408 @@
+[
+  {
+    "bank": "alrajhi",
+    "url": "https://www.alrajhibank.com.sa/robots.txt",
+    "locale": null,
+    "kind": "robots",
+    "file": "banks/alrajhi/robots.txt",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:43:44Z",
+    "expected": {
+      "sitemaps": ["https://www.alrajhibank.com.sa/sitemap.xml"],
+      "disallow": ["/sitecore/*", "/not-found"],
+      "allowsCardPaths": true
+    }
+  },
+  {
+    "bank": "alrajhi",
+    "url": "https://www.alrajhibank.com.sa/sitemap.xml",
+    "locale": null,
+    "kind": "sitemap",
+    "file": "banks/alrajhi/sitemap.excerpt.xml",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:44:23Z",
+    "excerpt": true,
+    "expected": {
+      "format": "urlset",
+      "originalUrlCount": 4630,
+      "urlCountInFixture": 69,
+      "containsLoc": [
+        "https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/Platinum-Credit-Card",
+        "https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/Signature-Credit-Card"
+      ]
+    }
+  },
+  {
+    "bank": "alrajhi",
+    "url": "https://www.alrajhibank.com.sa/en/Personal/Cards",
+    "locale": "en",
+    "kind": "listing",
+    "file": "banks/alrajhi/listing.en.raw.html",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:45:08Z",
+    "expected": {
+      "cardDetailLinksInclude": ["/en/Personal/Cards/Credit-Cards/Platinum-Credit-Card"],
+      "notes": "Card grid is client-side (\"Loading component...\" placeholders). Only one card detail link is in the markup; discover Al Rajhi cards from the sitemap."
+    }
+  },
+  {
+    "bank": "alrajhi",
+    "url": "https://www.alrajhibank.com.sa/en/Personal/Cards",
+    "locale": "en",
+    "kind": "listing",
+    "file": "banks/alrajhi/listing.en.rendered.html",
+    "rendered": true,
+    "fetchedAt": "2026-10-21T09:50:07Z",
+    "expected": {
+      "cardDetailLinksInclude": ["/en/Personal/Cards/Credit-Cards/Platinum-Credit-Card"],
+      "notes": "Playwright-rendered (networkidle + 3 s; images/fonts/trackers blocked). Placeholders are gone and the header nav is filled in, but category tabs still show no per-card tiles without a click. In the rendered DOM 'SAR' is replaced by a riyal icon, so text reads '15,000' with no currency word."
+    }
+  },
+  {
+    "bank": "alrajhi",
+    "url": "https://www.alrajhibank.com.sa/en/Personal/Cards/Credit-Cards/Platinum-Credit-Card",
+    "locale": "en",
+    "kind": "detail",
+    "file": "banks/alrajhi/detail.platinum-credit-card.en.html",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:45:14Z",
+    "expected": {
+      "cardName": "Platinum Credit Card",
+      "currency": "SAR",
+      "annualFee": null,
+      "annualFeeText": "Zero issuance fees and Annual fees valid from 1 October till 31 December 2026",
+      "annualFeeWaiver": { "from": "2026-10-01", "to": "2026-12-31" },
+      "supplementaryCardFeeText": "2 free cards SAR 50 for each Additional Card",
+      "monthlyProfitRatePct": 2.5,
+      "aprPct": null,
+      "foreignTransactionFeePct": 2,
+      "replacementFee": 15,
+      "latePaymentFee": null,
+      "wrongDisputeFee": 25,
+      "atmInquiryFee": 1.5,
+      "minimumPaymentText": "5% or SAR 100 whichever is higher",
+      "cashWithdrawalFeeText": "3% for transactions below SAR 2500, with a maximum limit of SAR 75 for transactions equal to or above SAR 2500",
+      "notes": "The page states a promotional waiver only; the regular annual fee is not stated, so annualFee is null (not 0). APR examples are not shown on this EN page."
+    }
+  },
+  {
+    "bank": "alrajhi",
+    "url": "https://www.alrajhibank.com.sa/Personal/Cards/Credit-Cards/Signature-Credit-Card",
+    "locale": "ar",
+    "kind": "detail",
+    "file": "banks/alrajhi/detail.signature-credit-card.ar.html",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:45:19Z",
+    "expected": {
+      "cardName": "بطاقة سيجنتشر الائتمانية",
+      "currency": "SAR",
+      "annualFee": null,
+      "annualFeeText": "بدون رسوم إصدار وبدون رسوم سنوية من تاريخ 1 اكتوبر حتى 31 ديسبمر 2026",
+      "annualFeeWaiver": { "from": "2026-10-01", "to": "2026-12-31" },
+      "supplementaryCardFeeText": "بطاقتين مجاناً وأكثر من ذلك 50 SAR",
+      "monthlyProfitRatePct": 2.5,
+      "aprPct": null,
+      "aprExamples": [
+        { "creditLimit": 20000, "aprPct": 33.27 },
+        { "creditLimit": 50000, "aprPct": 27.58 },
+        { "creditLimit": 75000, "aprPct": 27.3 }
+      ],
+      "annualProfitRatePct": 23.88,
+      "foreignTransactionFeePct": 2,
+      "replacementFee": 15,
+      "latePaymentFee": null,
+      "wrongDisputeFee": 25,
+      "atmInquiryFee": 1.5,
+      "minimumPaymentText": "%5 أو 100  SAR أيهما أعلى",
+      "notes": "Arabic is the default locale (no /ar prefix). The page mixes 'SAR' and 'ريال' as currency words, and writes percentages as '%5'. The waiver text has a typo on the page ('ديسبمر'); kept verbatim. APR depends on credit limit, so aprPct is null and the three examples are listed."
+    }
+  },
+  {
+    "bank": "snb",
+    "url": "https://www.alahli.com/robots.txt",
+    "locale": null,
+    "kind": "robots",
+    "file": "banks/snb/robots.txt",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:43:52Z",
+    "expected": {
+      "sitemaps": ["https://www.alahli.com/sitemap.xml"],
+      "disallowIncludes": [
+        "*/pages/search",
+        "*/pages/maintenance",
+        "*/pages/promotions/cc-eligible"
+      ],
+      "allowsCardPaths": true,
+      "notes": "Rules have no space after 'Disallow:' and start with a '*' wildcard."
+    }
+  },
+  {
+    "bank": "snb",
+    "url": "https://www.alahli.com/sitemap.xml",
+    "locale": null,
+    "kind": "sitemap",
+    "file": "banks/snb/sitemap.excerpt.xml",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:44:27Z",
+    "excerpt": true,
+    "expected": {
+      "format": "urlset",
+      "originalUrlCount": 1433,
+      "urlCountInFixture": 154,
+      "containsLoc": [
+        "https://www.alahli.com/en/cards/alahli-cashback-credit-card",
+        "https://www.alahli.com/en/pages/personal-banking/credit-cards/alahli-cashback-credit-card"
+      ],
+      "notes": "The sitemap lists both /en/cards/<slug> (which redirects) and /en/pages/personal-banking/credit-cards/<slug> (the final page). Canonicalise before de-duplicating."
+    }
+  },
+  {
+    "bank": "snb",
+    "url": "https://www.alahli.com/en/pages/personal-banking/credit-cards",
+    "locale": "en",
+    "kind": "listing",
+    "file": "banks/snb/listing.en.html",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:45:26Z",
+    "expected": {
+      "cardDetailLinksInclude": [
+        "/en/pages/personal-banking/credit-cards/alahli-cashback-credit-card",
+        "/en/pages/personal-banking/credit-cards/alahli-credit-card-platinum",
+        "/en/pages/personal-banking/credit-cards/alfursan-credit-card-infinite"
+      ],
+      "notes": "Server-rendered (Sitecore JSS); content also present in the __JSS_STATE__ JSON island."
+    }
+  },
+  {
+    "bank": "snb",
+    "url": "https://www.alahli.com/en/pages/personal-banking/credit-cards/alahli-cashback-credit-card",
+    "requestedUrl": "https://www.alahli.com/en/cards/alahli-cashback-credit-card",
+    "locale": "en",
+    "kind": "detail",
+    "file": "banks/snb/detail.alahli-cashback-credit-card.en.html",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:45:31Z",
+    "expected": {
+      "cardName": "AlAhli Cashback Credit Card",
+      "currency": "SAR",
+      "annualFee": 0,
+      "annualFeeText": "Earn cashback on your purchases with a Mastercard Cashback Credit Card from SNB and pay no annual card fees.",
+      "network": "Mastercard",
+      "cashbackTiers": [
+        { "monthlySpendFrom": 0, "monthlySpendTo": 499, "ratePct": 0 },
+        { "monthlySpendFrom": 500, "monthlySpendTo": 4999, "ratePct": 0.5 },
+        { "monthlySpendFrom": 5000, "monthlySpendTo": 9999, "ratePct": 1 },
+        { "monthlySpendFrom": 10000, "monthlySpendTo": null, "ratePct": 2 }
+      ],
+      "cashbackMonthlyCap": 200,
+      "monthlyProfitRatePct": null,
+      "aprPct": null,
+      "foreignTransactionFeePct": null,
+      "replacementFee": null,
+      "latePaymentFee": null,
+      "notes": "Annual fee 0 because the page says so explicitly. No fee schedule on this page (SNB publishes it on a separate 'Banking Fees' page), so the other fees are null. The '2% bank service fee' line is about the FX calculator, not a card fee."
+    }
+  },
+  {
+    "bank": "snb",
+    "url": "https://www.alahli.com/ar/pages/personal-banking/credit-cards/alahli-credit-card-platinum",
+    "requestedUrl": "https://www.alahli.com/ar/cards/alahli-credit-card---platinum",
+    "locale": "ar",
+    "kind": "detail",
+    "file": "banks/snb/detail.alahli-credit-card-platinum.ar.html",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:45:37Z",
+    "expected": {
+      "cardName": "بطاقة الأهلي الائتمانية - بلاتينيوم",
+      "currency": "SAR",
+      "annualFee": null,
+      "monthlyProfitRatePct": null,
+      "aprPct": null,
+      "foreignTransactionFeePct": null,
+      "replacementFee": null,
+      "latePaymentFee": null,
+      "minAge": 21,
+      "notes": "No fee figures on this page at all; every fee is null. Good negative case: the extractor must not invent a fee. (The page body text partly talks about the AlFursan card; it is the bank's copy.)"
+    }
+  },
+  {
+    "bank": "riyad",
+    "url": "https://www.riyadbank.com/robots.txt",
+    "locale": null,
+    "kind": "robots",
+    "file": "banks/riyad/robots.txt",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:43:58Z",
+    "expected": {
+      "sitemaps": ["http://www.riyadbank.com:8080/sitemap.xml"],
+      "disallow": ["http://65.2.46.195:8080", "/about-us/riyad-bank-pmi", "/*-v1/"],
+      "allowsCardPaths": true,
+      "notes": "Messy real-world file: the Sitemap line points to http on port 8080 (we fetched https://www.riyadbank.com/sitemap.xml instead) and one Disallow is a full URL, which a parser should ignore. 'User-Agent' casing differs."
+    }
+  },
+  {
+    "bank": "riyad",
+    "url": "https://www.riyadbank.com/sitemap.xml",
+    "locale": null,
+    "kind": "sitemap",
+    "file": "banks/riyad/sitemap-index.excerpt.xml",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:44:32Z",
+    "excerpt": true,
+    "expected": {
+      "format": "sitemapindex",
+      "originalSitemapCount": 1032,
+      "sitemapCountInFixture": 25,
+      "notes": "A sitemap index of Liferay per-layout child sitemaps (?p_l_id=...&layoutUuid=...). Child sitemaps were not fetched."
+    }
+  },
+  {
+    "bank": "riyad",
+    "url": "https://www.riyadbank.com/en/personal-banking/credit-cards",
+    "locale": "en",
+    "kind": "listing",
+    "file": "banks/riyad/listing.en.html",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:45:46Z",
+    "expected": {
+      "cardDetailLinksInclude": [
+        "/personal-banking/credit-cards/cashback-visa-signature",
+        "/personal-banking/credit-cards/titanium-credit-card",
+        "/personal-banking/credit-cards/platinum-credit-card",
+        "/personal-banking/credit-cards/world-elite-mastercard"
+      ],
+      "notes": "Server-rendered (Liferay). Card links omit the /en prefix and some carry '#rb-common-form-wrapper' fragments; strip fragments when canonicalising."
+    }
+  },
+  {
+    "bank": "riyad",
+    "url": "https://www.riyadbank.com/en/personal-banking/credit-cards/cashback-visa-signature",
+    "locale": "en",
+    "kind": "detail",
+    "file": "banks/riyad/detail.cashback-visa-signature.en.html",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:47:05Z",
+    "expected": {
+      "cardName": "Cashback Visa Signature Islamic Credit Card",
+      "currency": "SAR",
+      "network": "Visa",
+      "annualFee": 500,
+      "monthlyProfitRatePct": 2.5,
+      "aprPct": 36.28,
+      "latePaymentFee": 50,
+      "foreignTransactionFeePct": 2,
+      "supplementaryCardAnnualFee": 0,
+      "replacementFee": 15,
+      "wrongDisputeFee": 25,
+      "creditShieldText": "0.49% of the total outstanding balance",
+      "minimumPaymentText": "5% of the total due or S..R 100, whichever is higher",
+      "cashbackTiers": [
+        {
+          "monthlySpendFrom": 2500,
+          "monthlySpendTo": 7499,
+          "ratePct": 5,
+          "capPerCategory": 100,
+          "totalCap": 500
+        },
+        {
+          "monthlySpendFrom": 7500,
+          "monthlySpendTo": 14999,
+          "ratePct": 7,
+          "capPerCategory": 150,
+          "totalCap": 750
+        },
+        {
+          "monthlySpendFrom": 15000,
+          "monthlySpendTo": null,
+          "ratePct": 10,
+          "capPerCategory": 200,
+          "totalCap": 1000
+        }
+      ],
+      "notes": "The <h1> reads 'Cashback Visa Signature'; the full name is in the breadcrumb and the cashback table heading. The page writes the currency as 'SAR' in the fee table but as the literal text 'S..R' elsewhere (a riyal-symbol stand-in); one tier cell starts with a stray U+064D. 'Supplementary card: Free' is recorded as 0 because the page states it."
+    }
+  },
+  {
+    "bank": "riyad",
+    "url": "https://www.riyadbank.com/ar/personal-banking/credit-cards/titanium-credit-card",
+    "locale": "ar",
+    "kind": "detail",
+    "file": "banks/riyad/detail.titanium-credit-card.ar.html",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:47:15Z",
+    "expected": {
+      "cardName": "بطاقة تيتانيوم الائتمانية الإسلامية",
+      "currency": "SAR",
+      "annualFee": 290,
+      "monthlyProfitRatePct": 2.55,
+      "aprPct": 36.45,
+      "latePaymentFee": 50,
+      "foreignTransactionFeePct": 2,
+      "reactivationFee": 100,
+      "supplementaryCardAnnualFee": 0,
+      "replacementFee": 15,
+      "documentRequestFee": 25,
+      "creditShieldText": "0.49% من القيمة الاجمالية الشهرية المستحقة",
+      "minimumPaymentText": "%5 من مجموع المبالغ المستحقة أو 100 ر..س أيهما أعلى",
+      "feesEffectiveFrom": "2025-07-19",
+      "notes": "Currency is written as the literal text 'ر..س' (two dots), not 'ر.س'. Fees-effective date is printed as 19/07/2025 (DD/MM/YYYY)."
+    }
+  },
+  {
+    "bank": "sab",
+    "url": "https://www.sab.com/robots.txt",
+    "locale": null,
+    "kind": "robots",
+    "file": "banks/sab/robots.blocked.html",
+    "rendered": false,
+    "fetchedAt": "2026-10-21T09:44:00Z",
+    "blocked": true,
+    "expected": {
+      "httpStatus": 200,
+      "isRobotsTxt": false,
+      "notes": "SAB's WAF answered with an HTML 'Request Rejected' page (HTTP 200) for our UA. Not evaded; no further SAB requests. Useful as a 'robots.txt is actually HTML' case: treat as unknown and do not crawl."
+    }
+  },
+  {
+    "bank": "synthetic",
+    "url": null,
+    "locale": "ar",
+    "kind": "detail",
+    "file": "synthetic/detail.arabic-indic-digits.ar.html",
+    "rendered": false,
+    "fetchedAt": null,
+    "synthetic": true,
+    "expected": {
+      "cardName": "بطاقة المثال البلاتينية الائتمانية",
+      "currency": "SAR",
+      "annualFee": 500,
+      "supplementaryCardAnnualFee": 150,
+      "monthlyProfitRatePct": 2.5,
+      "aprPct": 36.28,
+      "foreignTransactionFeePct": 2,
+      "latePaymentFee": 100,
+      "replacementFee": 25,
+      "minSalary": 10000,
+      "minimumPaymentText": "٥٪ من الرصيد المستحق أو ١٠٠ ريال أيهما أعلى",
+      "notes": "All figures in Arabic-Indic digits (٠-٩), Arabic decimal separator U+066B (٢٫٥), thousands separator U+066C (١٠٬٠٠٠) and Arabic percent U+066A (٪). Fictional bank."
+    }
+  },
+  {
+    "bank": "synthetic",
+    "url": null,
+    "locale": "en",
+    "kind": "detail",
+    "file": "synthetic/bad-crawl.maintenance.html",
+    "rendered": false,
+    "fetchedAt": null,
+    "synthetic": true,
+    "badCrawl": true,
+    "expected": {
+      "httpStatus": 200,
+      "shouldRejectCrawl": true,
+      "cardName": null,
+      "annualFee": null,
+      "notes": "HTTP 200 maintenance shell with no card content. The SFT-51 guard should flag it and keep the last good snapshot, not publish nulls."
+    }
+  }
+]

@@ -1,0 +1,38 @@
+User-agent: *
+Disallow:*/sbc/*
+Disallow:*/pages/board
+Disallow:*/pages/search
+Disallow:*/pages/CEO-info
+Disallow:*/pages/ceo-info
+Disallow:*/pages/surge-cup
+Disallow:*/pages/eform/pdpl
+Disallow:*/pages/maintenance
+Disallow:*/eform/upload-test
+Disallow:*/eform/how-to-form
+Disallow:*/eform/how-to-form/*
+Disallow:*/pages/bank-of-ideas
+Disallow:*/pages/linkedin-guide
+Disallow:*/project/snb/snb-web/email/*
+Disallow:*/pages/promotions/cc-eligible
+Disallow:*/project/snb/snb-web/videos/board/*
+Disallow:*/pages/promotions/2month-Wessam-gold
+Disallow:*/pages/promotions/2month-Wessam-Platinum
+Disallow:*/pages/eform/best-affluent-program-referral
+Disallow:*/pages/personal-banking/digital-banking/neo-e-services-terms-and-conditions
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-AdsBot
+Allow: /
+
+User-agent: PreplexityBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://www.alahli.com/sitemap.xml

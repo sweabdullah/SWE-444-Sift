@@ -1,0 +1,2 @@
+# Keep saved bank pages byte-for-byte (some robots.txt files use CRLF on purpose).
+banks/** -text
