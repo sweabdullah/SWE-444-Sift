@@ -6,7 +6,7 @@ import { DEFAULT_LOCALE, isLocale } from "@sift/schema";
  * (including the root "/") is redirected to the Arabic default, keeping the rest of the path.
  *
  * Next.js 16 renamed the "middleware" file convention to "proxy" (same behaviour).
- * SFT-10 may replace this with the i18n library's own middleware/proxy.
+ * Translations live in messages/{ar,en}.json and are read through lib/i18n.ts.
  */
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;

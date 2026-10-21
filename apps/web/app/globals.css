@@ -3,16 +3,19 @@
 @import "./brand/sift-tokens.css";
 
 /* ───────── FONT SWAP POINT ─────────
-   The only lines to change when fonts land. Thmanyah may NOT be self-hosted on the public site
-   (licence) — SFT-10 wires IBM Plex Sans Arabic / Markazi Text via next/font/google in
-   lib/fonts.ts, which defines --font-plex-arabic / --font-markazi on <html>. Until then these
-   variables are undefined and the var() fallbacks below give a system-font stack. */
+   The ONLY block to change when Thmanyah web use is approved (steps in apps/web/FONTS.md).
+   Today: IBM Plex Sans Arabic (UI) and Markazi Text 700 (display) from lib/fonts.ts, which
+   sets --font-plex-arabic / --font-markazi on <html>. The system stack is a last resort. */
 :root {
   --sift-font-system:
     system-ui, -apple-system, "Segoe UI", Tahoma, "Geeza Pro", "Noto Sans Arabic", Arial, sans-serif;
   --sift-font-ui: var(--font-plex-arabic, system-ui), var(--sift-font-system);
-  --sift-font-display: var(--font-markazi, system-ui), var(--sift-font-system);
-  --sift-weight-figure: 700; /* fallback max weight; 900 once Thmanyah Sans is approved */
+  --sift-font-display: var(--font-markazi, system-ui), var(--font-plex-arabic, system-ui), serif;
+  --sift-weight-figure: 700; /* Plex tops out at 700; set 900 with Thmanyah Sans */
+  /* Thmanyah (only after written approval — see FONTS.md):
+     --sift-font-ui: "Thmanyah Sans", var(--sift-font-system);
+     --sift-font-display: "Thmanyah Serif Display", serif;
+     --sift-weight-figure: 900; */
 }
 
 /* Colours / fonts / radii reference the brand vars (inline so utilities emit the var directly). */

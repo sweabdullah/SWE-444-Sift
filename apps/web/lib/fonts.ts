@@ -1,13 +1,34 @@
+import { IBM_Plex_Sans_Arabic, Markazi_Text } from "next/font/google";
+
 /**
- * Font hook point (placeholder).
+ * Licence-safe web fonts (see apps/web/FONTS.md).
  *
- * SFT-10 adds IBM Plex Sans Arabic (and optionally Markazi Text for display) here via
- * `next/font/google`, exposing the CSS variables `--font-plex-arabic` / `--font-markazi`.
- * app/globals.css already reads those variables in its FONT SWAP block, falling back to the
- * system stack until they exist. Thmanyah fonts must NOT be self-hosted (licence) — see
- * the brand audit before changing this.
+ * The brand faces (Thmanyah Sans / Serif Display) may NOT be web-embedded until Thmanyah
+ * grants written approval, so the site uses OFL-licensed Google fonts. `next/font/google`
+ * downloads them at build time and self-hosts them from /_next/static — no font files are
+ * committed and the browser never calls Google.
  *
- * Until then this exports an empty class list so app/[locale]/layout.tsx has one place to
- * attach the font variables: `<html className={fontVariables}>`.
+ * Each font only exposes a CSS variable; app/globals.css maps them onto the brand tokens
+ * in its FONT SWAP block:
+ *   --font-plex-arabic → --sift-font-ui      → Tailwind --font-sans (everything)
+ *   --font-markazi     → --sift-font-display → Tailwind --font-display (marketing ≥28px only)
  */
-export const fontVariables = "";
+
+/** UI and figures. Arabic + Latin in one family; digits are tabular by default. No 900. */
+const plexArabic = IBM_Plex_Sans_Arabic({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-plex-arabic",
+  display: "swap",
+});
+
+/** Display serif (the "serif says" voice). Marketing headlines at 28px and above only. */
+const markazi = Markazi_Text({
+  subsets: ["arabic", "latin"],
+  weight: "700",
+  variable: "--font-markazi",
+  display: "swap",
+});
+
+/** Class list for <html>: defines the font CSS variables for the whole document. */
+export const fontVariables = `${plexArabic.variable} ${markazi.variable}`;
