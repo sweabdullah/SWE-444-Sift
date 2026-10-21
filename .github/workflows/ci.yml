@@ -1,0 +1,69 @@
+# Runs on every pull request and on every push to main.
+# Mirrors the local gate: `pnpm check` (format check, lint, build) then `pnpm test`.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A newer push to the same PR or branch cancels the run it supersedes.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    # Throwaway Postgres so migration and database tests have something real to hit.
+    # Placeholder credentials; this database only lives for the length of the job.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: sift
+          POSTGRES_PASSWORD: sift
+          POSTGRES_DB: sift_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U sift -d sift_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://sift:sift@localhost:5432/sift_ci
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      # Reads the pnpm version from "packageManager" in package.json.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # No-op until @sift/db defines a db:migrate:deploy script (schema work, T-2).
+      - name: Apply database migrations
+        run: pnpm --filter @sift/db --if-present run db:migrate:deploy
+
+      - name: Format check, lint, build
+        run: pnpm check
+
+      - name: Tests
+        run: pnpm test
