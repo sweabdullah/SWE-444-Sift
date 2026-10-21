@@ -12,12 +12,17 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "test": "vitest run",
+    "db:migrate:deploy": "prisma migrate deploy"
   },
   "dependencies": {
-    "@prisma/client": "6.19.3"
+    "@prisma/client": "6.19.3",
+    "@sift/schema": "workspace:*",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "prisma": "6.19.3"
+    "prisma": "6.19.3",
+    "vitest": "^3.2.7"
   }
 }
