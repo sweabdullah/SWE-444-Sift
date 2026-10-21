@@ -8,7 +8,7 @@ Prisma models are PascalCase (`CardTranslation`); Postgres tables and columns ar
 
 1. **NULL is not zero.** A figure the bank has not published is `NULL`. `0` means the bank published "free" / "zero". Figure columns (fees, income, caps, Sharia flag) are nullable and have **no default**, so nothing can silently become `0` or `false`. The UI must show `NULL` as "not published", never as "free".
 2. **Never inferred.** `card.sharia_compliant` is set only when the bank states it. `NULL` = unknown, `false` = the bank says it isn't.
-3. **Prose once per language.** Every human-readable text lives in a `*_translation` table with a `locale` (`ar` | `en`) and a unique `(parent_id, locale)` pair. The `card` and `reward_tier` tables hold only language-neutral facts.
+3. **Prose once per language.** Card and reward prose lives in a `*_translation` table with a `locale` (`ar` | `en`) and a unique `(parent_id, locale)` pair. The `card` and `reward_tier` tables hold only language-neutral facts. One exception: a bank's name is a short, fixed pair stored as two columns, `bank.name_ar` and `bank.name_en`, not in a translation table.
 4. **Filterable values are enums.** Anything a visitor can filter or sort by is a Postgres enum or a typed numeric column, never free text. Enum labels are translated once in the UI.
 
 ## Card identity
@@ -51,7 +51,13 @@ A card is identified by **`(bank_id, canonical_url)`** — unique constraint on 
 | 6   | Late payment       | `fee.late_payment_fee`                  | `DECIMAL(12,2)`, SAR |
 | 7   | Annual-fee waiver  | `card_translation.fee_waiver_condition` | text, per locale     |
 
-Each is its own nullable column with no default. The waiver condition is prose, so rule 3 puts it in `card_translation`. A card with no `fee` row has published none of the six amounts. Fees live in their own `fee` table because the plan names it as one of the core tables; filter on it with a relation filter (`card: { fee: { annualFee: { lte: 0 } } }`), backed by an index on `fee.annual_fee`.
+Each is its own nullable column with no default. The waiver condition is prose, so rule 3 puts it in `card_translation`. Fees live in their own `fee` table because the plan names it as one of the core tables. Filter on them from the card with a relation filter, backed by an index on `fee.annual_fee`:
+
+```ts
+prisma.card.findMany({ where: { status: "published", fee: { annualFee: { lte: 0 } } } });
+```
+
+**"Unknown fee" has two shapes.** A fee is unpublished if the card has no `fee` row at all, or if it has a `fee` row whose column is `NULL`. A query for unknown fees must match both, e.g. `OR: [{ fee: null }, { fee: { annualFee: null } }]`. To keep this simple, **always create the `fee` row together with the card** (in the seed and in the approval code), even when every amount is `NULL`; then "unknown" is always just `NULL`.
 
 Money is `Decimal`, never `Float`. In TypeScript the client returns `Prisma.Decimal`; convert at the edge, not in storage.
 
@@ -87,9 +93,13 @@ Each crawl run that does not find a published card increments `card.consecutive_
 
 ```bash
 cp packages/db/.env.example packages/db/.env   # then set DATABASE_URL
-pnpm db:migrate                                # apply migrations (creates new ones in dev)
+pnpm db:deploy                                 # apply existing migrations (prisma migrate deploy) — use this to set up a database
 pnpm db:generate                               # regenerate the client (pnpm build does this too)
 pnpm db:studio                                 # browse the data
+
+# Only when you change schema.prisma:
+pnpm db:migrate --name <change>                # prisma migrate dev: creates a new migration and applies it;
+                                               # it may ask to reset the database if it detects drift
 ```
 
 Never edit a migration that has been merged; add a new one.
