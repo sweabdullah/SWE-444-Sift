@@ -2,15 +2,27 @@
   "name": "@sift/web",
   "version": "0.0.0",
   "private": true,
-  "description": "Public web app (Next.js) \u2014 catalogue, comparison, accounts, admin. Placeholder until T-3 (BRO-7).",
+  "description": "Public web app (Next.js App Router) — catalogue, comparison, accounts, admin.",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "next typegen && tsc --noEmit",
+    "lint:logical": "node scripts/check-logical.mjs",
+    "test": "vitest run"
   },
   "dependencies": {
-    "@sift/schema": "workspace:*"
+    "@sift/schema": "workspace:*",
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "tailwindcss": "4.3.3",
+    "vitest": "5.0.5"
   }
 }

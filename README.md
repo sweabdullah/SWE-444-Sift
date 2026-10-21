@@ -20,14 +20,16 @@ pnpm build
 
 That's the whole setup. If `pnpm build` passes on a fresh clone, your environment is right.
 
-| Command             | What it does                                    |
-| ------------------- | ----------------------------------------------- |
-| `pnpm build`        | Builds every package, in dependency order       |
-| `pnpm lint`         | ESLint over the whole repo                      |
-| `pnpm format`       | Rewrites files with Prettier                    |
-| `pnpm format:check` | Fails if any file isn't Prettier-formatted      |
-| `pnpm typecheck`    | Strict TypeScript check of every package        |
-| `pnpm check`        | Everything CI runs: format check → lint → build |
+| Command                  | What it does                                                                            |
+| ------------------------ | --------------------------------------------------------------------------------------- |
+| `pnpm build`             | Builds every package, in dependency order                                               |
+| `pnpm lint`              | ESLint over the whole repo, then `lint:logical` (bans left/right utilities in apps/web) |
+| `pnpm format`            | Rewrites files with Prettier                                                            |
+| `pnpm format:check`      | Fails if any file isn't Prettier-formatted                                              |
+| `pnpm typecheck`         | Strict TypeScript check of every package                                                |
+| `pnpm check`             | Everything CI runs: format check → lint → build                                         |
+| `pnpm --filter web dev`  | Runs the web app at http://localhost:3000 (`/` redirects to `/ar`)                      |
+| `pnpm --filter web test` | Vitest unit tests for apps/web                                                          |
 
 Run `pnpm check` before you open a pull request.
 
