@@ -4,3 +4,5 @@ dist
 out
 coverage
 pnpm-lock.yaml
+apps/web/app/brand/sift-tokens.css
+apps/web/next-env.d.ts

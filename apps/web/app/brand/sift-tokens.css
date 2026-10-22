@@ -1,0 +1,46 @@
+/* Sift design tokens · v3.0 · October 2026 */
+:root {
+  /* colour: core */
+  --sift-graphite:      #1C1F24;  /* dark grounds, all text on light */
+  --sift-mist:          #F2F4F6;  /* light page ground, text on dark */
+  --sift-white:         #FFFFFF;  /* cards and panels */
+  --sift-platinum:      #C3CAD3;  /* chip (flat) and i dot on dark */
+  --sift-platinum-deep: #5B6470;  /* chip and i dot on light, links, secondary text */
+
+  /* colour: supporting */
+  --sift-graphite-deep: #14171B;  /* footer, hero depth */
+  --sift-surface:       #262A30;  /* panels and inputs on dark */
+  --sift-line-dark:     #3A3F48;  /* dividers on dark */
+  --sift-muted-dark:    #A9B1BC;  /* secondary text on dark */
+  --sift-button-dark:   #E4E8EC;  /* primary button on dark */
+  --sift-line:          #D5DAE0;  /* dividers, borders */
+
+  /* colour: highlighter */
+  --sift-ice:           #CADCEE;  /* highlighter on light */
+  --sift-ice-dark:      #3A5068;  /* highlighter on dark */
+  --sift-highlight:      linear-gradient(transparent 55%, var(--sift-ice) 55%);
+  --sift-highlight-dark: linear-gradient(transparent 55%, var(--sift-ice-dark) 55%);
+  /* use: one phrase in a marketing headline, or the figure matching an active filter.
+     padding 0 .1em; margin 0 -.1em; box-decoration-break: clone */
+
+  /* platinum sheen: the chip only, never text, buttons or backgrounds */
+  --sift-sheen-dark:  linear-gradient(135deg, #F2F4F7 0%, #BFC6CF 45%, #D6DBE1 55%, #8C95A1 100%);
+  --sift-sheen-light: linear-gradient(135deg, #8E97A3 0%, #5B6470 45%, #6E7783 55%, #3E454E 100%);
+
+  /* type */
+  --sift-font-display: 'Thmanyah Serif Display', serif;      /* marketing headlines only */
+  --sift-font-ui:      'Thmanyah Sans', system-ui, sans-serif; /* everything else */
+  --sift-size-display: 40px;  /* lh 1.1, brand only */
+  --sift-size-h1:      32px;  /* lh 1.2, brand only */
+  --sift-size-title:   28px;  /* Sans 700, product page titles */
+  --sift-size-h2:      22px;  /* lh 1.3 */
+  --sift-size-body:    16px;  /* lh 1.6, Arabic 1.7 */
+  --sift-size-label:   13px;
+  --sift-size-figure:  30px;  /* Sans 900 */
+
+  /* shape and space */
+  --sift-radius-sm: 6px;
+  --sift-radius:    12px;
+  --sift-radius-lg: 20px;
+  --sift-space:     8px;   /* 8-pt grid */
+}
