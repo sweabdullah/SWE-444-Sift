@@ -14,5 +14,9 @@
   "home": {
     "title": "Sift",
     "tagline": "A bilingual catalogue of Saudi credit cards. Under construction."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "home": "Back to the home page"
   }
 }

@@ -1,14 +1,7 @@
 import { describe, expect, it } from "vitest";
 import ar from "@/messages/ar.json";
 import en from "@/messages/en.json";
-import {
-  LOCALES,
-  getMessages,
-  getTranslator,
-  interpolate,
-  localizedPath,
-  type MessageKey,
-} from "./i18n";
+import { LOCALES, getMessages, getTranslator, interpolate, type MessageKey } from "./i18n";
 
 /** Every dotted leaf path in a catalogue, sorted. */
 function keysOf(node: unknown, prefix = ""): string[] {
@@ -70,18 +63,5 @@ describe("getTranslator", () => {
   it("throws on a key that does not exist", () => {
     // @ts-expect-error — the key type rejects unknown keys at compile time too
     expect(() => getTranslator("en")("home.nope")).toThrow(/Missing message/);
-  });
-});
-
-describe("localizedPath", () => {
-  it("swaps only the locale segment, so the visitor stays on the same page", () => {
-    expect(localizedPath("/ar", "en")).toBe("/en");
-    expect(localizedPath("/ar/cards/alrajhi-signature", "en")).toBe("/en/cards/alrajhi-signature");
-    expect(localizedPath("/en/compare", "ar")).toBe("/ar/compare");
-  });
-
-  it("adds a locale prefix when the path has none", () => {
-    expect(localizedPath("/", "ar")).toBe("/ar");
-    expect(localizedPath("/cards", "en")).toBe("/en/cards");
   });
 });

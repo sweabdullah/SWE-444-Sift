@@ -1,9 +1,19 @@
-import { DEFAULT_LOCALE, LOCALES, directionOf, isLocale, type Locale } from "@sift/schema";
+import type { Locale } from "./locale";
 import ar from "@/messages/ar.json";
 import en from "@/messages/en.json";
 import { formatNumber } from "./format";
 
-export { DEFAULT_LOCALE, LOCALES, directionOf, isLocale, type Locale };
+// Client components must import these from "@/lib/locale" instead: importing this module
+// bundles both message catalogues.
+export {
+  DEFAULT_LOCALE,
+  LOCALES,
+  directionOf,
+  isLocale,
+  localizedPath,
+  otherLocale,
+  type Locale,
+} from "./locale";
 
 /**
  * Message catalogues. Arabic is the source of truth for the shape: `Messages` is derived from
@@ -48,8 +58,9 @@ function lookup(messages: Messages, key: string): string {
 }
 
 /**
- * Typed translator for one locale. Works in server and client components (catalogues are
- * static imports). `{name}` placeholders are replaced from `values`; unknown placeholders are
+ * Typed translator for one locale. Use it in server components and pass the resulting strings
+ * to client components as props; importing this module from a client component would ship
+ * both catalogues to the browser. `{name}` placeholders are replaced from `values`; unknown placeholders are
  * left as-is so a missing value is visible rather than silently blank.
  */
 export function getTranslator(locale: Locale): Translator {
@@ -65,19 +76,4 @@ export function interpolate(template: string, locale: Locale, values?: MessageVa
     if (value === undefined) return match;
     return typeof value === "number" ? formatNumber(value, locale) : value;
   });
-}
-
-/** The other locale — used by the language switch. */
-export function otherLocale(locale: Locale): Locale {
-  return locale === "ar" ? "en" : "ar";
-}
-
-/**
- * The same page in another locale: swaps the leading /ar or /en segment and keeps the rest
- * of the path, so switching language never sends the visitor back home.
- */
-export function localizedPath(pathname: string, target: Locale): string {
-  const segments = pathname.split("/").filter(Boolean);
-  if (segments.length > 0 && isLocale(segments[0] ?? "")) segments.shift();
-  return `/${[target, ...segments].join("/")}`;
 }
