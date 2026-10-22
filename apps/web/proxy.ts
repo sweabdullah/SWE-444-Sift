@@ -21,6 +21,9 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Skip Next internals, API routes and any file with an extension (logo, favicon, robots.txt).
-  matcher: ["/((?!_next|api|.*\\..*).*)"],
+  // Skip Next internals (/_next/), API routes (/api/…) and real static files by known extension.
+  // Anything else, including paths that merely contain a dot or start with "api", gets a locale.
+  matcher: [
+    "/((?!_next/|api/|.*\\.(?:ico|png|jpe?g|gif|webp|avif|svg|txt|xml|json|webmanifest|map|css|js|woff2?)$).*)",
+  ],
 };

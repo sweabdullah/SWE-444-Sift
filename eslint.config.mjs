@@ -5,38 +5,55 @@ import prettier from "eslint-config-prettier";
 import globals from "globals";
 import nextPlugin from "@next/eslint-plugin-next";
 
-// Arabic-first (RTL) app: physical left/right Tailwind utilities are banned in className.
-// Editor-time mirror of apps/web/scripts/check-logical.mjs, which is the authoritative check
-// (`pnpm --filter web lint:logical`, run by `pnpm lint`).
-const PHYSICAL_CLASS =
-  /(?:^|\s|:)(?:-?(?:scroll-)?[mp][lr]-|-?(?:left|right)-(?=\d|px|auto|full|\[)|(?:text|float|clear)-(?:left|right)(?:\s|$)|(?:border|rounded)-(?:l|r|tl|tr|bl|br)(?:-|\s|$))/;
+import {
+  STYLE_FIX,
+  findInClassString,
+  isPhysicalStyle,
+} from "./apps/web/scripts/logical-patterns.mjs";
+
+// Arabic-first (RTL) app: physical left/right utilities and inline styles are banned in apps/web.
+// Patterns are shared with apps/web/scripts/check-logical.mjs (`pnpm --filter web lint:logical`,
+// run by `pnpm lint`), so the editor and the script flag the same things.
 
 /** @type {import("eslint").Rule.RuleModule} */
 const noPhysicalClasses = {
   meta: {
     type: "problem",
     messages: {
-      physical:
-        "Use logical utilities (ms-/me-, ps-/pe-, start-/end-, text-start/text-end, border-s/-e, rounded-s/-e), never left/right.",
+      physical: "Physical left/right utility `{{match}}`: use {{fix}}.",
+      style: "Physical left/right inline style `{{match}}`: use {{fix}}.",
     },
     schema: [],
   },
   create(context) {
-    /** @param {import("estree").Node} node @param {string} text */
+    /** @param {any} node @param {string} text */
     const check = (node, text) => {
-      if (PHYSICAL_CLASS.test(text)) context.report({ node, messageId: "physical" });
+      for (const f of findInClassString(text))
+        context.report({ node, messageId: "physical", data: { match: f.match, fix: f.fix } });
     };
     return {
+      // Every string, not only className: catches cn("ml-4"), const H = "mr-2", templates.
+      /** @param {any} node */
+      Literal(node) {
+        if (typeof node.value === "string") check(node, node.value);
+      },
+      /** @param {any} node */
+      TemplateElement(node) {
+        check(node, node.value.cooked ?? node.value.raw);
+      },
+      // style={{ marginLeft: 8, left: 0, textAlign: "left" }}
       /** @param {any} node */
       JSXAttribute(node) {
-        if (node.name.name !== "className" || !node.value) return;
-        const v = node.value;
-        if (v.type === "Literal" && typeof v.value === "string") check(v, v.value);
-        if (v.type === "JSXExpressionContainer") {
-          const e = v.expression;
-          if (e.type === "Literal" && typeof e.value === "string") check(e, e.value);
-          if (e.type === "TemplateLiteral")
-            for (const q of e.quasis) check(q, q.value.cooked ?? q.value.raw);
+        if (node.name.name !== "style" || node.value?.type !== "JSXExpressionContainer") return;
+        const obj = node.value.expression;
+        if (obj.type !== "ObjectExpression") return;
+        for (const p of obj.properties) {
+          if (p.type !== "Property") continue;
+          const key =
+            p.key.type === "Identifier" ? p.key.name : p.key.type === "Literal" ? p.key.value : "";
+          const value = p.value.type === "Literal" ? p.value.value : undefined;
+          if (typeof key === "string" && isPhysicalStyle(key, value))
+            context.report({ node: p, messageId: "style", data: { match: key, fix: STYLE_FIX } });
         }
       },
     };
@@ -79,6 +96,11 @@ export default tseslint.config(
       ...nextPlugin.configs["core-web-vitals"].rules,
       "sift/no-physical-classes": "error",
     },
+  },
+  {
+    // Tests contain banned strings on purpose (same exemption as lint:logical).
+    files: ["apps/web/**/*.test.{ts,tsx}"],
+    rules: { "sift/no-physical-classes": "off" },
   },
   // Must stay last: turns off stylistic rules that Prettier owns.
   prettier,
