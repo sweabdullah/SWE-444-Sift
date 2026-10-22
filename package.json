@@ -12,7 +12,8 @@
     "lint": "eslint . && pnpm --filter web lint:logical",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "pnpm format:check && pnpm lint && pnpm build"
+    "check": "pnpm format:check && pnpm lint && pnpm build",
+    "test": "pnpm -r --if-present run test"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
