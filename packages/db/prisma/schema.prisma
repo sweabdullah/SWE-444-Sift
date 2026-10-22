@@ -1,0 +1,513 @@
+// Sift — core database schema (T-2 / SFT-6).
+// Read packages/db/SCHEMA.md before changing anything here.
+//
+// Conventions
+// - Models are PascalCase in Prisma, tables and columns are snake_case in Postgres (@@map / @map).
+// - Every filterable value is a database enum, never free text.
+// - Every prose field lives in a *_translation table, once per locale.
+// - A figure the bank has not published is NULL. NULL is never 0. Figure columns have no defaults.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ──────────────────────────────────────────────────────────────────
+
+enum Locale {
+  ar
+  en
+
+  @@map("locale")
+}
+
+enum CardStatus {
+  draft
+  published
+  archived
+
+  @@map("card_status")
+}
+
+enum RewardType {
+  cashback
+  points
+  miles
+  none
+
+  @@map("reward_type")
+}
+
+enum CardNetwork {
+  visa
+  mastercard
+  amex
+  mada
+  unionpay
+
+  @@map("card_network")
+}
+
+enum SpendingCategory {
+  general
+  dining
+  groceries
+  fuel
+  travel
+  airlines
+  hotels
+  online
+  international
+  entertainment
+  shopping
+  utilities
+  education
+  healthcare
+  other
+
+  @@map("spending_category")
+}
+
+enum RateUnit {
+  percent
+  points_per_sar
+  miles_per_sar
+
+  @@map("rate_unit")
+}
+
+enum CapPeriod {
+  per_transaction
+  monthly
+  quarterly
+  yearly
+
+  @@map("cap_period")
+}
+
+enum SourceType {
+  html
+  pdf
+
+  @@map("source_type")
+}
+
+enum UserRole {
+  user
+  admin
+
+  @@map("user_role")
+}
+
+enum PendingRequestKind {
+  new_card
+  field_change
+  withdrawal
+
+  @@map("pending_request_kind")
+}
+
+enum PendingRequestStatus {
+  pending
+  approved
+  rejected
+  failed_validation
+
+  @@map("pending_request_status")
+}
+
+enum CrawlRunStatus {
+  running
+  succeeded
+  failed
+  aborted_guard
+
+  @@map("crawl_run_status")
+}
+
+enum CrawlTrigger {
+  manual
+  scheduled
+
+  @@map("crawl_trigger")
+}
+
+// ─── Banks and their sources ────────────────────────────────────────────────
+
+model Bank {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  nameAr      String   @map("name_ar")
+  nameEn      String   @map("name_en")
+  homepageUrl String   @map("homepage_url")
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  entryUrls       BankEntryUrl[]
+  cards           Card[]
+  sources         Source[]
+  crawlRuns       CrawlRun[]
+  pendingRequests PendingRequest[]
+
+  @@index([active])
+  @@map("bank")
+}
+
+/// An official URL registered for a bank (S-28). The crawler starts only from these.
+model BankEntryUrl {
+  id        String   @id @default(cuid())
+  bankId    String   @map("bank_id")
+  url       String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  bank Bank @relation(fields: [bankId], references: [id], onDelete: Cascade)
+
+  @@unique([bankId, url])
+  @@map("bank_entry_url")
+}
+
+/// One fetched official document (HTML page or PDF) that figures were read from.
+model Source {
+  id          String     @id @default(cuid())
+  bankId      String     @map("bank_id")
+  url         String
+  sourceType  SourceType @map("source_type")
+  fetchedAt   DateTime   @map("fetched_at")
+  /// Hash of the fetched content, for the change pre-check (S-49, deferred). Null until used.
+  contentHash String?    @map("content_hash")
+  createdAt   DateTime   @default(now()) @map("created_at")
+
+  bank            Bank              @relation(fields: [bankId], references: [id], onDelete: Restrict)
+  cards           Card[]
+  fieldSources    CardFieldSource[]
+  pendingRequests PendingRequest[]
+
+  @@index([bankId, url])
+  @@map("source")
+}
+
+// ─── Cards ──────────────────────────────────────────────────────────────────
+
+/// Identity rule: a card is (bank_id, canonical_url). normalised_name is the fallback
+/// matcher when a bank moves the page (S-47).
+model Card {
+  id                  String       @id @default(cuid())
+  bankId              String       @map("bank_id")
+  canonicalUrl        String       @map("canonical_url")
+  normalisedName      String       @map("normalised_name")
+  status              CardStatus   @default(draft)
+  rewardType          RewardType   @map("reward_type")
+  network             CardNetwork?
+  /// Only what the bank publishes. Never inferred. NULL = unknown.
+  shariaCompliant     Boolean?     @map("sharia_compliant")
+  /// SAR per month. NULL = not published.
+  minMonthlyIncome    Decimal?     @map("min_monthly_income") @db.Decimal(12, 2)
+  /// The card's official source link (S-4). Per-figure sources are in card_field_source.
+  sourceId            String       @map("source_id")
+  /// Refreshed on every successful check, even when nothing changed (S-20, S-31).
+  verifiedAt          DateTime?    @map("verified_at")
+  /// Consecutive crawl runs in which the card was not found. 3 => withdrawal request (S-36, S-51).
+  consecutiveAbsences Int          @default(0) @map("consecutive_absences")
+  lastSeenAt          DateTime?    @map("last_seen_at")
+  publishedAt         DateTime?    @map("published_at")
+  archivedAt          DateTime?    @map("archived_at")
+  createdAt           DateTime     @default(now()) @map("created_at")
+  updatedAt           DateTime     @updatedAt @map("updated_at")
+
+  bank            Bank              @relation(fields: [bankId], references: [id], onDelete: Restrict)
+  source          Source            @relation(fields: [sourceId], references: [id], onDelete: Restrict)
+  fee             Fee?
+  translations    CardTranslation[]
+  rewardTiers     RewardTier[]
+  fieldSources    CardFieldSource[]
+  shortlists      Shortlist[]
+  pendingRequests PendingRequest[]
+  changes         CardChange[]
+
+  @@unique([bankId, canonicalUrl])
+  @@index([bankId, normalisedName])
+  @@index([status])
+  @@index([status, rewardType])
+  @@index([status, bankId])
+  @@index([status, shariaCompliant])
+  @@index([status, minMonthlyIncome])
+  @@index([network])
+  @@map("card")
+}
+
+/// The seven agreed fee fields (one row per card). Six are amounts here; the seventh,
+/// the waiver condition, is prose and lives in card_translation.fee_waiver_condition.
+/// Every column is nullable with no default: NULL = the bank has not published it; 0 = free.
+model Fee {
+  cardId               String   @id @map("card_id")
+  /// SAR per year.
+  annualFee            Decimal? @map("annual_fee") @db.Decimal(12, 2)
+  /// SAR, one-off.
+  issuanceFee          Decimal? @map("issuance_fee") @db.Decimal(12, 2)
+  /// SAR per supplementary card per year.
+  supplementaryCardFee Decimal? @map("supplementary_card_fee") @db.Decimal(12, 2)
+  /// Percent of the transaction amount, e.g. 2.75 = 2.75 %.
+  fxMarkupPct          Decimal? @map("fx_markup_pct") @db.Decimal(6, 3)
+  /// SAR per withdrawal.
+  cashAdvanceFee       Decimal? @map("cash_advance_fee") @db.Decimal(12, 2)
+  /// SAR per late payment.
+  latePaymentFee       Decimal? @map("late_payment_fee") @db.Decimal(12, 2)
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@index([annualFee])
+  @@map("fee")
+}
+
+/// Every prose field of a card, once per locale.
+model CardTranslation {
+  id                  String   @id @default(cuid())
+  cardId              String   @map("card_id")
+  locale              Locale
+  name                String
+  benefitsDescription String?  @map("benefits_description")
+  rewardConditions    String?  @map("reward_conditions")
+  eligibility         String?
+  /// The seventh fee field (waiver condition), as prose. NULL = not published.
+  feeWaiverCondition  String?  @map("fee_waiver_condition")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@unique([cardId, locale])
+  @@map("card_translation")
+}
+
+/// Which source a single figure was read from, so a PDF-only figure is visibly marked.
+/// field_name is a dotted path, e.g. "fee.annual_fee", "card.sharia_compliant",
+/// "reward_tier.<sort_order>.rate", "card_translation.ar.eligibility".
+model CardFieldSource {
+  id        String @id @default(cuid())
+  cardId    String @map("card_id")
+  fieldName String @map("field_name")
+  sourceId  String @map("source_id")
+
+  card   Card   @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  source Source @relation(fields: [sourceId], references: [id], onDelete: Restrict)
+
+  @@unique([cardId, fieldName])
+  @@index([sourceId])
+  @@map("card_field_source")
+}
+
+/// One row of a card's reward structure: type, category, rate, cap, condition (S-5).
+model RewardTier {
+  id               String           @id @default(cuid())
+  cardId           String           @map("card_id")
+  rewardType       RewardType       @map("reward_type")
+  spendingCategory SpendingCategory @map("spending_category")
+  /// Normalised value; 1.5 and 1.50 are the same Decimal.
+  rate             Decimal          @db.Decimal(10, 4)
+  rateUnit         RateUnit         @map("rate_unit")
+  /// Maximum reward per cap_period, in SAR (cashback) or points/miles. NULL = no published cap.
+  cap              Decimal?         @db.Decimal(12, 2)
+  capPeriod        CapPeriod?       @map("cap_period")
+  /// Spend needed (SAR per month) before this tier applies. NULL = none published.
+  minSpend         Decimal?         @map("min_spend") @db.Decimal(12, 2)
+  /// Deterministic tier order within the card.
+  sortOrder        Int              @map("sort_order")
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+
+  card         Card                    @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  translations RewardTierTranslation[]
+
+  @@unique([cardId, sortOrder])
+  @@index([spendingCategory, rate])
+  @@index([rewardType, rate])
+  @@map("reward_tier")
+}
+
+/// The prose condition that unlocks a tier, once per locale.
+model RewardTierTranslation {
+  id           String @id @default(cuid())
+  rewardTierId String @map("reward_tier_id")
+  locale       Locale
+  condition    String
+
+  rewardTier RewardTier @relation(fields: [rewardTierId], references: [id], onDelete: Cascade)
+
+  @@unique([rewardTierId, locale])
+  @@map("reward_tier_translation")
+}
+
+// ─── Users (Auth.js @auth/prisma-adapter models + Sift fields) ──────────────
+// Prisma field names must match the adapter's (userId, providerAccountId, ...).
+
+model User {
+  id               String    @id @default(cuid())
+  name             String?
+  email            String    @unique
+  emailVerified    DateTime? @map("email_verified")
+  image            String?
+  /// Email + password registration (S-21). NULL for OAuth-only accounts.
+  passwordHash     String?   @map("password_hash")
+  role             UserRole  @default(user)
+  locale           Locale    @default(ar)
+  /// Daily digest of changes to shortlisted cards (S-54, S-55). Opt-in.
+  digestOptIn      Boolean   @default(false) @map("digest_opt_in")
+  unsubscribeToken String    @unique @default(cuid()) @map("unsubscribe_token")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  accounts        Account[]
+  sessions        Session[]
+  shortlists      Shortlist[]
+  reviewedRequest PendingRequest[]
+
+  @@index([role])
+  @@map("user")
+}
+
+model Account {
+  id                String   @id @default(cuid())
+  userId            String   @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String   @map("provider_account_id")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("account")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_token")
+}
+
+/// A registered user's saved cards (S-23, S-24).
+model Shortlist {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  cardId    String   @map("card_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cardId])
+  @@index([cardId])
+  @@map("shortlist")
+}
+
+// ─── Ingestion pipeline ─────────────────────────────────────────────────────
+
+/// One crawl of one bank: pages, candidates, errors (S-29) and the collapse guard (S-51).
+model CrawlRun {
+  id           String         @id @default(cuid())
+  bankId       String         @map("bank_id")
+  trigger      CrawlTrigger
+  status       CrawlRunStatus @default(running)
+  startedAt    DateTime       @default(now()) @map("started_at")
+  finishedAt   DateTime?      @map("finished_at")
+  pagesFetched Int            @default(0) @map("pages_fetched")
+  cardsFound   Int            @default(0) @map("cards_found")
+  error        String?
+
+  bank            Bank             @relation(fields: [bankId], references: [id], onDelete: Restrict)
+  pendingRequests PendingRequest[]
+
+  @@index([bankId, startedAt])
+  @@index([status])
+  @@map("crawl_run")
+}
+
+/// Anything the pipeline proposes, held out of the public catalogue until an admin
+/// reviews it (S-30, S-32, S-37, S-46, S-50, S-36).
+model PendingRequest {
+  id               String               @id @default(cuid())
+  kind             PendingRequestKind
+  status           PendingRequestStatus @default(pending)
+  bankId           String               @map("bank_id")
+  /// NULL for new_card until approved; set for field_change and withdrawal.
+  cardId           String?              @map("card_id")
+  crawlRunId       String?              @map("crawl_run_id")
+  sourceId         String               @map("source_id")
+  /// The extracted draft (shape owned by @sift/schema's Zod extraction schema).
+  payload          Json
+  /// Validation errors when status = failed_validation.
+  validationErrors Json?                @map("validation_errors")
+  createdAt        DateTime             @default(now()) @map("created_at")
+  reviewedById     String?              @map("reviewed_by")
+  reviewedAt       DateTime?            @map("reviewed_at")
+  reviewNote       String?              @map("review_note")
+
+  bank       Bank         @relation(fields: [bankId], references: [id], onDelete: Restrict)
+  card       Card?        @relation(fields: [cardId], references: [id], onDelete: SetNull)
+  crawlRun   CrawlRun?    @relation(fields: [crawlRunId], references: [id], onDelete: SetNull)
+  source     Source       @relation(fields: [sourceId], references: [id], onDelete: Restrict)
+  reviewedBy User?        @relation(fields: [reviewedById], references: [id], onDelete: SetNull)
+  changes    CardChange[]
+
+  @@index([status, createdAt])
+  @@index([bankId])
+  @@index([cardId])
+  @@index([crawlRunId])
+  @@map("pending_request")
+}
+
+/// A field-level before/after record, written when an admin approves a change (S-50).
+/// The daily digest (S-54) picks up rows where notified_at IS NULL.
+model CardChange {
+  id               String    @id @default(cuid())
+  cardId           String    @map("card_id")
+  pendingRequestId String    @map("pending_request_id")
+  /// Same dotted path as card_field_source.field_name.
+  fieldName        String    @map("field_name")
+  /// Set for prose fields; NULL for language-neutral fields.
+  locale           Locale?
+  oldValue         Json?     @map("old_value")
+  newValue         Json?     @map("new_value")
+  approvedAt       DateTime  @map("approved_at")
+  notifiedAt       DateTime? @map("notified_at")
+
+  card           Card           @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  pendingRequest PendingRequest @relation(fields: [pendingRequestId], references: [id], onDelete: Restrict)
+
+  @@index([cardId, approvedAt])
+  @@index([pendingRequestId])
+  @@index([notifiedAt])
+  @@map("card_change")
+}
