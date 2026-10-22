@@ -17,7 +17,8 @@
     "db:migrate": "pnpm --filter @sift/db db:migrate",
     "db:deploy": "pnpm --filter @sift/db db:deploy",
     "db:seed": "pnpm --filter @sift/db db:seed",
-    "db:studio": "pnpm --filter @sift/db db:studio"
+    "db:studio": "pnpm --filter @sift/db db:studio",
+    "test": "pnpm -r --if-present run test"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
