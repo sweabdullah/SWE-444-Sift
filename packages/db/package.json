@@ -2,12 +2,29 @@
   "name": "@sift/db",
   "version": "0.0.0",
   "private": true,
-  "description": "Prisma schema, migrations and seed. Shared by web and ingest. Filled in by T-2 (BRO-6).",
+  "description": "Prisma schema, migrations and the shared Prisma client. Used by web and ingest. Schema notes: SCHEMA.md.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "build": "prisma generate && tsc -p tsconfig.json",
+    "typecheck": "prisma generate && tsc -p tsconfig.json --noEmit",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "db:seed": "prisma db seed",
+    "db:seed:check": "tsx prisma/seed-check.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.3"
+  },
+  "devDependencies": {
+    "bcryptjs": "3.0.2",
+    "prisma": "6.19.3",
+    "tsx": "4.20.6"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }
