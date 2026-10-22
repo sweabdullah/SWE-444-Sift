@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "siteName": "Sift",
+    "description": "A bilingual catalogue of Saudi credit cards where every figure traces back to the bank that published it."
+  },
+  "common": {
+    "logoAlt": "Sift logo",
+    "riyal": "Saudi riyal"
+  },
+  "localeSwitch": {
+    "label": "العربية",
+    "ariaLabel": "التبديل إلى العربية"
+  },
+  "home": {
+    "title": "Sift",
+    "tagline": "A bilingual catalogue of Saudi credit cards. Under construction."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "home": "Back to the home page"
+  }
+}

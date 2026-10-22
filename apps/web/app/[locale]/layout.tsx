@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
-import { LOCALES, directionOf, isLocale, placeholderCopy } from "@/lib/i18n";
+import { LOCALES, directionOf, getTranslator, isLocale } from "@/lib/i18n";
 import { fontVariables } from "@/lib/fonts";
 import "../globals.css";
 
@@ -20,7 +20,11 @@ type Props = {
 export async function generateMetadata({ params }: Omit<Props, "children">): Promise<Metadata> {
   const { locale } = await params;
   if (!isLocale(locale)) return {};
-  return { title: placeholderCopy[locale].title };
+  const t = getTranslator(locale);
+  return {
+    title: { default: t("meta.siteName"), template: `%s · ${t("meta.siteName")}` },
+    description: t("meta.description"),
+  };
 }
 
 /** Root layout: <html lang dir> follows the locale segment. */
@@ -29,7 +33,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   if (!isLocale(locale)) notFound();
 
   return (
-    <html lang={locale} dir={directionOf(locale)} className={fontVariables || undefined}>
+    <html lang={locale} dir={directionOf(locale)} className={fontVariables}>
       <body className="min-h-dvh bg-mist font-sans text-body text-graphite antialiased">
         {children}
       </body>

@@ -1,5 +1,6 @@
 import type { Locale } from "@sift/schema";
 import { formatSAR } from "@/lib/format";
+import { getTranslator } from "@/lib/i18n";
 
 /**
  * Saudi riyal symbol — official SAMA geometry (brand kit 05-Symbols), recoloured to
@@ -21,11 +22,6 @@ export function RiyalSymbol({ label }: { label?: string }) {
   );
 }
 
-const SYMBOL_LABEL: Record<Locale, string> = {
-  ar: "ريال سعودي",
-  en: "Saudi riyal",
-};
-
 /**
  * A riyal amount: symbol LEFT of the number with one space, in both languages.
  * Wrapped in an LTR-isolated, non-wrapping span so RTL text never reorders `⃁ -250`.
@@ -46,7 +42,7 @@ export function Riyal({
   );
   return (
     <span dir="ltr" className="whitespace-nowrap" style={{ unicodeBidi: "isolate" }} data-riyal="">
-      <RiyalSymbol label={SYMBOL_LABEL[locale]} /> {text}
+      <RiyalSymbol label={getTranslator(locale)("common.riyal")} /> {text}
     </span>
   );
 }
