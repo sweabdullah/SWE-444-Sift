@@ -2,45 +2,12 @@
 // Fails if any source file in apps/web uses physical left/right utilities or CSS properties.
 // Sift is Arabic-first (RTL): use logical ones instead — ms-/me-, ps-/pe-, start-/end-,
 // text-start/text-end, border-s/border-e, rounded-s/rounded-e, margin-inline-start, etc.
+// Patterns live in ./logical-patterns.mjs, shared with the ESLint rule `sift/no-physical-classes`.
 // Run: pnpm --filter web lint:logical   (also part of `pnpm lint` at the repo root)
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, extname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-
-const VALUE = String.raw`(?:\d+(?:\.\d+)?|px|auto|full|\d+\/\d+|\[[^\]\s]+\]|\([^)\s]+\))`;
-const START = String.raw`(?<=^|[\s"'\`{(,!:])`; // start of a class token (after a variant colon too)
-const END = String.raw`(?=$|[\s"'\`})\],;])`;
-
-/** Tailwind class tokens that hard-code a physical side. */
-const CLASS_RULES = [
-  {
-    re: new RegExp(`${START}-?(?:scroll-)?(?:m|p)(?:l|r)-${VALUE}${END}`, "g"),
-    fix: "ms-/me-, ps-/pe-",
-  },
-  { re: new RegExp(`${START}-?(?:left|right)-${VALUE}${END}`, "g"), fix: "start-/end-" },
-  {
-    re: new RegExp(`${START}(?:text|float|clear)-(?:left|right)${END}`, "g"),
-    fix: "text-start/text-end, float-start/float-end",
-  },
-  {
-    re: new RegExp(
-      String.raw`${START}(?:border|rounded)-(?:l|r|tl|tr|bl|br)(?:-[\w\[\]./#%-]+)?${END}`,
-      "g",
-    ),
-    fix: "border-s/border-e, rounded-s/rounded-e/rounded-ss…",
-  },
-  { re: new RegExp(`${START}space-x-reverse${END}`, "g"), fix: "gap-* (flex/grid)" },
-];
-
-/** Physical CSS properties in stylesheets. */
-const CSS_RULES = [
-  {
-    re: /\b(?:margin|padding|border|scroll-margin|scroll-padding)-(?:left|right)\b/g,
-    fix: "margin-inline-start/end, padding-inline-start/end, border-inline-start/end",
-  },
-  { re: /^\s*(?:left|right)\s*:/gm, fix: "inset-inline-start / inset-inline-end" },
-  { re: /\b(?:text-align|float|clear)\s*:\s*(?:left|right)\b/g, fix: "start / end" },
-];
+import { findInSource } from "./logical-patterns.mjs";
 
 const CODE_EXT = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".mdx"]);
 const SKIP_DIRS = new Set([
@@ -55,16 +22,13 @@ const SKIP_DIRS = new Set([
 
 /** Returns a list of `{ line, match, fix }` findings for one file's contents. */
 export function findPhysical(source, ext) {
-  const rules = ext === ".css" ? CSS_RULES : CODE_EXT.has(ext) ? CLASS_RULES : [];
-  const findings = [];
-  for (const { re, fix } of rules) {
-    re.lastIndex = 0;
-    for (const m of source.matchAll(re)) {
-      const line = source.slice(0, m.index).split("\n").length;
-      findings.push({ line, match: m[0].trim(), fix });
-    }
-  }
-  return findings.sort((a, b) => a.line - b.line);
+  const kind = ext === ".css" ? "css" : CODE_EXT.has(ext) ? "code" : null;
+  if (!kind) return [];
+  return findInSource(source, kind).map(({ index, match, fix }) => ({
+    line: source.slice(0, index).split("\n").length,
+    match,
+    fix,
+  }));
 }
 
 function* walk(dir) {
