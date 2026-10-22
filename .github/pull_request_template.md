@@ -6,7 +6,7 @@ Linear: SFT-
 
 ## How to verify
 
-<!-- Steps a reviewer can follow to see each acceptance criterion working. -->
+<!-- Steps anyone can follow to see each acceptance criterion working. -->
 
 1.
 
