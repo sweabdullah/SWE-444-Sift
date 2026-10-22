@@ -96,6 +96,7 @@ cp packages/db/.env.example packages/db/.env   # then set DATABASE_URL
 pnpm db:deploy                                 # apply existing migrations (prisma migrate deploy) — use this to set up a database
 pnpm db:generate                               # regenerate the client (pnpm build does this too)
 pnpm db:studio                                 # browse the data
+pnpm db:seed                                   # load the dev seed (wipes the database; see SEED.md)
 
 # Only when you change schema.prisma:
 pnpm db:migrate --name <change>                # prisma migrate dev: creates a new migration and applies it;
