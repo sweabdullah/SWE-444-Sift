@@ -13,6 +13,10 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check": "pnpm format:check && pnpm lint && pnpm build",
+    "db:generate": "pnpm --filter @sift/db db:generate",
+    "db:migrate": "pnpm --filter @sift/db db:migrate",
+    "db:deploy": "pnpm --filter @sift/db db:deploy",
+    "db:studio": "pnpm --filter @sift/db db:studio",
     "test": "pnpm -r --if-present run test"
   },
   "devDependencies": {
