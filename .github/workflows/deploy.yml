@@ -88,13 +88,13 @@ jobs:
         run: npx --yes "$VERCEL_CLI" pull --yes --environment=production
       - name: Build
         run: npx --yes "$VERCEL_CLI" build --prod
-      # Once SFT-6 (Prisma) is merged, apply migrations here, before the new code goes live.
-      # PROD_DIRECT_URL is a GitHub secret holding the production DIRECT (non-pooled) URL;
-      # the Prisma schema reads only DATABASE_URL, so it is passed under that name.
-      # - name: Apply database migrations
-      #   run: pnpm install --frozen-lockfile && pnpm --filter @sift/db db:deploy
-      #   env:
-      #     DATABASE_URL: ${{ secrets.PROD_DIRECT_URL }}
+      # Apply migrations before the new code goes live. PROD_DIRECT_URL is a GitHub secret
+      # holding the production DIRECT (non-pooled) URL; the Prisma schema reads only
+      # DATABASE_URL, so it is passed under that name.
+      - name: Apply database migrations
+        run: pnpm install --frozen-lockfile && pnpm --filter @sift/db db:deploy
+        env:
+          DATABASE_URL: ${{ secrets.PROD_DIRECT_URL }}
       - name: Deploy
         run: |
           url=$(npx --yes "$VERCEL_CLI" deploy --prebuilt --prod --meta commit="$DEPLOY_SHA")
