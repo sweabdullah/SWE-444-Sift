@@ -1,12 +1,12 @@
 ## What this does
 
-<!-- One or two sentences. Title format: "BRO-123: short description" so Linear links this PR. -->
+<!-- One or two sentences. Title format: "SFT-123: short description" so Linear links this PR. -->
 
-Linear: BRO-
+Linear: SFT-
 
 ## How to verify
 
-<!-- Steps a reviewer can follow to see each acceptance criterion working. -->
+<!-- Steps anyone can follow to see each acceptance criterion working. -->
 
 1.
 
