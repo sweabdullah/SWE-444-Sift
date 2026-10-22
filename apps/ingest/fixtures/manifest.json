@@ -195,12 +195,14 @@
         { "monthlySpendFrom": 10000, "monthlySpendTo": null, "ratePct": 2 }
       ],
       "cashbackMonthlyCap": 200,
+      "cashbackMonthlyCapNote": "Conditional, not a flat cap: the page says '200 Cashback cap per Card per Month, When Spending  10,000' (the riyal sign is a private-use glyph U+E000 in the markup). So it applies to the >=10,000 monthly-spend tier.",
       "monthlyProfitRatePct": null,
       "aprPct": null,
       "foreignTransactionFeePct": null,
+      "foreignTransactionFeeNote": "Ambiguous; kept null pending a Lane D rule. The page's FX-calculator box says: 'Note: Please add 2% as a bank service fee to the foreign exchange rate for an accurate estimation'. An extractor could reasonably read this as a 2% FX fee for SNB cards.",
       "replacementFee": null,
       "latePaymentFee": null,
-      "notes": "Annual fee 0 because the page says so explicitly. No fee schedule on this page (SNB publishes it on a separate 'Banking Fees' page), so the other fees are null. The '2% bank service fee' line is about the FX calculator, not a card fee."
+      "notes": "Annual fee 0 because the page says so explicitly. No fee schedule on this page (SNB publishes it on a separate 'Banking Fees' page), so the other fees are null. See cashbackMonthlyCapNote and foreignTransactionFeeNote."
     }
   },
   {
@@ -219,6 +221,7 @@
       "monthlyProfitRatePct": null,
       "aprPct": null,
       "foreignTransactionFeePct": null,
+      "foreignTransactionFeeNote": "Same ambiguity as the SNB cashback EN page. The FX-calculator box says: 'ملاحظة: يرجى إضافة 2% كرسوم خدمة مصرفية إلى سعر صرف العملية للحصول على تقدير دقيق'. Kept null pending a Lane D rule.",
       "replacementFee": null,
       "latePaymentFee": null,
       "minAge": 21,

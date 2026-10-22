@@ -3,6 +3,8 @@
 Saved bank pages so the crawler (SFT-49/50/51/59) and the extractor (SFT-56/57) can be built and tested with **no live site and no AI key**.
 
 > **Local testing only.** These are copies of public pages owned by the banks named below. They are kept here only as test inputs for a university project (KSU SWE-444). They are not republished, served, or used in the product. If a bank objects, or before the repo is made public, delete `banks/<bank>/`. The banks' own terms and copyright apply to every file under `banks/`.
+>
+> **Risk:** if the repo is made public (for example to get branch protection on a free plan), these copies become public too. The team should decide first: keep the repo private, or move `banks/` out of git (a private artifact or LFS) before going public.
 
 ## Layout
 
@@ -55,7 +57,11 @@ Retrieved **2026-10-21, 09:43–09:50 UTC**. Each HTML file starts with a commen
 
 - Every executable `<script>` (inline or `src`) is replaced with `<!-- sift-fixture: script removed -->`. This removes analytics and tag managers (Google Analytics, GTM, gtag) and Liferay's per-session `authToken`.
 - JSON data islands (`application/json`, `application/ld+json`, e.g. `__NEXT_DATA__`, `__JSS_STATE__`) are kept, because an extractor may want them. Inside them, the SNB Google Maps API key and GTM container ID are replaced with `REDACTED_…` placeholders.
-- `<noscript>` tracking iframes are removed, and reCAPTCHA `data-sitekey` values are redacted.
+- `<noscript>` tracking iframes are removed.
+- Every reCAPTCHA site key is redacted: the `data-sitekey` attribute becomes `REDACTED`, and both the `?k=` parameter of Riyad's fallback iframe and the `RecaptchaSiteKey` field in SNB's JSON become `REDACTED_RECAPTCHA_SITEKEY`. Al Rajhi's `ahrefs-site-verification` meta token is redacted too.
+- Inline event handlers are disabled: `on<event>="…"` attributes become `data-sift-removed-on<event>=""` (17, all in Riyad pages). `javascript:` attribute URLs become `#sift-removed-javascript` (4, Riyad AR). Two inert `javascript:` strings remain on purpose in the Al Rajhi files:
+  - `href="/en/javascript:;return%20false;"` is a relative path, not executable. It is a real CMS bug and a good "don't follow this link" case for the crawler.
+  - `"href":"javascript:;return false;"` sits inside the `__NEXT_DATA__` JSON, so it is data, not code.
 - Everything else (markup, classes, text, tables, links) is unchanged.
 - Sitemaps are **excerpts**, to keep the folder small (the full files are 2.4 MB, 0.86 MB and 0.18 MB). Each one keeps the first few entries plus every card URL, and a comment at the top gives the original entry count and the filter used.
 
