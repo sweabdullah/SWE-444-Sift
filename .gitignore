@@ -33,3 +33,6 @@ Thumbs.db
 
 # Next.js generated types
 next-env.d.ts
+
+# Vercel CLI link (project/org ids, pulled env vars)
+.vercel/

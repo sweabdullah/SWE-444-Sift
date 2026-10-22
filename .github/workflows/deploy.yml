@@ -1,0 +1,101 @@
+# Deploys apps/web to Vercel, only after the real CI workflow ("ci", .github/workflows/ci.yml,
+# job `ci`: pnpm check + tests + migrations) finishes successfully for the same commit (SFT-9).
+#   - ci passed on a pull_request from this repo -> Preview deployment (URL in the job summary)
+#   - ci passed on a push to main                -> Production deployment (commit SHA + URL in summary)
+#   - workflow_dispatch on main                  -> manual Production redeploy of main
+# Vercel's own Git auto-deploy is switched off in apps/web/vercel.json, so this workflow is the
+# only path to production. Deploy jobs stay skipped until the repository variable
+# VERCEL_DEPLOY is "true" and the secrets VERCEL_TOKEN, VERCEL_ORG_ID and VERCEL_PROJECT_ID
+# exist. Note: workflow_run only fires once this file is on the default branch (main).
+# Setup steps: docs/deploy.md.
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ github.event.workflow_run.head_branch || github.ref }}
+  cancel-in-progress: ${{ github.event.workflow_run.event == 'pull_request' }}
+
+jobs:
+  preview:
+    name: Preview deployment
+    # The preview job builds PR code with the Vercel token, so only same-repo PRs qualify
+    # (fork PRs never get the token).
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      vars.VERCEL_DEPLOY == 'true'
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      DEPLOY_SHA: ${{ github.event.workflow_run.head_sha }}
+      VERCEL_CLI: vercel@62.0.0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Pull Preview settings and env vars from Vercel
+        run: npx --yes "$VERCEL_CLI" pull --yes --environment=preview
+      - name: Build
+        run: npx --yes "$VERCEL_CLI" build
+      - name: Deploy
+        run: |
+          url=$(npx --yes "$VERCEL_CLI" deploy --prebuilt --meta commit="$DEPLOY_SHA")
+          echo "Preview for commit \`$DEPLOY_SHA\`: $url" >> "$GITHUB_STEP_SUMMARY"
+
+  production:
+    name: Production deployment
+    if: >-
+      vars.VERCEL_DEPLOY == 'true' && (
+        (github.event_name == 'workflow_run' &&
+         github.event.workflow_run.conclusion == 'success' &&
+         github.event.workflow_run.event == 'push' &&
+         github.event.workflow_run.head_branch == 'main' &&
+         github.event.workflow_run.head_repository.full_name == github.repository) ||
+        (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
+      )
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      DEPLOY_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+      VERCEL_CLI: vercel@62.0.0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Pull Production settings and env vars from Vercel
+        run: npx --yes "$VERCEL_CLI" pull --yes --environment=production
+      - name: Build
+        run: npx --yes "$VERCEL_CLI" build --prod
+      # Once SFT-6 (Prisma) is merged, apply migrations here, before the new code goes live.
+      # PROD_DIRECT_URL is a GitHub secret holding the production DIRECT (non-pooled) URL;
+      # the Prisma schema reads only DATABASE_URL, so it is passed under that name.
+      # - name: Apply database migrations
+      #   run: pnpm install --frozen-lockfile && pnpm --filter @sift/db db:deploy
+      #   env:
+      #     DATABASE_URL: ${{ secrets.PROD_DIRECT_URL }}
+      - name: Deploy
+        run: |
+          url=$(npx --yes "$VERCEL_CLI" deploy --prebuilt --prod --meta commit="$DEPLOY_SHA")
+          echo "Production is now commit \`$DEPLOY_SHA\` ($url)" >> "$GITHUB_STEP_SUMMARY"
