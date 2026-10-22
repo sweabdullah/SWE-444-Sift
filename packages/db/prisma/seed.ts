@@ -3,7 +3,8 @@
  *
  * Idempotent: everything runs in one transaction that first TRUNCATEs every Sift table
  * and then inserts the fixed records from seed-data.ts with stable IDs. Running it twice
- * leaves the same rows. It wipes local data, so it refuses to run with NODE_ENV=production.
+ * leaves the same rows (all IDs are deterministic). It wipes the database, so it refuses to run
+ * with NODE_ENV=production, and refuses a non-local DATABASE_URL unless SIFT_ALLOW_SEED=1.
  *
  * What is seeded and why: ../SEED.md.
  */
@@ -58,6 +59,11 @@ async function main(): Promise<void> {
   if (process.env.NODE_ENV === "production") {
     throw new Error("Refusing to seed: NODE_ENV=production. The seed truncates every table.");
   }
+  if (!isLocalDatabase(process.env.DATABASE_URL) && process.env.SIFT_ALLOW_SEED !== "1") {
+    throw new Error(
+      "Refusing to seed: DATABASE_URL is not localhost/127.0.0.1. The seed truncates every table; set SIFT_ALLOW_SEED=1 to override.",
+    );
+  }
 
   const prisma = new PrismaClient();
   // Hash outside the transaction; bcryptjs is a well-known pure-JS bcrypt.
@@ -107,8 +113,8 @@ async function main(): Promise<void> {
               fee: { create: c.fee },
               translations: {
                 create: [
-                  { locale: "ar", ...c.ar },
-                  { locale: "en", ...c.en },
+                  { id: `${c.id}_ar`, locale: "ar", ...c.ar },
+                  { id: `${c.id}_en`, locale: "en", ...c.en },
                 ],
               },
             },
@@ -117,6 +123,7 @@ async function main(): Promise<void> {
           for (const [sortOrder, t] of c.tiers.entries()) {
             await tx.rewardTier.create({
               data: {
+                id: `${c.id}_tier_${sortOrder}`,
                 cardId: c.id,
                 rewardType: t.rewardType,
                 spendingCategory: t.spendingCategory,
@@ -128,8 +135,8 @@ async function main(): Promise<void> {
                 sortOrder,
                 translations: {
                   create: [
-                    { locale: "ar", condition: t.condition.ar },
-                    { locale: "en", condition: t.condition.en },
+                    { id: `${c.id}_tier_${sortOrder}_ar`, locale: "ar", condition: t.condition.ar },
+                    { id: `${c.id}_tier_${sortOrder}_en`, locale: "en", condition: t.condition.en },
                   ],
                 },
               },
@@ -146,6 +153,7 @@ async function main(): Promise<void> {
           c.tiers.forEach((_t, i) => fieldNames.push(`reward_tier.${i}.rate`));
           await tx.cardFieldSource.createMany({
             data: fieldNames.map((fieldName) => ({
+              id: `${c.id}_src_${fieldName}`,
               cardId: c.id,
               fieldName,
               sourceId: c.figureSources[fieldName] ?? c.sourceId,
@@ -201,7 +209,8 @@ async function main(): Promise<void> {
             createdAt: new Date("2026-10-20T08:00:00.000Z"),
             reviewedById: "user_admin",
             reviewedAt: approvedAt,
-            reviewNote: "Seed fixture: approved annual-fee change (old value is synthetic).",
+            reviewNote:
+              "SYNTHETIC seed fixture: approved annual-fee change; the old value 250.00 is made up.",
           },
         });
         await tx.cardChange.create({
@@ -248,6 +257,15 @@ async function main(): Promise<void> {
     );
   } finally {
     await prisma.$disconnect();
+  }
+}
+
+function isLocalDatabase(url: string | undefined): boolean {
+  if (!url) return false;
+  try {
+    return ["localhost", "127.0.0.1", "[::1]"].includes(new URL(url).hostname);
+  } catch {
+    return false;
   }
 }
 

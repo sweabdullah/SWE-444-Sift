@@ -513,7 +513,7 @@ export const cards: SeedCard[] = [
     status: "published",
     rewardType: "cashback",
     network: "visa",
-    shariaCompliant: true, // the bank names the product "Cashback Visa Signature Islamic Credit Card"
+    shariaCompliant: null, // the pages do not state Sharia compliance; never inferred from the product name
     minMonthlyIncome: null,
     sourceId: "src_riyad_cashback_signature",
     figureSources: {},
@@ -533,7 +533,7 @@ export const cards: SeedCard[] = [
       benefitsDescription:
         "Up to 10% cashback on selected categories, 12 complimentary airport lounge visits a year through Visa Airport Companion, and travel offers.",
       rewardConditions:
-        "Rate depends on overall monthly spend (all eligible transactions in the billing month) and applies only to eligible transactions in the cashback categories: groceries, dining, fuel/taxis, entertainment and pharmacies. Caps are per category per month.",
+        "Rate depends on overall monthly spend (all eligible transactions in the billing month) and applies only to eligible transactions in the cashback categories: groceries, dining, fuel/taxis, entertainment and pharmacies. Caps are per category per month. Total monthly cashback is capped at SAR 500, 750 or 1,000 for the three spend bands.",
       eligibility:
         "18 years of age or older, and compliant with Riyad Bank's and SIMAH's policies for credit card issuance.",
       feeWaiverCondition: null,
@@ -543,7 +543,7 @@ export const cards: SeedCard[] = [
       benefitsDescription:
         "استرداد نقدي يصل إلى 10% على فئات مختارة، و12 زيارة مجانية سنويًا لصالات المطارات عبر Visa Airport Companion، وعروض سفر.",
       rewardConditions:
-        "تعتمد النسبة على إجمالي الإنفاق الشهري (جميع العمليات المؤهلة في شهر الفوترة) وتطبق فقط على العمليات المؤهلة في فئات الاسترداد: البقالة والمطاعم والوقود/سيارات الأجرة والترفيه والصيدليات. الحد الأقصى لكل فئة شهريًا.",
+        "تعتمد النسبة على إجمالي الإنفاق الشهري (جميع العمليات المؤهلة في شهر الفوترة) وتطبق فقط على العمليات المؤهلة في فئات الاسترداد: البقالة والمطاعم والوقود/سيارات الأجرة والترفيه والصيدليات. الحد الأقصى لكل فئة شهريًا. إجمالي الاسترداد الشهري بحد أقصى 500 أو 750 أو 1,000 ريال حسب شريحة الإنفاق.",
       eligibility:
         "العمر 18 سنة أو أكثر، والالتزام بسياسات بنك الرياض وسمة لإصدار البطاقات الائتمانية.",
       feeWaiverCondition: null,
@@ -1016,18 +1016,22 @@ export const newCardPayload = {
   },
 };
 
-/** A draft that failed validation: missing Arabic name, annual fee extracted as text. */
+/**
+ * A draft that failed validation. Real figures from the Mazeed page (2026-10-22): annual fee 200
+ * (its disclosure table; the listing page says SAR 299), cashback card. It is invalid because the
+ * extractor returned the fee as text ("SAR 200") and produced no Arabic translation.
+ */
 export const failedPayload = {
   bankSlug: "emirates-nbd-ksa",
   canonicalUrl: "https://www.emiratesnbd.com.sa/en/cards/credit-cards/mazeed-platinum-credit-card",
   sourceUrl: "https://www.emiratesnbd.com.sa/en/cards/credit-cards/mazeed-platinum-credit-card",
   sourceType: "html",
-  rewardType: "points",
+  rewardType: "cashback",
   network: "visa",
   shariaCompliant: null,
   minMonthlyIncome: null,
   fees: {
-    annualFee: "SAR 299",
+    annualFee: "SAR 200",
     issuanceFee: null,
     supplementaryCardFee: null,
     fxMarkupPct: null,
@@ -1036,7 +1040,7 @@ export const failedPayload = {
   },
   translations: {
     en: {
-      name: "Mazeed Platinum Credit Card",
+      name: "Mazeed Platinum Cashback Credit Card",
       benefitsDescription: null,
       rewardConditions: null,
       eligibility: null,
