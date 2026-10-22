@@ -58,9 +58,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # No-op until @sift/db defines a db:migrate:deploy script (schema work, T-2).
+      # Runs the `db:deploy` script SFT-6 (PR #4) adds to @sift/db; --if-present keeps it a no-op until then.
       - name: Apply database migrations
-        run: pnpm --filter @sift/db --if-present run db:migrate:deploy
+        run: pnpm --filter @sift/db --if-present run db:deploy
 
       - name: Format check, lint, build
         run: pnpm check
