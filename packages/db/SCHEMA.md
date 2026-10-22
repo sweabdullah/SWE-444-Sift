@@ -90,6 +90,7 @@ cp packages/db/.env.example packages/db/.env   # then set DATABASE_URL
 pnpm db:migrate                                # apply migrations (creates new ones in dev)
 pnpm db:generate                               # regenerate the client (pnpm build does this too)
 pnpm db:studio                                 # browse the data
+pnpm db:seed                                   # load the dev seed (wipes the database; see SEED.md)
 ```
 
 Never edit a migration that has been merged; add a new one.

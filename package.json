@@ -16,6 +16,7 @@
     "db:generate": "pnpm --filter @sift/db db:generate",
     "db:migrate": "pnpm --filter @sift/db db:migrate",
     "db:deploy": "pnpm --filter @sift/db db:deploy",
+    "db:seed": "pnpm --filter @sift/db db:seed",
     "db:studio": "pnpm --filter @sift/db db:studio"
   },
   "devDependencies": {
