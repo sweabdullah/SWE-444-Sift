@@ -13,6 +13,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@sift/db": "workspace:*",
     "@sift/schema": "workspace:*",
     "next": "16.4.2",
     "react": "19.3.1",

@@ -8,7 +8,10 @@
 // - A figure the bank has not published is NULL. NULL is never 0. Figure columns have no defaults.
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // "native" for the machine that builds; rhel-openssl-3.0.x for the Vercel functions that run
+  // the site (Amazon Linux 2023). The deploy workflow builds on Ubuntu and uploads the result.
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {

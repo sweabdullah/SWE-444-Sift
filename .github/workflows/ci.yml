@@ -62,6 +62,16 @@ jobs:
       - name: Apply database migrations
         run: pnpm --filter @sift/db --if-present run db:deploy
 
+      # The production catalogue seed against the throwaway database: the first run loads the
+      # published cards, the second must find them and change nothing.
+      - name: Catalogue seed (load, then re-run as a no-op)
+        run: |
+          pnpm --filter @sift/db db:generate
+          pnpm --filter @sift/db db:seed:catalogue | tee seed-1.log
+          grep -q "Catalogue seeded: 4 banks, 8 published cards." seed-1.log
+          pnpm --filter @sift/db db:seed:catalogue | tee seed-2.log
+          grep -q "Catalogue seed skipped" seed-2.log
+
       - name: Format check, lint, build
         run: pnpm check
 

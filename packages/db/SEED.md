@@ -11,6 +11,14 @@ pnpm --filter @sift/db db:seed:check
 
 **It wipes the database.** The seed runs in one transaction that `TRUNCATE`s every Sift table and then inserts the records below, so running it twice gives the same rows. It refuses to run when `NODE_ENV=production`, and refuses any `DATABASE_URL` whose host is not `localhost` / `127.0.0.1` unless `SIFT_ALLOW_SEED=1` is set. Every ID is deterministic (including child rows: `<card id>_ar`, `<card id>_tier_<n>`, `<card id>_tier_<n>_en`, `<card id>_src_<field name>`), so tests and pages can refer to them.
 
+## Production catalogue seed
+
+`pnpm --filter @sift/db db:seed:catalogue` ([`prisma/seed-catalogue.ts`](prisma/seed-catalogue.ts)) loads only the **published** cards below into production, with their banks, entry URLs, the sources they cite, fees, translations, reward tiers and per-figure sources. It shares its insert code with the development seed ([`prisma/catalogue.ts`](prisma/catalogue.ts)), so both load the same figures.
+
+- **No users, no passwords, no shortlists, no crawl runs, no pending requests**, and no archived card. Every card starts with 0 consecutive absences.
+- **It never deletes anything.** If the database already holds any bank or card it prints `Catalogue seed skipped` and exits cleanly. The deploy workflow runs it after the migrations on every production deploy, so it loads the catalogue once, into the empty production database, and is a no-op after that.
+- CI runs it twice against the throwaway database: the first run must load 4 banks and 8 published cards, the second must skip.
+
 ## Where the figures come from
 
 Every card figure was read from the bank's official page or fee schedule on **2026-10-21** (`card.verified_at`, `source.fetched_at`). Each published figure has a `card_field_source` row pointing at the document it came from (70 rows). A figure the bank does not state is `NULL`, never `0`, and nothing is inferred.
