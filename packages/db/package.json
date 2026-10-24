@@ -14,7 +14,8 @@
     "db:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:seed": "prisma db seed",
-    "db:seed:check": "tsx prisma/seed-check.ts"
+    "db:seed:check": "tsx prisma/seed-check.ts",
+    "db:seed:catalogue": "tsx prisma/seed-catalogue.ts"
   },
   "dependencies": {
     "@prisma/client": "6.19.3"

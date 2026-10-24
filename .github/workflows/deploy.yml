@@ -95,6 +95,12 @@ jobs:
         run: pnpm install --frozen-lockfile && pnpm --filter @sift/db db:deploy
         env:
           DATABASE_URL: ${{ secrets.PROD_DIRECT_URL }}
+      # Loads the published cards into an empty production database (banks, cards, fees,
+      # translations, tiers, sources; no users). Does nothing once any bank or card exists.
+      - name: Seed the card catalogue (first deploy only)
+        run: pnpm --filter @sift/db db:generate && pnpm --filter @sift/db db:seed:catalogue
+        env:
+          DATABASE_URL: ${{ secrets.PROD_DIRECT_URL }}
       - name: Deploy
         run: |
           url=$(npx --yes "$VERCEL_CLI" deploy --prebuilt --prod --meta commit="$DEPLOY_SHA")

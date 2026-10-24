@@ -11,6 +11,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
+import { insertCatalogue } from "./catalogue.js";
 import {
   approvedChange,
   banks,
@@ -21,7 +22,6 @@ import {
   failedValidationErrors,
   newCardPayload,
   shortlist,
-  sources,
   users,
   VERIFIED_AT,
 } from "./seed-data.js";
@@ -46,15 +46,6 @@ const TABLES = [
   "bank",
 ];
 
-const FEE_COLUMNS = {
-  annualFee: "fee.annual_fee",
-  issuanceFee: "fee.issuance_fee",
-  supplementaryCardFee: "fee.supplementary_card_fee",
-  fxMarkupPct: "fee.fx_markup_pct",
-  cashAdvanceFee: "fee.cash_advance_fee",
-  latePaymentFee: "fee.late_payment_fee",
-} as const;
-
 async function main(): Promise<void> {
   if (process.env.NODE_ENV === "production") {
     throw new Error("Refusing to seed: NODE_ENV=production. The seed truncates every table.");
@@ -76,90 +67,9 @@ async function main(): Promise<void> {
           `TRUNCATE TABLE ${TABLES.map((t) => `"${t}"`).join(", ")} RESTART IDENTITY CASCADE`,
         );
 
-        // Banks and their registered entry URLs.
-        await tx.bank.createMany({
-          data: banks.map(({ entryUrls: _entryUrls, ...bank }) => bank),
-        });
-        await tx.bankEntryUrl.createMany({
-          data: banks.flatMap((b) =>
-            b.entryUrls.map((url, i) => ({ id: `${b.id}_entry_${i}`, bankId: b.id, url })),
-          ),
-        });
-
-        await tx.source.createMany({
-          data: sources.map((s) => ({ ...s, fetchedAt: VERIFIED_AT })),
-        });
-
-        // Cards and everything hanging off them.
-        for (const c of cards) {
-          await tx.card.create({
-            data: {
-              id: c.id,
-              bankId: c.bankId,
-              canonicalUrl: c.canonicalUrl,
-              normalisedName: c.normalisedName,
-              status: c.status,
-              rewardType: c.rewardType,
-              network: c.network,
-              shariaCompliant: c.shariaCompliant,
-              minMonthlyIncome: c.minMonthlyIncome,
-              sourceId: c.sourceId,
-              verifiedAt: VERIFIED_AT,
-              consecutiveAbsences: c.consecutiveAbsences,
-              lastSeenAt:
-                c.consecutiveAbsences > 0 ? new Date("2026-10-18T08:00:00.000Z") : VERIFIED_AT,
-              publishedAt: c.publishedAt,
-              archivedAt: c.archivedAt,
-              fee: { create: c.fee },
-              translations: {
-                create: [
-                  { id: `${c.id}_ar`, locale: "ar", ...c.ar },
-                  { id: `${c.id}_en`, locale: "en", ...c.en },
-                ],
-              },
-            },
-          });
-
-          for (const [sortOrder, t] of c.tiers.entries()) {
-            await tx.rewardTier.create({
-              data: {
-                id: `${c.id}_tier_${sortOrder}`,
-                cardId: c.id,
-                rewardType: t.rewardType,
-                spendingCategory: t.spendingCategory,
-                rate: t.rate,
-                rateUnit: t.rateUnit,
-                cap: t.cap,
-                capPeriod: t.capPeriod,
-                minSpend: t.minSpend,
-                sortOrder,
-                translations: {
-                  create: [
-                    { id: `${c.id}_tier_${sortOrder}_ar`, locale: "ar", condition: t.condition.ar },
-                    { id: `${c.id}_tier_${sortOrder}_en`, locale: "en", condition: t.condition.en },
-                  ],
-                },
-              },
-            });
-          }
-
-          // One card_field_source row per published figure, so every figure has its URL.
-          const fieldNames: string[] = [];
-          for (const [key, field] of Object.entries(FEE_COLUMNS)) {
-            if (c.fee[key as keyof typeof FEE_COLUMNS] !== null) fieldNames.push(field);
-          }
-          if (c.shariaCompliant !== null) fieldNames.push("card.sharia_compliant");
-          if (c.minMonthlyIncome !== null) fieldNames.push("card.min_monthly_income");
-          c.tiers.forEach((_t, i) => fieldNames.push(`reward_tier.${i}.rate`));
-          await tx.cardFieldSource.createMany({
-            data: fieldNames.map((fieldName) => ({
-              id: `${c.id}_src_${fieldName}`,
-              cardId: c.id,
-              fieldName,
-              sourceId: c.figureSources[fieldName] ?? c.sourceId,
-            })),
-          });
-        }
+        // Banks, sources and every card (published and archived), with the crawl state the
+        // pipeline fixtures below rely on.
+        await insertCatalogue(tx, cards, { pipelineState: true });
 
         // Users (DEV-ONLY password) and the registered user's shortlist.
         await tx.user.createMany({

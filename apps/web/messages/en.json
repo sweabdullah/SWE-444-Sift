@@ -13,7 +13,15 @@
   },
   "home": {
     "title": "Sift",
-    "tagline": "A bilingual catalogue of Saudi credit cards. Under construction."
+    "tagline": "A bilingual catalogue of Saudi credit cards where every figure traces back to the bank that published it."
+  },
+  "catalogue": {
+    "heading": "Published cards",
+    "count": "Cards: {count}",
+    "sortNote": "Sorted by bank name, then card name. This is not a ranking.",
+    "annualFee": "Annual fee",
+    "notPublished": "Not published by the bank",
+    "empty": "No cards are published yet."
   },
   "notFound": {
     "title": "Page not found",
