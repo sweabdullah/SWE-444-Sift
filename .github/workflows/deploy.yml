@@ -51,6 +51,11 @@ jobs:
           node-version-file: .nvmrc
       - name: Pull Preview settings and env vars from Vercel
         run: npx --yes "$VERCEL_CLI" pull --yes --environment=preview
+      # Sensitive Vercel env vars (DATABASE_URL, AUTH_SECRET) come back from `vercel pull` as the
+      # placeholder "[SENSITIVE]". Left in, the build would carry the placeholder instead of the
+      # real value; removed, Vercel injects the real value when the function runs.
+      - name: Drop sensitive placeholders from the pulled env
+        run: sed -i '/="\[SENSITIVE\]"$/d' .vercel/.env.*.local
       - name: Build
         run: npx --yes "$VERCEL_CLI" build
       - name: Deploy
@@ -86,6 +91,11 @@ jobs:
           node-version-file: .nvmrc
       - name: Pull Production settings and env vars from Vercel
         run: npx --yes "$VERCEL_CLI" pull --yes --environment=production
+      # Sensitive Vercel env vars (DATABASE_URL, AUTH_SECRET) come back from `vercel pull` as the
+      # placeholder "[SENSITIVE]". Left in, the build would carry the placeholder instead of the
+      # real value; removed, Vercel injects the real value when the function runs.
+      - name: Drop sensitive placeholders from the pulled env
+        run: sed -i '/="\[SENSITIVE\]"$/d' .vercel/.env.*.local
       - name: Build
         run: npx --yes "$VERCEL_CLI" build --prod
       # Apply migrations before the new code goes live. PROD_DIRECT_URL is a GitHub secret
