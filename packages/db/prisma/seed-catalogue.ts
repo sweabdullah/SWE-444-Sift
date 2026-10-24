@@ -4,7 +4,7 @@
  * Loads only the PUBLISHED cards from seed-data.ts, with their banks, sources, fees,
  * translations, reward tiers and per-figure sources. Unlike the development seed it creates no
  * users, no passwords, no shortlists, no crawl runs and no pending requests, and it never
- * deletes anything: if the database already holds a bank or a card it does nothing and exits
+ * deletes anything: if the database already holds a bank, a card or a source it does nothing and exits
  * cleanly, so the deploy workflow can run it on every deploy. From the first real admin edit
  * onwards, the database, not this file, is the source of truth.
  *
@@ -18,13 +18,14 @@ import { cards } from "./seed-data.js";
 async function main(): Promise<void> {
   const prisma = new PrismaClient();
   try {
-    const [existingBanks, existingCards] = await Promise.all([
+    const [existingBanks, existingCards, existingSources] = await Promise.all([
       prisma.bank.count(),
       prisma.card.count(),
+      prisma.source.count(),
     ]);
-    if (existingBanks > 0 || existingCards > 0) {
+    if (existingBanks > 0 || existingCards > 0 || existingSources > 0) {
       console.log(
-        `Catalogue seed skipped: the database already has ${existingBanks} banks and ${existingCards} cards.`,
+        `Catalogue seed skipped: the database already has ${existingBanks} banks, ${existingCards} cards and ${existingSources} sources.`,
       );
       return;
     }
