@@ -80,6 +80,27 @@ export function CatalogueFiltersForm({ locale, filters }: Props) {
         </div>
       </fieldset>
 
+      <fieldset className="flex flex-col gap-2">
+        <legend className="text-start text-label font-semibold">
+          {t("catalogue.filters.shariaLegend")}
+        </legend>
+        <p className="text-start text-label text-platinum-deep">
+          {t("catalogue.filters.shariaHint")}
+        </p>
+        <div className="pt-1">
+          <label className="flex min-h-11 items-center gap-2">
+            <input
+              type="checkbox"
+              name={FILTER_PARAMS.sharia}
+              value="1"
+              defaultChecked={filters.sharia}
+              className="size-5 accent-graphite"
+            />
+            <span>{t("catalogue.filters.shariaLabel")}</span>
+          </label>
+        </div>
+      </fieldset>
+
       <div className="flex flex-wrap items-center gap-3 border-t border-line pt-4">
         <button
           type="submit"

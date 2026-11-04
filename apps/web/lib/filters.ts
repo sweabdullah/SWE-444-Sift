@@ -24,6 +24,8 @@ export interface CatalogueFilters {
   feeMax: number | null;
   /** The visitor's monthly income, in SAR: show cards whose minimum is at or below it. */
   income: number | null;
+  /** Show only cards the bank publishes as Sharia-compliant. `false` = no Sharia filter. */
+  sharia: boolean;
 }
 
 /** Query parameter names. */
@@ -32,6 +34,7 @@ export const FILTER_PARAMS = {
   feeMin: "feeMin",
   feeMax: "feeMax",
   income: "income",
+  sharia: "sharia",
 } as const;
 
 export type SearchParams = Record<string, string | string[] | undefined>;
@@ -48,6 +51,18 @@ function amountOf(params: SearchParams, name: string): number | null {
   if (!raw) return null;
   const amount = Number(raw);
   return Number.isFinite(amount) && amount >= 0 ? amount : null;
+}
+
+/**
+ * The values that switch a yes/no filter on. The form submits "1"; "true" and "on" (a checkbox
+ * with no value) are accepted too, so a hand-written link works. Anything else means off.
+ */
+const ON_VALUES = new Set(["1", "true", "on"]);
+
+/** The first value of a parameter as a switch: on for a recognised "on" value, otherwise off. */
+function switchOf(params: SearchParams, name: string): boolean {
+  const raw = valuesOf(params, name)[0]?.trim().toLowerCase();
+  return raw !== undefined && ON_VALUES.has(raw);
 }
 
 function isFilterRewardType(value: string): value is FilterRewardType {
@@ -70,6 +85,7 @@ export function parseFilters(params: SearchParams): CatalogueFilters {
     feeMin,
     feeMax,
     income: amountOf(params, FILTER_PARAMS.income),
+    sharia: switchOf(params, FILTER_PARAMS.sharia),
   };
 }
 
@@ -83,13 +99,23 @@ export function hasIncomeFilter(filters: CatalogueFilters): boolean {
   return filters.income !== null;
 }
 
+/** True when the Sharia-compliant filter is on. */
+export function hasShariaFilter(filters: CatalogueFilters): boolean {
+  return filters.sharia;
+}
+
 /** True when at least one filter narrows the catalogue. */
 export function hasActiveFilters(filters: CatalogueFilters): boolean {
-  return filters.rewardTypes.length > 0 || hasFeeFilter(filters) || hasIncomeFilter(filters);
+  return (
+    filters.rewardTypes.length > 0 ||
+    hasFeeFilter(filters) ||
+    hasIncomeFilter(filters) ||
+    hasShariaFilter(filters)
+  );
 }
 
 /** Which filter a condition comes from, so one can be left out (see the build*UnknownWhere). */
-type FilterName = "reward" | "fee" | "income";
+type FilterName = "reward" | "fee" | "income" | "sharia";
 
 function conditionsFor(filters: CatalogueFilters, omit?: FilterName): Prisma.CardWhereInput[] {
   const and: Prisma.CardWhereInput[] = [];
@@ -118,6 +144,13 @@ function conditionsFor(filters: CatalogueFilters, omit?: FilterName): Prisma.Car
   // assumed to qualify.
   if (omit !== "income" && filters.income !== null) {
     and.push({ minMonthlyIncome: { lte: filters.income } });
+  }
+
+  // Only cards the bank publishes as Sharia-compliant (`true`). A card the bank says is not
+  // compliant (`false`) is left out, and so is one where the bank does not say (NULL): it is
+  // never guessed to be compliant.
+  if (omit !== "sharia" && hasShariaFilter(filters)) {
+    and.push({ shariaCompliant: true });
   }
 
   return and;
@@ -152,4 +185,14 @@ export function buildUnknownFeeWhere(filters: CatalogueFilters): Prisma.CardWher
 export function buildUnknownIncomeWhere(filters: CatalogueFilters): Prisma.CardWhereInput | null {
   if (!hasIncomeFilter(filters)) return null;
   return toWhere([...conditionsFor(filters, "income"), { minMonthlyIncome: null }]);
+}
+
+/**
+ * Cards the Sharia filter hides only because the bank does not state whether they are
+ * Sharia-compliant: they match every other active filter, but `shariaCompliant` is NULL. Cards the
+ * bank says are not compliant (`false`) are not counted. `null` when the Sharia filter is off.
+ */
+export function buildUnknownShariaWhere(filters: CatalogueFilters): Prisma.CardWhereInput | null {
+  if (!hasShariaFilter(filters)) return null;
+  return toWhere([...conditionsFor(filters, "sharia"), { shariaCompliant: null }]);
 }

@@ -6,7 +6,9 @@ import {
   buildCardWhere,
   buildUnknownFeeWhere,
   buildUnknownIncomeWhere,
+  buildUnknownShariaWhere,
   hasActiveFilters,
+  hasShariaFilter,
   parseFilters,
 } from "./filters";
 
@@ -172,6 +174,75 @@ describe("buildUnknownIncomeWhere", () => {
   it("counts cards with no published minimum income that match every other filter", () => {
     expect(buildUnknownIncomeWhere(parseFilters({ income: "5000", feeMax: "0" }))).toEqual({
       AND: [{ fee: { is: { annualFee: { lte: 0 } } } }, { minMonthlyIncome: null }],
+    });
+  });
+});
+
+describe("parseFilters — Sharia-compliant", () => {
+  it("is off by default", () => {
+    const filters = parseFilters({});
+    expect(filters.sharia).toBe(false);
+    expect(hasShariaFilter(filters)).toBe(false);
+  });
+
+  it("is on for the form's value, and for 'true' and 'on'", () => {
+    for (const on of ["1", "true", "on", "TRUE", " on "]) {
+      expect(parseFilters({ sharia: on }).sharia).toBe(true);
+    }
+  });
+
+  it("is off for empty, false and unrecognised values", () => {
+    for (const off of ["", "0", "false", "off", "no", "yes please"]) {
+      expect(parseFilters({ sharia: off }).sharia).toBe(false);
+    }
+  });
+
+  it("counts as an active filter", () => {
+    expect(hasActiveFilters(parseFilters({ sharia: "1" }))).toBe(true);
+  });
+});
+
+describe("buildCardWhere — Sharia-compliant", () => {
+  it("adds no condition when the filter is off", () => {
+    expect(buildCardWhere(parseFilters({ sharia: "0" }))).toEqual({});
+  });
+
+  it("keeps only cards the bank publishes as Sharia-compliant", () => {
+    // `equals true` on a nullable column: `false` and NULL (the bank does not say) both fail, so
+    // a card is never guessed to be compliant.
+    expect(buildCardWhere(parseFilters({ sharia: "1" }))).toEqual({
+      AND: [{ shariaCompliant: true }],
+    });
+  });
+
+  it("combines with the other filters (all must hold)", () => {
+    const where = buildCardWhere(
+      parseFilters({ reward: "cashback", feeMax: "0", income: "8000", sharia: "1" }),
+    );
+    expect(where.AND).toHaveLength(4);
+    expect(where.AND).toContainEqual({ shariaCompliant: true });
+  });
+});
+
+describe("buildUnknownShariaWhere", () => {
+  it("is null when the Sharia filter is off", () => {
+    expect(buildUnknownShariaWhere(parseFilters({ feeMax: "0" }))).toBeNull();
+  });
+
+  it("counts cards whose compliance the bank does not state that match every other filter", () => {
+    // Only NULL counts as unknown: a card the bank says is not compliant (`false`) is not hidden
+    // for lack of information, so it is not in this count.
+    expect(buildUnknownShariaWhere(parseFilters({ income: "5000", sharia: "1" }))).toEqual({
+      AND: [{ minMonthlyIncome: { lte: 5000 } }, { shariaCompliant: null }],
+    });
+  });
+
+  it("still applies inside the other filters' unknown counts", () => {
+    expect(buildUnknownFeeWhere(parseFilters({ feeMax: "0", sharia: "1" }))).toEqual({
+      AND: [
+        { shariaCompliant: true },
+        { OR: [{ fee: { is: null } }, { fee: { is: { annualFee: null } } }] },
+      ],
     });
   });
 });

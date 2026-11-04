@@ -43,7 +43,11 @@
       "incomeLegend": "Minimum income",
       "incomeLabel": "My monthly income (SAR)",
       "incomeHint": "Shows cards whose published minimum income is at or below this amount.",
-      "unknownIncome": "Cards hidden because the bank has not published a minimum income: {count}"
+      "unknownIncome": "Cards hidden because the bank has not published a minimum income: {count}",
+      "shariaLegend": "Sharia compliance",
+      "shariaLabel": "Sharia-compliant cards only",
+      "shariaHint": "Shows only cards the bank publishes as Sharia-compliant. Cards where the bank does not say are left out.",
+      "unknownSharia": "Cards hidden because the bank does not state Sharia compliance: {count}"
     }
   },
   "notFound": {
