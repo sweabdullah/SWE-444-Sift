@@ -5,6 +5,7 @@ import {
   FILTER_REWARD_TYPES,
   buildCardWhere,
   buildUnknownFeeWhere,
+  buildUnknownIncomeWhere,
   hasActiveFilters,
   parseFilters,
 } from "./filters";
@@ -134,6 +135,43 @@ describe("buildUnknownFeeWhere", () => {
         },
         { OR: [{ fee: { is: null } }, { fee: { is: { annualFee: null } } }] },
       ],
+    });
+  });
+});
+
+describe("parseFilters — minimum income", () => {
+  it("reads an income, or none", () => {
+    expect(parseFilters({}).income).toBeNull();
+    expect(parseFilters({ income: "12000" }).income).toBe(12000);
+  });
+
+  it("ignores empty, negative and non-numeric incomes", () => {
+    for (const bad of ["", "-1", "lots"]) expect(parseFilters({ income: bad }).income).toBeNull();
+  });
+
+  it("counts as an active filter", () => {
+    expect(hasActiveFilters(parseFilters({ income: "8000" }))).toBe(true);
+  });
+});
+
+describe("buildCardWhere — minimum income", () => {
+  it("keeps cards whose published minimum income is at or below the visitor's income", () => {
+    // `lte` on a nullable column: a NULL (unpublished) minimum never matches, so it is excluded
+    // rather than assumed to qualify.
+    expect(buildCardWhere(parseFilters({ income: "10000" }))).toEqual({
+      AND: [{ minMonthlyIncome: { lte: 10000 } }],
+    });
+  });
+});
+
+describe("buildUnknownIncomeWhere", () => {
+  it("is null when no income is set", () => {
+    expect(buildUnknownIncomeWhere(parseFilters({ feeMax: "0" }))).toBeNull();
+  });
+
+  it("counts cards with no published minimum income that match every other filter", () => {
+    expect(buildUnknownIncomeWhere(parseFilters({ income: "5000", feeMax: "0" }))).toEqual({
+      AND: [{ fee: { is: { annualFee: { lte: 0 } } } }, { minMonthlyIncome: null }],
     });
   });
 });
