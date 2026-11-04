@@ -34,7 +34,12 @@
       "apply": "Apply filters",
       "clear": "Clear filters",
       "noMatch": "No cards match these filters.",
-      "matchCount": "Matching cards: {count}"
+      "matchCount": "Matching cards: {count}",
+      "feeLegend": "Annual fee (SAR)",
+      "feeHint": "Set 0 as the maximum to see free cards only.",
+      "feeMin": "From",
+      "feeMax": "To",
+      "unknownFee": "Cards hidden because the bank has not published an annual fee: {count}"
     }
   },
   "notFound": {
