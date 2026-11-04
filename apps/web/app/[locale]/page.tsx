@@ -10,6 +10,7 @@ import {
   buildCardWhere,
   buildUnknownFeeWhere,
   buildUnknownIncomeWhere,
+  buildUnknownShariaWhere,
   hasActiveFilters,
   parseFilters,
   type SearchParams,
@@ -22,7 +23,8 @@ export const dynamic = "force-dynamic";
 
 /**
  * Home page: the published cards, read from the database and narrowed by the filters in the
- * query string (SFT-28 reward type, SFT-29 annual fee, SFT-30 minimum income). The full catalogue is SFT-18.
+ * query string (SFT-28 reward type, SFT-29 annual fee, SFT-30 minimum income, SFT-31 Sharia-compliant).
+ * The full catalogue is SFT-18.
  */
 export default async function HomePage({
   params,
@@ -38,10 +40,12 @@ export default async function HomePage({
   const filtered = hasActiveFilters(filters);
   const unknownFeeWhere = buildUnknownFeeWhere(filters);
   const unknownIncomeWhere = buildUnknownIncomeWhere(filters);
-  const [rows, unknownFeeCount, unknownIncomeCount] = await Promise.all([
+  const unknownShariaWhere = buildUnknownShariaWhere(filters);
+  const [rows, unknownFeeCount, unknownIncomeCount, unknownShariaCount] = await Promise.all([
     findPublishedCardsForList(locale, buildCardWhere(filters)),
     unknownFeeWhere ? countPublishedCards(unknownFeeWhere) : 0,
     unknownIncomeWhere ? countPublishedCards(unknownIncomeWhere) : 0,
+    unknownShariaWhere ? countPublishedCards(unknownShariaWhere) : 0,
   ]);
   const cards = toCardList(rows, locale);
 
@@ -93,6 +97,11 @@ export default async function HomePage({
           {unknownIncomeCount > 0 && (
             <p className="text-label text-start text-platinum-deep">
               {t("catalogue.filters.unknownIncome", { count: unknownIncomeCount })}
+            </p>
+          )}
+          {unknownShariaCount > 0 && (
+            <p className="text-label text-start text-platinum-deep">
+              {t("catalogue.filters.unknownSharia", { count: unknownShariaCount })}
             </p>
           )}
 
