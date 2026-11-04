@@ -1,4 +1,11 @@
+import type { RateUnit } from "@sift/db";
 import type { Locale } from "@sift/schema";
+import {
+  compareCards,
+  summarizeRewardRate,
+  type CatalogueSort,
+  type RewardRateSummary,
+} from "./sort";
 
 /** One card as the public card list shows it. */
 export interface CardListItem {
@@ -7,7 +14,11 @@ export interface CardListItem {
   bankName: string;
   /** SAR per year. `null` = the bank has not published it (never shown as 0). */
   annualFee: number | null;
+  /** Highest and base rate in the card's headline unit. `null` = no reward tiers published. */
+  rewardRate: RewardRateSummary | null;
 }
+
+type DecimalLike = { toString(): string };
 
 /**
  * The shape of a published-card row from `findPublishedCardsForList` (@sift/db). Kept structural
@@ -16,30 +27,49 @@ export interface CardListItem {
 export interface CardListRow {
   id: string;
   bank: { nameAr: string; nameEn: string };
-  fee: { annualFee: { toString(): string } | null } | null;
+  fee: { annualFee: DecimalLike | null } | null;
   translations: { name: string }[];
+  rewardTiers: {
+    spendingCategory: string;
+    rate: DecimalLike;
+    rateUnit: RateUnit;
+    minSpend: DecimalLike | null;
+  }[];
+}
+
+function toNumber(value: DecimalLike | null | undefined): number | null {
+  return value === null || value === undefined ? null : Number(value.toString());
 }
 
 /**
- * Turn database rows into list items for one locale, sorted by bank name and then card name.
- * The sort is alphabetical on purpose: Sift never orders cards by merit. A card with no name in
- * this locale is left out rather than shown in the other language (nothing is translated).
+ * Turn database rows into list items for one locale, in the visitor's sort order (lib/sort.ts).
+ * The default is alphabetical by bank name and then card name on purpose: Sift never orders
+ * cards by merit unless the visitor asks. A card with no name in this locale is left out rather
+ * than shown in the other language (nothing is translated).
  */
-export function toCardList(rows: CardListRow[], locale: Locale): CardListItem[] {
-  const collator = new Intl.Collator(locale, { sensitivity: "base", numeric: true });
+export function toCardList(
+  rows: CardListRow[],
+  locale: Locale,
+  sort: CatalogueSort = "default",
+): CardListItem[] {
   const items: CardListItem[] = [];
   for (const row of rows) {
     const name = row.translations[0]?.name;
     if (!name) continue;
-    const fee = row.fee?.annualFee;
     items.push({
       id: row.id,
       name,
       bankName: locale === "ar" ? row.bank.nameAr : row.bank.nameEn,
-      annualFee: fee === null || fee === undefined ? null : Number(fee.toString()),
+      annualFee: toNumber(row.fee?.annualFee),
+      rewardRate: summarizeRewardRate(
+        row.rewardTiers.map((tier) => ({
+          spendingCategory: tier.spendingCategory,
+          rate: Number(tier.rate.toString()),
+          rateUnit: tier.rateUnit,
+          minSpend: toNumber(tier.minSpend),
+        })),
+      ),
     });
   }
-  return items.sort(
-    (a, b) => collator.compare(a.bankName, b.bankName) || collator.compare(a.name, b.name),
-  );
+  return items.sort(compareCards(sort, locale));
 }

@@ -18,9 +18,27 @@
   "catalogue": {
     "heading": "Published cards",
     "count": "Cards: {count}",
-    "sortNote": "Sorted by bank name, then card name. This is not a ranking.",
+    "sortNote": {
+      "default": "Sorted by bank name, then card name. This is not a ranking.",
+      "fee": "Sorted by annual fee, lowest first. Cards whose fee the bank has not published are listed last.",
+      "rate": "Sorted by the highest rate a card can earn, grouped by unit: cashback %, then points per SAR, then miles per SAR — these units can't be compared with each other. The base rate is shown on every card. Cards with no published rate are listed last."
+    },
+    "sort": {
+      "label": "Sort by",
+      "default": "Bank, then card name",
+      "fee": "Annual fee, lowest first",
+      "rate": "Reward rate, highest first"
+    },
     "annualFee": "Annual fee",
     "notPublished": "Not published by the bank",
+    "rewardRate": "Reward rate",
+    "rate": {
+      "upToBase": "Up to {max} · Base {base}",
+      "percent": "{rate}%",
+      "points_per_sar": "{rate} pt / SAR",
+      "miles_per_sar": "{rate} miles / SAR",
+      "notPublished": "Reward rate not published"
+    },
     "empty": "No cards are published yet.",
     "filters": {
       "heading": "Filter cards",
