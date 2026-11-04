@@ -64,6 +64,22 @@ export function CatalogueFiltersForm({ locale, filters }: Props) {
         </div>
       </fieldset>
 
+      <fieldset className="flex flex-col gap-2">
+        <legend className="text-start text-label font-semibold">
+          {t("catalogue.filters.incomeLegend")}
+        </legend>
+        <p className="text-start text-label text-platinum-deep">
+          {t("catalogue.filters.incomeHint")}
+        </p>
+        <div className="pt-1">
+          <AmountInput
+            name={FILTER_PARAMS.income}
+            label={t("catalogue.filters.incomeLabel")}
+            value={filters.income}
+          />
+        </div>
+      </fieldset>
+
       <div className="flex flex-wrap items-center gap-3 border-t border-line pt-4">
         <button
           type="submit"

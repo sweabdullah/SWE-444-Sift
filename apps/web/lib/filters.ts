@@ -22,6 +22,8 @@ export interface CatalogueFilters {
   feeMin: number | null;
   /** Highest annual fee to show, in SAR. `null` = no upper bound; `0` = free cards only. */
   feeMax: number | null;
+  /** The visitor's monthly income, in SAR: show cards whose minimum is at or below it. */
+  income: number | null;
 }
 
 /** Query parameter names. */
@@ -29,6 +31,7 @@ export const FILTER_PARAMS = {
   reward: "reward",
   feeMin: "feeMin",
   feeMax: "feeMax",
+  income: "income",
 } as const;
 
 export type SearchParams = Record<string, string | string[] | undefined>;
@@ -66,6 +69,7 @@ export function parseFilters(params: SearchParams): CatalogueFilters {
     rewardTypes: FILTER_REWARD_TYPES.filter((type) => selected.has(type)),
     feeMin,
     feeMax,
+    income: amountOf(params, FILTER_PARAMS.income),
   };
 }
 
@@ -74,13 +78,18 @@ export function hasFeeFilter(filters: CatalogueFilters): boolean {
   return filters.feeMin !== null || filters.feeMax !== null;
 }
 
-/** True when at least one filter narrows the catalogue. */
-export function hasActiveFilters(filters: CatalogueFilters): boolean {
-  return filters.rewardTypes.length > 0 || hasFeeFilter(filters);
+/** True when a monthly income is set. */
+export function hasIncomeFilter(filters: CatalogueFilters): boolean {
+  return filters.income !== null;
 }
 
-/** Which filter a condition comes from, so one can be left out (see buildUnknownFeeWhere). */
-type FilterName = "reward" | "fee";
+/** True when at least one filter narrows the catalogue. */
+export function hasActiveFilters(filters: CatalogueFilters): boolean {
+  return filters.rewardTypes.length > 0 || hasFeeFilter(filters) || hasIncomeFilter(filters);
+}
+
+/** Which filter a condition comes from, so one can be left out (see the build*UnknownWhere). */
+type FilterName = "reward" | "fee" | "income";
 
 function conditionsFor(filters: CatalogueFilters, omit?: FilterName): Prisma.CardWhereInput[] {
   const and: Prisma.CardWhereInput[] = [];
@@ -102,6 +111,13 @@ function conditionsFor(filters: CatalogueFilters, omit?: FilterName): Prisma.Car
     if (filters.feeMin !== null) annualFee.gte = filters.feeMin;
     if (filters.feeMax !== null) annualFee.lte = filters.feeMax;
     and.push({ fee: { is: { annualFee } } });
+  }
+
+  // Published minimum monthly income at or below the visitor's income. A card whose minimum the
+  // bank has not published (NULL) fails the comparison in SQL, so it is left out rather than
+  // assumed to qualify.
+  if (omit !== "income" && filters.income !== null) {
+    and.push({ minMonthlyIncome: { lte: filters.income } });
   }
 
   return and;
@@ -127,4 +143,13 @@ export function buildUnknownFeeWhere(filters: CatalogueFilters): Prisma.CardWher
     ...conditionsFor(filters, "fee"),
     { OR: [{ fee: { is: null } }, { fee: { is: { annualFee: null } } }] },
   ]);
+}
+
+/**
+ * Cards the income filter hides only because the bank has not published a minimum income: they
+ * match every other active filter, but their minimum income is NULL. `null` when no income is set.
+ */
+export function buildUnknownIncomeWhere(filters: CatalogueFilters): Prisma.CardWhereInput | null {
+  if (!hasIncomeFilter(filters)) return null;
+  return toWhere([...conditionsFor(filters, "income"), { minMonthlyIncome: null }]);
 }

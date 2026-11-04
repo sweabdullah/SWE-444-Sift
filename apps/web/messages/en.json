@@ -39,7 +39,11 @@
       "feeHint": "Set 0 as the maximum to see free cards only.",
       "feeMin": "From",
       "feeMax": "To",
-      "unknownFee": "Cards hidden because the bank has not published an annual fee: {count}"
+      "unknownFee": "Cards hidden because the bank has not published an annual fee: {count}",
+      "incomeLegend": "Minimum income",
+      "incomeLabel": "My monthly income (SAR)",
+      "incomeHint": "Shows cards whose published minimum income is at or below this amount.",
+      "unknownIncome": "Cards hidden because the bank has not published a minimum income: {count}"
     }
   },
   "notFound": {
