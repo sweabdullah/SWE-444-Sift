@@ -1,21 +1,38 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { findPublishedCardsForList } from "@sift/db";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
+import { CatalogueFiltersForm } from "@/components/CatalogueFilters";
 import { Riyal } from "@/components/Riyal";
 import { toCardList } from "@/lib/catalogue";
+import { buildCardWhere, hasActiveFilters, parseFilters, type SearchParams } from "@/lib/filters";
 import { getTranslator, isLocale } from "@/lib/i18n";
 
 // Read the published cards from the database on every request, so a change an administrator
 // publishes shows up without a rebuild (and builds never need a database).
 export const dynamic = "force-dynamic";
 
-/** Home page: the published cards, read from the database. The full catalogue is SFT-18. */
-export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+/**
+ * Home page: the published cards, read from the database and narrowed by the filters in the
+ * query string (SFT-28). The full catalogue is SFT-18.
+ */
+export default async function HomePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<SearchParams>;
+}) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const t = getTranslator(locale);
-  const cards = toCardList(await findPublishedCardsForList(locale), locale);
+  const filters = parseFilters(await searchParams);
+  const filtered = hasActiveFilters(filters);
+  const cards = toCardList(
+    await findPublishedCardsForList(locale, buildCardWhere(filters)),
+    locale,
+  );
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-page flex-col px-6">
@@ -47,16 +64,27 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <h2 id="catalogue-heading" className="text-h2 text-start">
               {t("catalogue.heading")}
             </h2>
-            <p className="text-label text-platinum-deep">
-              {t("catalogue.count", { count: cards.length })}
+            <p className="text-label text-platinum-deep" aria-live="polite">
+              {filtered
+                ? t("catalogue.filters.matchCount", { count: cards.length })
+                : t("catalogue.count", { count: cards.length })}
             </p>
           </div>
           <p className="text-label text-start text-platinum-deep">{t("catalogue.sortNote")}</p>
 
+          <CatalogueFiltersForm locale={locale} filters={filters} />
+
           {cards.length === 0 ? (
-            <p className="rounded-md border border-line bg-white p-6 text-start">
-              {t("catalogue.empty")}
-            </p>
+            <div className="flex flex-col items-start gap-3 rounded-md border border-line bg-white p-6">
+              <p className="text-start">
+                {filtered ? t("catalogue.filters.noMatch") : t("catalogue.empty")}
+              </p>
+              {filtered && (
+                <Link href={`/${locale}`} className="text-start underline underline-offset-4">
+                  {t("catalogue.filters.clear")}
+                </Link>
+              )}
+            </div>
           ) : (
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {cards.map((card) => (

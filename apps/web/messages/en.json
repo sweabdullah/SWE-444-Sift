@@ -21,7 +21,21 @@
     "sortNote": "Sorted by bank name, then card name. This is not a ranking.",
     "annualFee": "Annual fee",
     "notPublished": "Not published by the bank",
-    "empty": "No cards are published yet."
+    "empty": "No cards are published yet.",
+    "filters": {
+      "heading": "Filter cards",
+      "rewardLegend": "Reward type",
+      "rewardHint": "Pick one or more. A card that offers several types appears under each.",
+      "reward": {
+        "cashback": "Cashback",
+        "points": "Points",
+        "miles": "Miles"
+      },
+      "apply": "Apply filters",
+      "clear": "Clear filters",
+      "noMatch": "No cards match these filters.",
+      "matchCount": "Matching cards: {count}"
+    }
   },
   "notFound": {
     "title": "Page not found",

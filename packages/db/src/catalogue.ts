@@ -1,13 +1,14 @@
-import type { Locale } from "@prisma/client";
+import type { Locale, Prisma } from "@prisma/client";
 import { prisma } from "./client.js";
 
 /**
  * Published cards for the public card list: name in one locale, both bank names and the annual
- * fee. Public queries filter `status = published` here, in the database, never in the page.
+ * fee. `where` narrows the list (the visitor's filters); it is always combined with
+ * `status = published` here, in the database, so no filter can reach a draft or archived card.
  */
-export function findPublishedCardsForList(locale: Locale) {
+export function findPublishedCardsForList(locale: Locale, where: Prisma.CardWhereInput = {}) {
   return prisma.card.findMany({
-    where: { status: "published" },
+    where: { AND: [{ status: "published" }, where] },
     select: {
       id: true,
       bank: { select: { nameAr: true, nameEn: true } },
