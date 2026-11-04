@@ -1,12 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { findPublishedCardsForList } from "@sift/db";
+import { countPublishedCards, findPublishedCardsForList } from "@sift/db";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { CatalogueFiltersForm } from "@/components/CatalogueFilters";
 import { Riyal } from "@/components/Riyal";
 import { toCardList } from "@/lib/catalogue";
-import { buildCardWhere, hasActiveFilters, parseFilters, type SearchParams } from "@/lib/filters";
+import {
+  buildCardWhere,
+  buildUnknownFeeWhere,
+  hasActiveFilters,
+  parseFilters,
+  type SearchParams,
+} from "@/lib/filters";
 import { getTranslator, isLocale } from "@/lib/i18n";
 
 // Read the published cards from the database on every request, so a change an administrator
@@ -15,7 +21,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * Home page: the published cards, read from the database and narrowed by the filters in the
- * query string (SFT-28). The full catalogue is SFT-18.
+ * query string (SFT-28 reward type, SFT-29 annual fee). The full catalogue is SFT-18.
  */
 export default async function HomePage({
   params,
@@ -29,10 +35,12 @@ export default async function HomePage({
   const t = getTranslator(locale);
   const filters = parseFilters(await searchParams);
   const filtered = hasActiveFilters(filters);
-  const cards = toCardList(
-    await findPublishedCardsForList(locale, buildCardWhere(filters)),
-    locale,
-  );
+  const unknownFeeWhere = buildUnknownFeeWhere(filters);
+  const [rows, unknownFeeCount] = await Promise.all([
+    findPublishedCardsForList(locale, buildCardWhere(filters)),
+    unknownFeeWhere ? countPublishedCards(unknownFeeWhere) : 0,
+  ]);
+  const cards = toCardList(rows, locale);
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-page flex-col px-6">
@@ -73,6 +81,12 @@ export default async function HomePage({
           <p className="text-label text-start text-platinum-deep">{t("catalogue.sortNote")}</p>
 
           <CatalogueFiltersForm locale={locale} filters={filters} />
+
+          {unknownFeeCount > 0 && (
+            <p className="text-label text-start text-platinum-deep">
+              {t("catalogue.filters.unknownFee", { count: unknownFeeCount })}
+            </p>
+          )}
 
           {cards.length === 0 ? (
             <div className="flex flex-col items-start gap-3 rounded-md border border-line bg-white p-6">

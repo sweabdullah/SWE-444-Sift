@@ -19,3 +19,8 @@ export function findPublishedCardsForList(locale: Locale, where: Prisma.CardWher
 }
 
 export type PublishedCardRow = Awaited<ReturnType<typeof findPublishedCardsForList>>[number];
+
+/** How many published cards match `where` (used for "N cards hidden" notes under a filter). */
+export function countPublishedCards(where: Prisma.CardWhereInput) {
+  return prisma.card.count({ where: { AND: [{ status: "published" }, where] } });
+}

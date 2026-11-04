@@ -45,6 +45,25 @@ export function CatalogueFiltersForm({ locale, filters }: Props) {
         </div>
       </fieldset>
 
+      <fieldset className="flex flex-col gap-2">
+        <legend className="text-start text-label font-semibold">
+          {t("catalogue.filters.feeLegend")}
+        </legend>
+        <p className="text-start text-label text-platinum-deep">{t("catalogue.filters.feeHint")}</p>
+        <div className="flex flex-wrap gap-4 pt-1">
+          <AmountInput
+            name={FILTER_PARAMS.feeMin}
+            label={t("catalogue.filters.feeMin")}
+            value={filters.feeMin}
+          />
+          <AmountInput
+            name={FILTER_PARAMS.feeMax}
+            label={t("catalogue.filters.feeMax")}
+            value={filters.feeMax}
+          />
+        </div>
+      </fieldset>
+
       <div className="flex flex-wrap items-center gap-3 border-t border-line pt-4">
         <button
           type="submit"
@@ -60,5 +79,32 @@ export function CatalogueFiltersForm({ locale, filters }: Props) {
         </Link>
       </div>
     </form>
+  );
+}
+
+/** A SAR amount field. Western digits; `dir="ltr"` keeps the number readable in Arabic. */
+function AmountInput({
+  name,
+  label,
+  value,
+}: {
+  name: string;
+  label: string;
+  value: number | null;
+}) {
+  return (
+    <label className="flex flex-col gap-1">
+      <span className="text-start text-label">{label}</span>
+      <input
+        type="number"
+        name={name}
+        min={0}
+        step="any"
+        inputMode="decimal"
+        dir="ltr"
+        defaultValue={value ?? ""}
+        className="min-h-11 w-32 rounded-md border border-line bg-white ps-3 pe-3 text-start"
+      />
+    </label>
   );
 }

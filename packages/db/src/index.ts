@@ -5,6 +5,10 @@
  * enum. Schema notes: packages/db/SCHEMA.md. Seed scripts: packages/db/SEED.md.
  */
 export { prisma } from "./client.js";
-export { findPublishedCardsForList, type PublishedCardRow } from "./catalogue.js";
+export {
+  countPublishedCards,
+  findPublishedCardsForList,
+  type PublishedCardRow,
+} from "./catalogue.js";
 
 export * from "@prisma/client";
