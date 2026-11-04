@@ -1,14 +1,16 @@
 import Link from "next/link";
 import { FILTER_PARAMS, FILTER_REWARD_TYPES, type CatalogueFilters } from "@/lib/filters";
 import { getTranslator, type Locale } from "@/lib/i18n";
+import { SORT_ORDERS, SORT_PARAM, clearFiltersHref, type CatalogueSort } from "@/lib/sort";
 
-type Props = { locale: Locale; filters: CatalogueFilters };
+type Props = { locale: Locale; filters: CatalogueFilters; sort: CatalogueSort };
 
 /**
  * The catalogue filter panel. A plain GET form: the filters become the page's query string, so
  * they work without JavaScript and a filtered view can be bookmarked or shared. Server component.
+ * The sort order is a field of the same form, so applying a filter keeps it (SFT-33).
  */
-export function CatalogueFiltersForm({ locale, filters }: Props) {
+export function CatalogueFiltersForm({ locale, filters, sort }: Props) {
   const t = getTranslator(locale);
 
   return (
@@ -101,6 +103,21 @@ export function CatalogueFiltersForm({ locale, filters }: Props) {
         </div>
       </fieldset>
 
+      <label className="flex flex-col gap-1">
+        <span className="text-start text-label font-semibold">{t("catalogue.sort.label")}</span>
+        <select
+          name={SORT_PARAM}
+          defaultValue={sort}
+          className="min-h-11 w-fit rounded-md border border-line bg-white ps-3 pe-3 text-start"
+        >
+          {SORT_ORDERS.map((order) => (
+            <option key={order} value={order}>
+              {t(`catalogue.sort.${order}`)}
+            </option>
+          ))}
+        </select>
+      </label>
+
       <div className="flex flex-wrap items-center gap-3 border-t border-line pt-4">
         <button
           type="submit"
@@ -109,7 +126,7 @@ export function CatalogueFiltersForm({ locale, filters }: Props) {
           {t("catalogue.filters.apply")}
         </button>
         <Link
-          href={`/${locale}`}
+          href={clearFiltersHref(locale, sort)}
           className="min-h-11 content-center rounded-md border border-line ps-5 pe-5 py-2 text-platinum-deep hover:border-platinum-deep"
         >
           {t("catalogue.filters.clear")}

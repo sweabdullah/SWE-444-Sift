@@ -8,6 +8,7 @@ const sab: CardListRow = {
   bank: { nameAr: "البنك السعودي الأول", nameEn: "Saudi Awwal Bank (SAB)" },
   fee: { annualFee: decimal("350.00") },
   translations: [{ name: "SAB Cashback" }],
+  rewardTiers: [],
 };
 
 const rows: CardListRow[] = [
@@ -17,12 +18,14 @@ const rows: CardListRow[] = [
     bank: { nameAr: "بنك الرياض", nameEn: "Riyad Bank" },
     fee: { annualFee: decimal("0.00") },
     translations: [{ name: "Titanium" }],
+    rewardTiers: [],
   },
   {
     id: "card_riyad_a",
     bank: { nameAr: "بنك الرياض", nameEn: "Riyad Bank" },
     fee: null,
     translations: [{ name: "Cashback Signature" }],
+    rewardTiers: [],
   },
 ];
 
@@ -60,5 +63,39 @@ describe("toCardList", () => {
   it("leaves out a card with no name in this locale instead of showing another language", () => {
     const missing: CardListRow = { ...sab, id: "card_untranslated", translations: [] };
     expect(toCardList([missing], "ar")).toEqual([]);
+  });
+
+  it("reads the reward tiers' Decimals into a max and base rate, or null with no tiers", () => {
+    const tiered: CardListRow = {
+      ...sab,
+      rewardTiers: [
+        {
+          spendingCategory: "general",
+          rate: decimal("0.5000"),
+          rateUnit: "percent",
+          minSpend: decimal("500.00"),
+        },
+        {
+          spendingCategory: "general",
+          rate: decimal("2.0000"),
+          rateUnit: "percent",
+          minSpend: decimal("10000.00"),
+        },
+      ],
+    };
+    expect(toCardList([tiered], "en")[0]?.rewardRate).toEqual({
+      unit: "percent",
+      max: 2,
+      base: 0.5,
+    });
+    expect(toCardList([sab], "en")[0]?.rewardRate).toBeNull();
+  });
+
+  it("applies the requested sort: by fee, the free card first and the unpublished fee last", () => {
+    expect(toCardList(rows, "en", "fee").map((c) => c.id)).toEqual([
+      "card_riyad_b",
+      "card_sab",
+      "card_riyad_a",
+    ]);
   });
 });
