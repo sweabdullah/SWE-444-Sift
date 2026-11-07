@@ -7,6 +7,10 @@
     "logoAlt": "Sift logo",
     "riyal": "Saudi riyal"
   },
+  "financialDisclaimer": {
+    "title": "This is not financial advice.",
+    "body": "Sift provides information only. Verify figures and terms directly with the bank before applying."
+  },
   "localeSwitch": {
     "label": "العربية",
     "ariaLabel": "التبديل إلى العربية"

@@ -7,6 +7,10 @@
     "logoAlt": "شعار سِفت",
     "riyal": "ريال سعودي"
   },
+  "financialDisclaimer": {
+    "title": "المحتوى ليس نصيحة مالية.",
+    "body": "سِفت دليل للمعلومات فقط. تحقّق من الأرقام والشروط لدى البنك مباشرةً قبل التقدّم بطلب البطاقة."
+  },
   "localeSwitch": {
     "label": "English",
     "ariaLabel": "Switch to English"
