@@ -56,6 +56,7 @@ describe("card detail route", () => {
         verifiedAt: new Date("2026-10-21T09:00:00Z"),
         fee: null,
         minMonthlyIncome: null,
+        rewardTiers: [],
         translations: [
           {
             name: locale === "ar" ? "بطاقة الاختبار" : "Test card",
@@ -97,6 +98,7 @@ describe("card detail route", () => {
         verifiedAt: null,
         fee: null,
         minMonthlyIncome: null,
+        rewardTiers: [],
         translations:
           name === null
             ? []

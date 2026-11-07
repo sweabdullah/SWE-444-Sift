@@ -23,11 +23,12 @@ export function RewardRateValue({
   const figure = (value: number) => (
     <bdi className="whitespace-nowrap">{formatRate(t, locale, rate.unit, value)}</bdi>
   );
+  if (rate.base === rate.max) return figure(rate.max);
   return (
     <>
       {fillTemplate(t("catalogue.rate.upToBase"), {
         max: figure(rate.max),
-        base: figure(rate.base),
+        base: rate.base === null ? t("catalogue.notPublished") : figure(rate.base),
       })}
     </>
   );

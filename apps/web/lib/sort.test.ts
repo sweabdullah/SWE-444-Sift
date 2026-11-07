@@ -82,12 +82,12 @@ describe("summarizeRewardRate", () => {
     expect(summary).toEqual({ unit: "percent", max: 11, base: 0.7 });
   });
 
-  it("uses the lowest rate as the base when there is no general tier", () => {
+  it("does not invent a base when there is no general tier", () => {
     const summary = summarizeRewardRate([
       tier({ spendingCategory: "dining", rate: 5 }),
       tier({ spendingCategory: "online", rate: 3 }),
     ]);
-    expect(summary).toEqual({ unit: "percent", max: 5, base: 3 });
+    expect(summary).toEqual({ unit: "percent", max: 5, base: null });
   });
 
   it("summarises by percent first, then points, then miles, ignoring the other units", () => {
@@ -201,14 +201,14 @@ describe("compareCards — reward rate", () => {
 });
 
 describe("formatRate", () => {
-  it("writes each unit in both locales with at most two decimals and Western digits", () => {
+  it("writes each unit in both locales with all four stored decimals and Western digits", () => {
     const tEn = getTranslator("en");
     const tAr = getTranslator("ar");
     expect(formatRate(tEn, "en", "percent", 2)).toBe("2%");
     expect(formatRate(tEn, "en", "points_per_sar", 1)).toBe("1 pt / SAR");
-    expect(formatRate(tEn, "en", "miles_per_sar", 0.3333)).toBe("0.33 miles / SAR");
+    expect(formatRate(tEn, "en", "miles_per_sar", 0.3333)).toBe("0.3333 miles / SAR");
     expect(formatRate(tAr, "ar", "percent", 0.5)).toBe("0.5%");
-    expect(formatRate(tAr, "ar", "miles_per_sar", 0.3333)).toBe("0.33 ميل / ريال");
+    expect(formatRate(tAr, "ar", "miles_per_sar", 0.3333)).toBe("0.3333 ميل / ريال");
   });
 
   it("states the max and base together on a row", () => {

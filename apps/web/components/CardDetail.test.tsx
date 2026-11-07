@@ -18,6 +18,7 @@ describe("card detail content", () => {
       source: { url: "https://bank.example/cards/test" },
       verifiedAt: null,
       minMonthlyIncome: null,
+      rewardTiers: [],
       fee: {
         annualFee: new Prisma.Decimal(0),
         issuanceFee: null,
@@ -110,7 +111,7 @@ describe("card detail content", () => {
         ],
       };
       const html = renderToStaticMarkup(<CardDetail card={unknown} locale={locale} />);
-      expect(html.match(new RegExp(t("catalogue.notPublished"), "g"))).toHaveLength(11);
+      expect(html.match(new RegExp(t("catalogue.notPublished"), "g"))).toHaveLength(12);
       expect(html).not.toContain("data-riyal");
     });
 
@@ -153,6 +154,40 @@ describe("card detail content", () => {
       expect(error).toContain(copy.error);
       expect(error).toContain(copy.retry);
       expect(error).toContain("<button");
+    });
+    it(`integrates structured rewards with the existing detail page in ${locale}`, () => {
+      const condition = locale === "ar" ? "المشتريات المؤهلة" : "Eligible purchases";
+      const html = renderToStaticMarkup(
+        <CardDetail
+          locale={locale}
+          card={{
+            ...card,
+            verifiedAt: new Date("2026-10-21T09:00:00Z"),
+            rewardTiers: [
+              {
+                id: "tier",
+                rewardType: "cashback",
+                spendingCategory: "fuel",
+                rateUnit: "percent",
+                rate: new Prisma.Decimal(5),
+                cap: new Prisma.Decimal(200),
+                capPeriod: "monthly",
+                minSpend: null,
+                translations: [{ condition }],
+              },
+            ],
+          }}
+        />,
+      );
+      expect(html).toContain('id="reward-tiers-heading"');
+      expect(html).toContain('href="https://bank.example/cards/test"');
+      expect(html).toMatch(/datetime="2026-10-21T09:00:00.000Z"/i);
+      expect(html.indexOf(t("financialDisclaimer.body"))).toBeLessThan(
+        html.indexOf('<h2 id="fees-heading"'),
+      );
+      expect(html).toContain(condition);
+      expect(html).toContain("</svg> 200</span>");
+      expect(html).toContain('id="fees-heading"');
     });
   }
 });

@@ -39,6 +39,20 @@ describe("public detail database query", () => {
               eligibility: true,
             },
           },
+          rewardTiers: {
+            orderBy: { sortOrder: "asc" },
+            select: {
+              id: true,
+              rewardType: true,
+              spendingCategory: true,
+              rate: true,
+              rateUnit: true,
+              cap: true,
+              capPeriod: true,
+              minSpend: true,
+              translations: { where: { locale }, select: { condition: true } },
+            },
+          },
         }),
       });
     });

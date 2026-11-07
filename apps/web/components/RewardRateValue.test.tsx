@@ -20,6 +20,34 @@ describe("fillTemplate", () => {
 });
 
 describe("<RewardRateValue>", () => {
+  for (const locale of ["ar", "en"] as const) {
+    it(`shows a flat rate once with no misleading up-to claim in ${locale}`, () => {
+      const html = renderToStaticMarkup(
+        <RewardRateValue
+          t={getTranslator(locale)}
+          locale={locale}
+          rate={{ unit: "percent", max: 0, base: 0 }}
+        />,
+      );
+      expect(html).toBe('<bdi class="whitespace-nowrap">0%</bdi>');
+    });
+    it(`keeps a missing general base unknown and maximum precision isolated in ${locale}`, () => {
+      const t = getTranslator(locale);
+      const html = renderToStaticMarkup(
+        <RewardRateValue
+          t={t}
+          locale={locale}
+          rate={{ unit: "points_per_sar", max: 1.2345, base: null }}
+        />,
+      );
+      expect(html).toContain(
+        `<bdi class="whitespace-nowrap">${t("catalogue.rate.points_per_sar", { rate: "1.2345" })}</bdi>`,
+      );
+      expect(html).toContain(t("catalogue.notPublished"));
+      expect(html).not.toContain('dir="ltr"');
+      expect(html).not.toMatch(/[\u0660-\u0669]/);
+    });
+  }
   it("isolates each rate in a non-wrapping <bdi> in Arabic", () => {
     const html = renderToStaticMarkup(
       <RewardRateValue

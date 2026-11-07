@@ -61,6 +61,20 @@ export function findPublishedCardById(id: string, locale: Locale) {
       source: { select: { url: true } },
       verifiedAt: true,
       minMonthlyIncome: true,
+      rewardTiers: {
+        orderBy: { sortOrder: "asc" },
+        select: {
+          id: true,
+          rewardType: true,
+          spendingCategory: true,
+          rate: true,
+          rateUnit: true,
+          cap: true,
+          capPeriod: true,
+          minSpend: true,
+          translations: { where: { locale }, select: { condition: true } },
+        },
+      },
       fee: {
         select: {
           annualFee: true,

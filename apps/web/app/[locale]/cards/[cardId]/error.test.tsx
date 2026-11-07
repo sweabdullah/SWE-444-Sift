@@ -24,6 +24,7 @@ describe("card detail server-render retry", () => {
         source: { url: "https://bank.example/cards/test" },
         verifiedAt: null,
         minMonthlyIncome: null,
+        rewardTiers: [],
         fee: null,
         translations: [
           {

@@ -118,5 +118,56 @@
   "notFound": {
     "title": "Page not found",
     "home": "Back to the home page"
+  },
+  "rewardTiers": {
+    "heading": "Reward tiers",
+    "tier": "Tier {number}",
+    "type": "Reward type",
+    "categoryLabel": "Spending category",
+    "rate": "Rate",
+    "cap": "Reward cap",
+    "periodLabel": "Cap period",
+    "minimumSpend": "Minimum monthly spend",
+    "condition": "Unlock condition",
+    "sarValueUnavailable": "SAR value not published by the bank",
+    "reward": {
+      "cashback": "Cashback",
+      "points": "Points",
+      "miles": "Miles",
+      "none": "No rewards"
+    },
+    "unit": {
+      "percent": "Cashback rate",
+      "points_per_sar": "Points rate",
+      "miles_per_sar": "Miles rate"
+    },
+    "capUnit": {
+      "points": "{amount} points",
+      "miles": "{amount} miles",
+      "none": "{amount} (unit not published)"
+    },
+    "period": {
+      "per_transaction": "Per transaction",
+      "monthly": "Per month",
+      "quarterly": "Per quarter",
+      "yearly": "Per year"
+    },
+    "category": {
+      "general": "General spending",
+      "dining": "Dining",
+      "groceries": "Groceries",
+      "fuel": "Fuel",
+      "travel": "Travel",
+      "airlines": "Airlines",
+      "hotels": "Hotels",
+      "online": "Online",
+      "international": "International",
+      "entertainment": "Entertainment",
+      "shopping": "Shopping",
+      "utilities": "Utilities",
+      "education": "Education",
+      "healthcare": "Healthcare",
+      "other": "Other"
+    }
   }
 }
