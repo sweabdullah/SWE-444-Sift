@@ -35,3 +35,37 @@ export type PublishedCardRow = Awaited<ReturnType<typeof findPublishedCardsForLi
 export function countPublishedCards(where: Prisma.CardWhereInput) {
   return prisma.card.count({ where: { AND: [{ status: "published" }, where] } });
 }
+
+/** Public detail lookup. Drafts and archived cards are excluded in the database itself. */
+export function findPublishedCardById(id: string, locale: Locale) {
+  return prisma.card.findFirst({
+    where: { id, status: "published" },
+    select: {
+      id: true,
+      bank: { select: { nameAr: true, nameEn: true } },
+      minMonthlyIncome: true,
+      fee: {
+        select: {
+          annualFee: true,
+          issuanceFee: true,
+          supplementaryCardFee: true,
+          fxMarkupPct: true,
+          cashAdvanceFee: true,
+          latePaymentFee: true,
+        },
+      },
+      translations: {
+        where: { locale },
+        select: {
+          name: true,
+          feeWaiverCondition: true,
+          benefitsDescription: true,
+          rewardConditions: true,
+          eligibility: true,
+        },
+      },
+    },
+  });
+}
+
+export type PublishedCardDetailRow = NonNullable<Awaited<ReturnType<typeof findPublishedCardById>>>;

@@ -132,7 +132,14 @@ export default async function HomePage({
                   className="flex flex-col gap-4 rounded-md border border-line bg-white p-5"
                 >
                   <div className="flex flex-col gap-1">
-                    <h3 className="text-start font-semibold">{card.name}</h3>
+                    <h3 className="text-start font-semibold">
+                      <Link
+                        href={`/${locale}/cards/${encodeURIComponent(card.id)}`}
+                        className="underline underline-offset-4"
+                      >
+                        {card.name}
+                      </Link>
+                    </h3>
                     <p className="text-label text-start text-platinum-deep">{card.bankName}</p>
                   </div>
                   <dl className="mt-auto flex flex-col gap-2 border-t border-line pt-3">

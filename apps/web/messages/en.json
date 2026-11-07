@@ -68,6 +68,26 @@
       "unknownSharia": "Cards hidden because the bank does not state Sharia compliance: {count}"
     }
   },
+  "cardDetail": {
+    "back": "Back to the catalogue",
+    "fees": "Fees",
+    "fee": {
+      "annualFee": "Annual fee (per year)",
+      "issuanceFee": "Issuance fee (one-off)",
+      "supplementaryCardFee": "Supplementary card fee (per card per year)",
+      "fxMarkupPct": "Foreign exchange markup (% of transaction)",
+      "cashAdvanceFee": "Cash advance fee (per withdrawal)",
+      "latePaymentFee": "Late payment fee (per late payment)",
+      "waiverCondition": "Fee waiver condition"
+    },
+    "benefits": "Benefits",
+    "rewardConditions": "Reward conditions",
+    "eligibility": "Eligibility requirements",
+    "minimumIncome": "Minimum monthly income",
+    "loading": "Loading card details…",
+    "error": "Card details could not be loaded. Please try again.",
+    "retry": "Try again"
+  },
   "notFound": {
     "title": "Page not found",
     "home": "Back to the home page"
