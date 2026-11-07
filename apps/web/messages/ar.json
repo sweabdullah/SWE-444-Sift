@@ -5,7 +5,8 @@
   },
   "common": {
     "logoAlt": "شعار سِفت",
-    "riyal": "ريال سعودي"
+    "riyal": "ريال سعودي",
+    "lastUpdated": "آخر تحديث: {date}"
   },
   "localeSwitch": {
     "label": "English",
