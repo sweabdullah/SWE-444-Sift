@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { LOCALES, directionOf, getTranslator, isLocale } from "@/lib/i18n";
 import { fontVariables } from "@/lib/fonts";
+import { SiteFooter } from "@/components/SiteFooter";
 import "../globals.css";
 
 // Only /ar and /en exist; any other first segment is a 404.
@@ -36,6 +37,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     <html lang={locale} dir={directionOf(locale)} className={fontVariables}>
       <body className="min-h-dvh bg-mist font-sans text-body text-graphite antialiased">
         {children}
+        <SiteFooter locale={locale} />
       </body>
     </html>
   );

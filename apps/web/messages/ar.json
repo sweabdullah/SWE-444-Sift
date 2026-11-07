@@ -8,6 +8,10 @@
     "riyal": "ريال سعودي",
     "lastUpdated": "آخر تحديث: {date}"
   },
+  "financialDisclaimer": {
+    "title": "المحتوى ليس نصيحة مالية.",
+    "body": "سِفت دليل للمعلومات فقط. تحقّق من الأرقام والشروط لدى البنك مباشرةً قبل التقدّم بطلب البطاقة."
+  },
   "localeSwitch": {
     "label": "English",
     "ariaLabel": "Switch to English"
