@@ -1,6 +1,18 @@
 import type { Locale, Prisma } from "@prisma/client";
 import { prisma } from "./client.js";
 
+/** Both languages for search normalization; never expose draft or archived card names. */
+export function findPublishedCardNames() {
+  return prisma.card.findMany({
+    where: { status: "published" },
+    select: {
+      id: true,
+      bank: { select: { nameAr: true, nameEn: true } },
+      translations: { select: { name: true } },
+    },
+  });
+}
+
 /**
  * Published cards for the public card list: name in one locale, both bank names, the card's main
  * reward type (its headline reward), the annual fee and the reward tiers in their published order (for the rate on each row and the rate sort).
