@@ -1,8 +1,9 @@
 import type { PublishedCardDetailRow } from "@sift/db";
 import { Riyal } from "@/components/Riyal";
+import { RewardRateValue } from "@/components/RewardRateValue";
 import { formatNumber } from "@/lib/format";
 import { getTranslator, type Locale } from "@/lib/i18n";
-import { RATE_UNIT_ORDER, formatRate, formatRewardSummary, summarizeRewardRate } from "@/lib/sort";
+import { RATE_UNIT_ORDER, formatRate, summarizeRewardRate } from "@/lib/sort";
 
 type Tier = PublishedCardDetailRow["rewardTiers"][number];
 
@@ -34,7 +35,9 @@ export function RewardTiers({ tiers, locale }: { tiers: Tier[]; locale: Locale }
               return summary === null ? null : (
                 <div key={unit}>
                   <dt className="text-label text-platinum-deep">{t(`rewardTiers.unit.${unit}`)}</dt>
-                  <dd>{formatRewardSummary(t, locale, summary)}</dd>
+                  <dd>
+                    <RewardRateValue t={t} locale={locale} rate={summary} />
+                  </dd>
                 </div>
               );
             })}
@@ -56,7 +59,11 @@ export function RewardTiers({ tiers, locale }: { tiers: Tier[]; locale: Locale }
                   </div>
                   <div>
                     <dt className="text-label text-platinum-deep">{t("rewardTiers.rate")}</dt>
-                    <dd>{formatRate(t, locale, tier.rateUnit, Number(tier.rate.toString()))}</dd>
+                    <dd>
+                      <bdi className="whitespace-nowrap">
+                        {formatRate(t, locale, tier.rateUnit, Number(tier.rate.toString()))}
+                      </bdi>
+                    </dd>
                   </div>
                   <div>
                     <dt className="text-label text-platinum-deep">{t("rewardTiers.cap")}</dt>
@@ -67,11 +74,13 @@ export function RewardTiers({ tiers, locale }: { tiers: Tier[]; locale: Locale }
                         <Riyal value={Number(tier.cap.toString())} locale={locale} />
                       ) : (
                         <>
-                          {t(`rewardTiers.capUnit.${tier.rewardType}`, {
-                            amount: formatNumber(Number(tier.cap.toString()), locale, {
-                              maximumFractionDigits: 2,
-                            }),
-                          })}
+                          <bdi className="whitespace-nowrap">
+                            {t(`rewardTiers.capUnit.${tier.rewardType}`, {
+                              amount: formatNumber(Number(tier.cap.toString()), locale, {
+                                maximumFractionDigits: 2,
+                              }),
+                            })}
+                          </bdi>
                           <span className="block text-label">
                             {t("rewardTiers.sarValueUnavailable")}
                           </span>

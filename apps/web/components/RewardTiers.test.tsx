@@ -3,8 +3,9 @@ import { Prisma, type PublishedCardDetailRow } from "@sift/db";
 import { describe, expect, it } from "vitest";
 import { cards } from "../../../packages/db/prisma/seed-data";
 import { getTranslator } from "@/lib/i18n";
-import { formatRewardSummary, summarizeRewardRate } from "@/lib/sort";
+import { summarizeRewardRate } from "@/lib/sort";
 import { RewardTiers } from "./RewardTiers";
+import { RewardRateValue } from "./RewardRateValue";
 
 type Tier = PublishedCardDetailRow["rewardTiers"][number];
 const decimal = (value: number | string) => new Prisma.Decimal(value);
@@ -41,7 +42,9 @@ for (const locale of ["ar", "en"] as const) {
         }),
       ]);
       expect(html.match(/<li /g)).toHaveLength(2);
-      expect(html).toContain(t("catalogue.rate.upToBase", { max: "5%", base: "0.5%" }));
+      expect(html.replace(/<[^>]*>/g, "")).toContain(
+        t("catalogue.rate.upToBase", { max: "5%", base: "0.5%" }),
+      );
       expect(html).toContain(t("rewardTiers.reward.cashback"));
       expect(html).toContain(t("rewardTiers.category.fuel"));
       expect(html).toContain(t("rewardTiers.period.monthly"));
@@ -62,7 +65,7 @@ for (const locale of ["ar", "en"] as const) {
     });
     it("keeps a missing general base unknown instead of using a category rate", () => {
       const html = render([tier({ spendingCategory: "dining", rate: decimal(5) })]);
-      expect(html).toContain(
+      expect(html.replace(/<[^>]*>/g, "")).toContain(
         t("catalogue.rate.upToBase", { max: "5%", base: t("catalogue.notPublished") }),
       );
     });
@@ -156,7 +159,7 @@ for (const locale of ["ar", "en"] as const) {
           tier(),
           tier({ id: "fuel", spendingCategory: "fuel", rate: decimal(5), minSpend: decimal(5000) }),
         ]),
-      ).toContain(formatRewardSummary(t, locale, summary));
+      ).toContain(renderToStaticMarkup(<RewardRateValue t={t} locale={locale} rate={summary} />));
     });
   });
 }

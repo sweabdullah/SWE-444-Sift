@@ -37,6 +37,15 @@ describe("message catalogues", () => {
     }
   });
 
+  it("never joins two placeholders with a dash or slash (Arabic would reverse them)", () => {
+    // In a right-to-left line, "{start}–{end}" renders as "6–1": the bidi algorithm lays the two
+    // numbers out right to left around the neutral dash. Write "{start} to {end}" instead.
+    const joined = /\{\w+\}\s*[-–—/]\s*\{\w+\}/;
+    for (const locale of LOCALES) {
+      for (const s of stringsOf(getMessages(locale))) expect(s).not.toMatch(joined);
+    }
+  });
+
   it("never ranks or recommends a card (brand voice ban list)", () => {
     const banned =
       /\bbest\b|top pick|recommended|don't miss|أفضل|اختيارنا|ننصح|موصى|لا تفوّت|لا تفوت/i;

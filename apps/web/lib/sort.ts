@@ -109,23 +109,6 @@ export function formatRate(t: Translator, locale: Locale, unit: RateUnit, rate: 
   });
 }
 
-/** Same honest headline in the catalogue and detail page; flat rates need no "up to". */
-export function formatRewardSummary(
-  t: Translator,
-  locale: Locale,
-  summary: RewardRateSummary,
-): string {
-  const max = formatRate(t, locale, summary.unit, summary.max);
-  if (summary.base === summary.max) return max;
-  return t("catalogue.rate.upToBase", {
-    max,
-    base:
-      summary.base === null
-        ? t("catalogue.notPublished")
-        : formatRate(t, locale, summary.unit, summary.base),
-  });
-}
-
 /** Where a card's rate group sits in the rate sort; cards with no published rate go last. */
 function rateGroup(card: SortableCard): number {
   return card.rewardRate ? RATE_UNIT_ORDER.indexOf(card.rewardRate.unit) : RATE_UNIT_ORDER.length;
