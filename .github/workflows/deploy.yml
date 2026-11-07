@@ -19,9 +19,11 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: deploy-${{ github.event.workflow_run.head_branch || github.ref }}
-  cancel-in-progress: ${{ github.event.workflow_run.event == 'pull_request' }}
+# Cost guards (SFT-9). In Nov 2026, hung Vercel builds kept deploy jobs running for 3-6 hours each
+# and used the whole month's Actions minutes (97% of usage). So:
+#   - Concurrency is per job, below. Only ONE preview runs at a time across all PRs, and a newer
+#     preview cancels the older one. Production deploys run one at a time and queue, never cancel.
+#   - Every job and every slow step has a timeout. A normal deploy takes about 2 minutes.
 
 jobs:
   preview:
@@ -35,6 +37,12 @@ jobs:
       github.event.workflow_run.head_repository.full_name == github.repository &&
       vars.VERCEL_DEPLOY == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # One preview at a time for the whole repo: Vercel Hobby builds one deployment at a time, so
+    # parallel previews only queue there (and bill minutes here). The newest preview wins.
+    concurrency:
+      group: deploy-preview
+      cancel-in-progress: true
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -50,10 +58,14 @@ jobs:
         with:
           node-version-file: .nvmrc
       - name: Pull Preview settings and env vars from Vercel
+        timeout-minutes: 5
         run: npx --yes "$VERCEL_CLI" pull --yes --environment=preview
       - name: Build
+        timeout-minutes: 8
         run: npx --yes "$VERCEL_CLI" build
       - name: Deploy
+        # Stops a Vercel build that stays at "Building…" (the cause of the Nov 2026 incident).
+        timeout-minutes: 8
         run: |
           url=$(npx --yes "$VERCEL_CLI" deploy --prebuilt --meta commit="$DEPLOY_SHA")
           echo "Preview for commit \`$DEPLOY_SHA\`: $url" >> "$GITHUB_STEP_SUMMARY"
@@ -70,6 +82,12 @@ jobs:
         (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
       )
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # One production deploy at a time. A newer one waits rather than cancelling a deploy that may
+    # be between "migrate" and "go live".
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -85,23 +103,29 @@ jobs:
         with:
           node-version-file: .nvmrc
       - name: Pull Production settings and env vars from Vercel
+        timeout-minutes: 5
         run: npx --yes "$VERCEL_CLI" pull --yes --environment=production
       - name: Build
+        timeout-minutes: 8
         run: npx --yes "$VERCEL_CLI" build --prod
       # Apply migrations before the new code goes live. PROD_DIRECT_URL is a GitHub secret
       # holding the production DIRECT (non-pooled) URL; the Prisma schema reads only
       # DATABASE_URL, so it is passed under that name.
       - name: Apply database migrations
+        timeout-minutes: 5
         run: pnpm install --frozen-lockfile && pnpm --filter @sift/db db:deploy
         env:
           DATABASE_URL: ${{ secrets.PROD_DIRECT_URL }}
       # Loads the published cards into an empty production database (banks, cards, fees,
       # translations, tiers, sources; no users). Does nothing once any bank or card exists.
       - name: Seed the card catalogue (first deploy only)
+        timeout-minutes: 5
         run: pnpm --filter @sift/db db:generate && pnpm --filter @sift/db db:seed:catalogue
         env:
           DATABASE_URL: ${{ secrets.PROD_DIRECT_URL }}
       - name: Deploy
+        # Stops a Vercel build that stays at "Building…" (the cause of the Nov 2026 incident).
+        timeout-minutes: 8
         run: |
           url=$(npx --yes "$VERCEL_CLI" deploy --prebuilt --prod --meta commit="$DEPLOY_SHA")
           echo "Production is now commit \`$DEPLOY_SHA\` ($url)" >> "$GITHUB_STEP_SUMMARY"
