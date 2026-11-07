@@ -35,6 +35,9 @@ jobs:
       github.event.workflow_run.head_repository.full_name == github.repository &&
       vars.VERCEL_DEPLOY == 'true'
     runs-on: ubuntu-latest
+    # A Vercel build that never finishes (seen on the Hobby plan's one-at-a-time build queue) must
+    # fail fast, not hold the deploy slot for GitHub's 6-hour default and block every later deploy.
+    timeout-minutes: 20
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -70,6 +73,9 @@ jobs:
         (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
       )
     runs-on: ubuntu-latest
+    # A Vercel build that never finishes (seen on the Hobby plan's one-at-a-time build queue) must
+    # fail fast, not hold the deploy slot for GitHub's 6-hour default and block every later deploy.
+    timeout-minutes: 20
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
