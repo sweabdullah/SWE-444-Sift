@@ -16,7 +16,7 @@ import {
   type SearchParams,
 } from "@/lib/filters";
 import { getTranslator, isLocale } from "@/lib/i18n";
-import { clearFiltersHref, formatRate, parseSort } from "@/lib/sort";
+import { clearFiltersHref, formatRewardSummary, parseSort } from "@/lib/sort";
 
 // Read the published cards from the database on every request, so a change an administrator
 // publishes shows up without a rebuild (and builds never need a database).
@@ -155,7 +155,7 @@ export default async function HomePage({
                         )}
                       </dd>
                     </div>
-                    {/* Always the "up to" figure beside the base rate, whatever the sort. */}
+                    {/* Keep the headline consistent with the structured reward details. */}
                     <div className="flex items-baseline justify-between gap-4">
                       <dt className="text-label text-platinum-deep">{t("catalogue.rewardRate")}</dt>
                       <dd className="text-end">
@@ -165,15 +165,7 @@ export default async function HomePage({
                           </span>
                         ) : (
                           <span className="text-label font-semibold">
-                            {t("catalogue.rate.upToBase", {
-                              max: formatRate(t, locale, card.rewardRate.unit, card.rewardRate.max),
-                              base: formatRate(
-                                t,
-                                locale,
-                                card.rewardRate.unit,
-                                card.rewardRate.base,
-                              ),
-                            })}
+                            {formatRewardSummary(t, locale, card.rewardRate)}
                           </span>
                         )}
                       </dd>

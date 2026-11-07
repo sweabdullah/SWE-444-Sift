@@ -18,6 +18,7 @@ describe("card detail server-render retry", () => {
         id: "card_test",
         bank: { nameAr: "بنك الاختبار", nameEn: "Test bank" },
         minMonthlyIncome: null,
+        rewardTiers: [],
         fee: null,
         translations: [
           {

@@ -43,6 +43,7 @@ describe("card detail route", () => {
         bank: { nameAr: "بنك", nameEn: "Bank" },
         fee: null,
         minMonthlyIncome: null,
+        rewardTiers: [],
         translations:
           name === null
             ? []

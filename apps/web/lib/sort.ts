@@ -34,8 +34,8 @@ export interface RewardRateSummary {
   unit: RateUnit;
   /** The highest rate in `unit`, across every tier and spending category. */
   max: number;
-  /** The `general` tier with no (or the lowest) minimum spend; else the lowest rate in `unit`. */
-  base: number;
+  /** The `general` tier with the lowest minimum spend; null when no general rate is published. */
+  base: number | null;
 }
 
 /** The fields of a reward tier the summary needs, with Decimals already read as numbers. */
@@ -87,7 +87,7 @@ export function summarizeRewardRate(tiers: RateTier[]): RewardRateSummary | null
 
   // Base: the general-spend tier that applies with the least spending (no minimum first, then
   // the lowest minimum; the lower rate if still tied). A card with no general tier only earns in
-  // named categories, so its lowest rate is the honest base.
+  // named categories. A category-specific rate is never invented as a general base.
   const general = inUnit
     .filter((tier) => tier.spendingCategory === "general")
     .sort((a, b) => (a.minSpend ?? 0) - (b.minSpend ?? 0) || a.rate - b.rate);
@@ -95,17 +95,34 @@ export function summarizeRewardRate(tiers: RateTier[]): RewardRateSummary | null
   return {
     unit,
     max: Math.max(...rates),
-    base: general[0]?.rate ?? Math.min(...rates),
+    base: general[0]?.rate ?? null,
   };
 }
 
 /**
- * One rate with its unit, e.g. "2%", "1 pt / SAR", "0.33 miles / SAR". At most two decimals and
+ * One rate with its unit, preserving the database's four decimal places and
  * Western digits in both locales, like the fees.
  */
 export function formatRate(t: Translator, locale: Locale, unit: RateUnit, rate: number): string {
   return t(`catalogue.rate.${unit}`, {
-    rate: formatNumber(rate, locale, { maximumFractionDigits: 2 }),
+    rate: formatNumber(rate, locale, { maximumFractionDigits: 4 }),
+  });
+}
+
+/** Same honest headline in the catalogue and detail page; flat rates need no "up to". */
+export function formatRewardSummary(
+  t: Translator,
+  locale: Locale,
+  summary: RewardRateSummary,
+): string {
+  const max = formatRate(t, locale, summary.unit, summary.max);
+  if (summary.base === summary.max) return max;
+  return t("catalogue.rate.upToBase", {
+    max,
+    base:
+      summary.base === null
+        ? t("catalogue.notPublished")
+        : formatRate(t, locale, summary.unit, summary.base),
   });
 }
 

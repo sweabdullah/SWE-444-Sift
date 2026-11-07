@@ -1,5 +1,6 @@
 import type { PublishedCardDetailRow } from "@sift/db";
 import { Riyal } from "@/components/Riyal";
+import { RewardTiers } from "@/components/RewardTiers";
 import { formatNumber } from "@/lib/format";
 import { getTranslator, type Locale } from "@/lib/i18n";
 
@@ -71,6 +72,7 @@ export function CardDetail({ card, locale }: { card: PublishedCardDetailRow; loc
           {prose(translation.benefitsDescription)}
         </p>
       </section>
+      <RewardTiers tiers={card.rewardTiers} locale={locale} />
       <section aria-labelledby="rewards-heading">
         <h2 id="rewards-heading" className="text-h2">
           {t("cardDetail.rewardConditions")}

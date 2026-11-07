@@ -91,5 +91,56 @@
   "notFound": {
     "title": "الصفحة غير موجودة",
     "home": "العودة إلى الصفحة الرئيسية"
+  },
+  "rewardTiers": {
+    "heading": "شرائح المكافآت",
+    "tier": "الشريحة {number}",
+    "type": "نوع المكافأة",
+    "categoryLabel": "فئة الإنفاق",
+    "rate": "معدل المكافأة",
+    "cap": "الحد الأقصى للمكافأة",
+    "periodLabel": "فترة الحد الأقصى",
+    "minimumSpend": "الحد الأدنى للإنفاق الشهري",
+    "condition": "شرط استحقاق الشريحة",
+    "sarValueUnavailable": "القيمة بالريال غير منشورة من البنك",
+    "reward": {
+      "cashback": "استرداد نقدي",
+      "points": "نقاط",
+      "miles": "أميال",
+      "none": "بدون مكافآت"
+    },
+    "unit": {
+      "percent": "معدل الاسترداد النقدي",
+      "points_per_sar": "معدل النقاط",
+      "miles_per_sar": "معدل الأميال"
+    },
+    "capUnit": {
+      "points": "{amount} نقطة",
+      "miles": "{amount} ميل",
+      "none": "{amount} (الوحدة غير منشورة)"
+    },
+    "period": {
+      "per_transaction": "لكل عملية",
+      "monthly": "شهريًا",
+      "quarterly": "ربع سنوي",
+      "yearly": "سنويًا"
+    },
+    "category": {
+      "general": "الإنفاق العام",
+      "dining": "المطاعم",
+      "groceries": "البقالة",
+      "fuel": "الوقود",
+      "travel": "السفر",
+      "airlines": "الطيران",
+      "hotels": "الفنادق",
+      "online": "الإنترنت",
+      "international": "الإنفاق الدولي",
+      "entertainment": "الترفيه",
+      "shopping": "التسوق",
+      "utilities": "الخدمات",
+      "education": "التعليم",
+      "healthcare": "الرعاية الصحية",
+      "other": "أخرى"
+    }
   }
 }
