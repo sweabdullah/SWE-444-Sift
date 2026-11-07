@@ -34,6 +34,21 @@ describe("card detail content", () => {
     const translation = card.translations[0];
     if (!translation) throw new Error("Test card requires a translation");
 
+    it(`shows the full disclaimer before the first fee figure in ${locale}`, () => {
+      const html = renderToStaticMarkup(<CardDetail card={card} locale={locale} />);
+      const fees =
+        html.split('<section aria-labelledby="fees-heading">')[1]?.split("</section>")[0] ?? "";
+      const title = t("financialDisclaimer.title");
+      const body = t("financialDisclaimer.body");
+      expect(fees).toContain(title);
+      expect(fees).toContain(body);
+      expect(fees).toContain(`lang="${locale}" dir="${locale === "ar" ? "rtl" : "ltr"}"`);
+      expect(fees.indexOf(title)).toBeLessThan(fees.indexOf('<h2 id="fees-heading"'));
+      expect(fees.indexOf(body)).toBeLessThan(fees.indexOf("<dl"));
+      expect(fees).toContain("</svg> 0</span>");
+      expect(html.split(title)).toHaveLength(2);
+    });
+
     it(`shows seven fees, preserving zero, unknown and percentage precision in ${locale}`, () => {
       const html = renderToStaticMarkup(<CardDetail card={card} locale={locale} />);
       const fees =
