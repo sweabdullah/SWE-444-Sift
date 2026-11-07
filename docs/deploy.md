@@ -96,3 +96,18 @@ Tick each step in the SFT-9 PR or Linear issue as you go.
     - The page loads, and the Arabic text reads right-to-left.
     - From any terminal: `curl -s https://<production-domain>/ar | grep -o '<html[^>]*>'` should show `lang="ar"` and `dir="rtl"`. `/en` should show `lang="en"` and `dir="ltr"`.
     - Paste the production URL, the commit SHA from step 13 and the curl output into the SFT-9 Linear issue. These are the evidence for its acceptance criteria.
+
+## Keeping Actions minutes under control
+
+The repo is private on GitHub Free, which includes about 2,000 Actions minutes a month (shown as $12.00 on the billing page, resetting on the 1st). A normal round costs about 5 minutes: CI is 1–2 minutes and a deploy about 2. In November 2026 the whole month's allowance went in four days. Seventeen deploy jobs sat at Vercel's "Building…" for 3–6 hours each, which was 97% of usage. All real CI and deploy work that month took about 100 minutes.
+
+Guards now in `.github/workflows/deploy.yml`:
+
+- **Timeouts.** Each job stops after 15 minutes. The Vercel build and deploy steps stop after 8, and the pull, migrate and seed steps after 5. A hung Vercel build now costs at most 15 minutes, not 6 hours.
+- **One preview at a time.** All PR previews share the `deploy-preview` group, and a newer preview cancels the older one. Vercel Hobby builds one deployment at a time, so parallel previews only queued there while billing minutes here.
+- **Production queues, never cancels.** The `deploy-production` group runs one deploy at a time. A newer one waits, so a deploy is never cut off between "migrate" and "go live".
+- **A spending cap on the account.** GitHub → Settings → Billing → **Manage budgets** → an Actions budget with **Stop usage when budget limit is reached** switched on. That is the hard ceiling if everything else fails.
+
+If a deploy takes more than about 5 minutes, open Vercel → Deployments and cancel anything stuck in **Building** or **Queued**. Then re-run the Deploy workflow, or push again.
+
+If CI says _"The job was not started because recent account payments have failed or your spending limit needs to be increased"_, the month's minutes are used up. Check GitHub → Settings → Billing.
