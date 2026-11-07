@@ -16,20 +16,6 @@ describe("public detail database query", () => {
       expect(findFirst).toHaveBeenCalledWith({
         where: { id: "private-card", status: "published" },
         select: expect.objectContaining({
-          rewardTiers: {
-            orderBy: { sortOrder: "asc" },
-            select: {
-              id: true,
-              rewardType: true,
-              spendingCategory: true,
-              rate: true,
-              rateUnit: true,
-              cap: true,
-              capPeriod: true,
-              minSpend: true,
-              translations: { where: { locale }, select: { condition: true } },
-            },
-          },
           fee: {
             select: {
               annualFee: true,
@@ -48,6 +34,20 @@ describe("public detail database query", () => {
               benefitsDescription: true,
               rewardConditions: true,
               eligibility: true,
+            },
+          },
+          rewardTiers: {
+            orderBy: { sortOrder: "asc" },
+            select: {
+              id: true,
+              rewardType: true,
+              spendingCategory: true,
+              rate: true,
+              rateUnit: true,
+              cap: true,
+              capPeriod: true,
+              minSpend: true,
+              translations: { where: { locale }, select: { condition: true } },
             },
           },
         }),

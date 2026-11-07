@@ -35,35 +35,6 @@ describe("card detail content", () => {
     const translation = card.translations[0];
     if (!translation) throw new Error("Test card requires a translation");
 
-    it(`integrates structured rewards with the existing detail page in ${locale}`, () => {
-      const condition = locale === "ar" ? "المشتريات المؤهلة" : "Eligible purchases";
-      const html = renderToStaticMarkup(
-        <CardDetail
-          locale={locale}
-          card={{
-            ...card,
-            rewardTiers: [
-              {
-                id: "tier",
-                rewardType: "cashback",
-                spendingCategory: "fuel",
-                rateUnit: "percent",
-                rate: new Prisma.Decimal(5),
-                cap: new Prisma.Decimal(200),
-                capPeriod: "monthly",
-                minSpend: null,
-                translations: [{ condition }],
-              },
-            ],
-          }}
-        />,
-      );
-      expect(html).toContain('id="reward-tiers-heading"');
-      expect(html).toContain(condition);
-      expect(html).toContain("</svg> 200</span>");
-      expect(html).toContain('id="fees-heading"');
-    });
-
     it(`shows seven fees, preserving zero, unknown and percentage precision in ${locale}`, () => {
       const html = renderToStaticMarkup(<CardDetail card={card} locale={locale} />);
       const fees =
@@ -146,6 +117,34 @@ describe("card detail content", () => {
       expect(error).toContain(copy.error);
       expect(error).toContain(copy.retry);
       expect(error).toContain("<button");
+    });
+    it(`integrates structured rewards with the existing detail page in ${locale}`, () => {
+      const condition = locale === "ar" ? "المشتريات المؤهلة" : "Eligible purchases";
+      const html = renderToStaticMarkup(
+        <CardDetail
+          locale={locale}
+          card={{
+            ...card,
+            rewardTiers: [
+              {
+                id: "tier",
+                rewardType: "cashback",
+                spendingCategory: "fuel",
+                rateUnit: "percent",
+                rate: new Prisma.Decimal(5),
+                cap: new Prisma.Decimal(200),
+                capPeriod: "monthly",
+                minSpend: null,
+                translations: [{ condition }],
+              },
+            ],
+          }}
+        />,
+      );
+      expect(html).toContain('id="reward-tiers-heading"');
+      expect(html).toContain(condition);
+      expect(html).toContain("</svg> 200</span>");
+      expect(html).toContain('id="fees-heading"');
     });
   }
 });

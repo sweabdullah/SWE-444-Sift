@@ -1,6 +1,6 @@
 import type { PublishedCardDetailRow } from "@sift/db";
-import { Riyal } from "@/components/Riyal";
 import { RewardTiers } from "@/components/RewardTiers";
+import { Riyal } from "@/components/Riyal";
 import { formatNumber } from "@/lib/format";
 import { getTranslator, type Locale } from "@/lib/i18n";
 
