@@ -65,7 +65,7 @@ sft-6-postgres-prisma
 
 **Secrets.** Database URLs, AI keys and email keys go in `.env` (git-ignored) and in the hosting platform's environment settings. Never commit them. When a package needs a new variable, add it with a dummy value to that package's `.env.example`.
 
-**Bilingual and RTL from day one.** Every user-facing string exists in Arabic and English. Use logical CSS properties (`ps-`, `pe-`, `ms-`, `me-`, `start-`, `end-`) — never `left` / `right` — and check every screen in Arabic at phone width before opening a pull request.
+**Bilingual and RTL from day one.** Every user-facing string exists in Arabic and English. Use logical CSS properties (`ps-`, `pe-`, `ms-`, `me-`, `start-`, `end-`) — never `left` / `right` — and check every screen in Arabic at phone width before opening a pull request. What mirrors, the bidi traps with numbers and mixed text, and how to check a screen: [`docs/rtl.md`](docs/rtl.md).
 
 ## Lanes and contracts
 

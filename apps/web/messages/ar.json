@@ -32,6 +32,13 @@
     "annualFee": "الرسوم السنوية",
     "notPublished": "لم ينشرها البنك",
     "rewardRate": "نسبة المكافأة",
+    "rewardTypeLabel": "نوع المكافأة",
+    "rewardType": {
+      "cashback": "استرداد نقدي",
+      "points": "نقاط",
+      "miles": "أميال",
+      "none": "بلا مكافآت"
+    },
     "rate": {
       "upToBase": "حتى {max} · الأساسية {base}",
       "percent": "{rate}%",
@@ -40,6 +47,13 @@
       "notPublished": "لم تُنشر نسبة المكافأة"
     },
     "empty": "لا توجد بطاقات منشورة بعد.",
+    "pagination": {
+      "label": "صفحات البطاقات",
+      "previous": "السابقة",
+      "next": "التالية",
+      "status": "الصفحة {page} من {pages}",
+      "showing": "البطاقات {start} إلى {end} من {total}"
+    },
     "filters": {
       "heading": "تصفية البطاقات",
       "rewardLegend": "نوع المكافأة",
