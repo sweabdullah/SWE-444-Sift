@@ -1,13 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { countPublishedCards, findPublishedCardsForList } from "@sift/db";
+import { countPublishedCards, findPublishedCardNames, findPublishedCardsForList } from "@sift/db";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { CatalogueFiltersForm } from "@/components/CatalogueFilters";
 import { CataloguePagination } from "@/components/CataloguePagination";
 import { RewardRateValue } from "@/components/RewardRateValue";
 import { Riyal } from "@/components/Riyal";
-import { toCardList } from "@/lib/catalogue";
+import { cardHref, toCardList } from "@/lib/catalogue";
 import {
   buildCardWhere,
   buildUnknownFeeWhere,
@@ -20,6 +20,7 @@ import {
 import { getTranslator, isLocale } from "@/lib/i18n";
 import { paginate, parsePage } from "@/lib/pagination";
 import { clearFiltersHref, parseSort } from "@/lib/sort";
+import { buildSearchWhere, normalizeSearch } from "@/lib/search";
 
 // Read the published cards from the database on every request, so a change an administrator
 // publishes shows up without a rebuild (and builds never need a database).
@@ -52,11 +53,17 @@ export default async function HomePage({
   const sort = parseSort(query);
   const requestedPage = parsePage(query);
   const filtered = hasActiveFilters(filters);
-  const unknownFeeWhere = buildUnknownFeeWhere(filters);
-  const unknownIncomeWhere = buildUnknownIncomeWhere(filters);
-  const unknownShariaWhere = buildUnknownShariaWhere(filters);
+  // Resolve both languages before filtering, sorting and pagination. Keep this same condition
+  // in the unknown-value counts so those notes describe only cards matching the search.
+  const searchWhere = buildSearchWhere(
+    normalizeSearch(filters.search) ? await findPublishedCardNames() : [],
+    filters.search,
+  );
+  const unknownFeeWhere = buildUnknownFeeWhere(filters, searchWhere);
+  const unknownIncomeWhere = buildUnknownIncomeWhere(filters, searchWhere);
+  const unknownShariaWhere = buildUnknownShariaWhere(filters, searchWhere);
   const [rows, unknownFeeCount, unknownIncomeCount, unknownShariaCount] = await Promise.all([
-    findPublishedCardsForList(locale, buildCardWhere(filters)),
+    findPublishedCardsForList(locale, buildCardWhere(filters, searchWhere)),
     unknownFeeWhere ? countPublishedCards(unknownFeeWhere) : 0,
     unknownIncomeWhere ? countPublishedCards(unknownIncomeWhere) : 0,
     unknownShariaWhere ? countPublishedCards(unknownShariaWhere) : 0,
@@ -145,7 +152,14 @@ export default async function HomePage({
                     className="flex flex-col gap-4 rounded-md border border-line bg-white p-5"
                   >
                     <div className="flex flex-col gap-1">
-                      <h3 className="text-start font-semibold">{card.name}</h3>
+                      <h3 className="text-start font-semibold">
+                        <Link
+                          href={cardHref(locale, card.id)}
+                          className="underline underline-offset-4"
+                        >
+                          {card.name}
+                        </Link>
+                      </h3>
                       <p className="text-label text-start text-platinum-deep">{card.bankName}</p>
                     </div>
                     <dl className="mt-auto flex flex-col gap-2 border-t border-line pt-3">
