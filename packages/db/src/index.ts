@@ -7,6 +7,7 @@
 export { prisma } from "./client.js";
 export {
   countPublishedCards,
+  findPublishedCardNames,
   findPublishedCardsForList,
   type PublishedCardRow,
 } from "./catalogue.js";

@@ -1,5 +1,6 @@
 // Type-only imports: this module and its tests never load the Prisma client.
 import type { Prisma, RewardType } from "@sift/db";
+import { normalizeSearch } from "./search";
 
 /**
  * The reward types a visitor can filter by, in display order. One list for both locales: the
@@ -16,6 +17,8 @@ export type FilterRewardType = (typeof FILTER_REWARD_TYPES)[number];
 
 /** The catalogue filters, read from the URL query string so a filtered view can be bookmarked. */
 export interface CatalogueFilters {
+  /** Card or bank name, in either language. Empty = no search. */
+  search: string;
   /** Reward types to show. Empty = no reward filter. Several = a union (any of them). */
   rewardTypes: FilterRewardType[];
   /** Lowest annual fee to show, in SAR. `null` = no lower bound. */
@@ -30,6 +33,7 @@ export interface CatalogueFilters {
 
 /** Query parameter names. */
 export const FILTER_PARAMS = {
+  search: "q",
   reward: "reward",
   feeMin: "feeMin",
   feeMax: "feeMax",
@@ -80,6 +84,7 @@ export function parseFilters(params: SearchParams): CatalogueFilters {
   // A reversed range ("from 500 to 100") means the same range the other way round.
   if (feeMin !== null && feeMax !== null && feeMin > feeMax) [feeMin, feeMax] = [feeMax, feeMin];
   return {
+    search: valuesOf(params, FILTER_PARAMS.search)[0]?.trim() ?? "",
     // Keep the display order, whatever order the URL lists them in.
     rewardTypes: FILTER_REWARD_TYPES.filter((type) => selected.has(type)),
     feeMin,
@@ -107,6 +112,7 @@ export function hasShariaFilter(filters: CatalogueFilters): boolean {
 /** True when at least one filter narrows the catalogue. */
 export function hasActiveFilters(filters: CatalogueFilters): boolean {
   return (
+    normalizeSearch(filters.search).length > 0 ||
     filters.rewardTypes.length > 0 ||
     hasFeeFilter(filters) ||
     hasIncomeFilter(filters) ||
@@ -117,8 +123,13 @@ export function hasActiveFilters(filters: CatalogueFilters): boolean {
 /** Which filter a condition comes from, so one can be left out (see the build*UnknownWhere). */
 type FilterName = "reward" | "fee" | "income" | "sharia";
 
-function conditionsFor(filters: CatalogueFilters, omit?: FilterName): Prisma.CardWhereInput[] {
+function conditionsFor(
+  filters: CatalogueFilters,
+  searchWhere: Prisma.CardWhereInput,
+  omit?: FilterName,
+): Prisma.CardWhereInput[] {
   const and: Prisma.CardWhereInput[] = [];
+  if (Object.keys(searchWhere).length > 0) and.push(searchWhere);
 
   // Reward types are a union: a card matches if its main reward type, or the type of any of its
   // reward tiers, is one of the selected types. So a card offering cashback and points appears
@@ -161,8 +172,11 @@ function toWhere(and: Prisma.CardWhereInput[]): Prisma.CardWhereInput {
 }
 
 /** The database condition for the filters (combined with `status = published` by the query). */
-export function buildCardWhere(filters: CatalogueFilters): Prisma.CardWhereInput {
-  return toWhere(conditionsFor(filters));
+export function buildCardWhere(
+  filters: CatalogueFilters,
+  searchWhere: Prisma.CardWhereInput = {},
+): Prisma.CardWhereInput {
+  return toWhere(conditionsFor(filters, searchWhere));
 }
 
 /**
@@ -170,10 +184,13 @@ export function buildCardWhere(filters: CatalogueFilters): Prisma.CardWhereInput
  * every other active filter, but have no fee row or a NULL annual fee. The page shows this count
  * so a visitor knows those cards exist. `null` when no fee filter is active.
  */
-export function buildUnknownFeeWhere(filters: CatalogueFilters): Prisma.CardWhereInput | null {
+export function buildUnknownFeeWhere(
+  filters: CatalogueFilters,
+  searchWhere: Prisma.CardWhereInput = {},
+): Prisma.CardWhereInput | null {
   if (!hasFeeFilter(filters)) return null;
   return toWhere([
-    ...conditionsFor(filters, "fee"),
+    ...conditionsFor(filters, searchWhere, "fee"),
     { OR: [{ fee: { is: null } }, { fee: { is: { annualFee: null } } }] },
   ]);
 }
@@ -182,9 +199,12 @@ export function buildUnknownFeeWhere(filters: CatalogueFilters): Prisma.CardWher
  * Cards the income filter hides only because the bank has not published a minimum income: they
  * match every other active filter, but their minimum income is NULL. `null` when no income is set.
  */
-export function buildUnknownIncomeWhere(filters: CatalogueFilters): Prisma.CardWhereInput | null {
+export function buildUnknownIncomeWhere(
+  filters: CatalogueFilters,
+  searchWhere: Prisma.CardWhereInput = {},
+): Prisma.CardWhereInput | null {
   if (!hasIncomeFilter(filters)) return null;
-  return toWhere([...conditionsFor(filters, "income"), { minMonthlyIncome: null }]);
+  return toWhere([...conditionsFor(filters, searchWhere, "income"), { minMonthlyIncome: null }]);
 }
 
 /**
@@ -192,7 +212,10 @@ export function buildUnknownIncomeWhere(filters: CatalogueFilters): Prisma.CardW
  * Sharia-compliant: they match every other active filter, but `shariaCompliant` is NULL. Cards the
  * bank says are not compliant (`false`) are not counted. `null` when the Sharia filter is off.
  */
-export function buildUnknownShariaWhere(filters: CatalogueFilters): Prisma.CardWhereInput | null {
+export function buildUnknownShariaWhere(
+  filters: CatalogueFilters,
+  searchWhere: Prisma.CardWhereInput = {},
+): Prisma.CardWhereInput | null {
   if (!hasShariaFilter(filters)) return null;
-  return toWhere([...conditionsFor(filters, "sharia"), { shariaCompliant: null }]);
+  return toWhere([...conditionsFor(filters, searchWhere, "sharia"), { shariaCompliant: null }]);
 }
