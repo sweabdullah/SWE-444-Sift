@@ -8,6 +8,10 @@
     "riyal": "Saudi riyal",
     "lastUpdated": "Last updated: {date}"
   },
+  "financialDisclaimer": {
+    "title": "This is not financial advice.",
+    "body": "Sift provides information only. Verify figures and terms directly with the bank before applying."
+  },
   "localeSwitch": {
     "label": "العربية",
     "ariaLabel": "التبديل إلى العربية"
@@ -104,6 +108,12 @@
     "loading": "Loading card details…",
     "error": "Card details could not be loaded. Please try again.",
     "retry": "Try again"
+  },
+  "provenance": {
+    "source": "Official bank product source",
+    "verified": "Last verified",
+    "sourceUnavailable": "Official source unavailable",
+    "dateUnavailable": "Verification date not published"
   },
   "notFound": {
     "title": "Page not found",

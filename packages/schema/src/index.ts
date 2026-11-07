@@ -20,3 +20,5 @@ export function directionOf(locale: Locale): "rtl" | "ltr" {
 export function isLocale(value: string): value is Locale {
   return (LOCALES as readonly string[]).includes(value);
 }
+
+export { httpSourceHost, isOfficialSourceUrl, normalizeSourceUrl } from "./source.js";

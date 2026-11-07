@@ -25,7 +25,9 @@ export function findPublishedCardsForList(locale: Locale, where: Prisma.CardWher
     select: {
       id: true,
       rewardType: true,
-      bank: { select: { nameAr: true, nameEn: true } },
+      bank: { select: { nameAr: true, nameEn: true, entryUrls: { select: { url: true } } } },
+      source: { select: { url: true } },
+      verifiedAt: true,
       fee: { select: { annualFee: true } },
       translations: { where: { locale }, select: { name: true } },
       rewardTiers: {
@@ -55,7 +57,9 @@ export function findPublishedCardById(id: string, locale: Locale) {
     where: { id, status: "published" },
     select: {
       id: true,
-      bank: { select: { nameAr: true, nameEn: true } },
+      bank: { select: { nameAr: true, nameEn: true, entryUrls: { select: { url: true } } } },
+      source: { select: { url: true } },
+      verifiedAt: true,
       minMonthlyIncome: true,
       rewardTiers: {
         orderBy: { sortOrder: "asc" },

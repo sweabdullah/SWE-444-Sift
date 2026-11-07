@@ -10,7 +10,13 @@ describe("card detail content", () => {
     const t = getTranslator(locale);
     const card: PublishedCardDetailRow = {
       id: "card_test",
-      bank: { nameAr: "بنك الاختبار", nameEn: "Test bank" },
+      bank: {
+        nameAr: "بنك الاختبار",
+        nameEn: "Test bank",
+        entryUrls: [{ url: "https://bank.example/" }],
+      },
+      source: { url: "https://bank.example/cards/test" },
+      verifiedAt: null,
       minMonthlyIncome: null,
       rewardTiers: [],
       fee: {
@@ -34,6 +40,37 @@ describe("card detail content", () => {
     };
     const translation = card.translations[0];
     if (!translation) throw new Error("Test card requires a translation");
+
+    it(`includes the official source and genuine verification date on the detail page in ${locale}`, () => {
+      const html = renderToStaticMarkup(
+        <CardDetail
+          card={{ ...card, verifiedAt: new Date("2026-10-21T09:00:00Z") }}
+          locale={locale}
+        />,
+      );
+      expect(html).toContain('href="https://bank.example/cards/test"');
+      expect(html).toContain(t("provenance.verified"));
+      expect(html).toContain(t("financialDisclaimer.body"));
+      expect(html.indexOf(t("financialDisclaimer.body"))).toBeLessThan(
+        html.indexOf('<h2 id="fees-heading"'),
+      );
+      expect(html).toContain(locale === "ar" ? "21 أكتوبر 2026" : "October 21, 2026");
+    });
+
+    it(`shows the full disclaimer before the first fee figure in ${locale}`, () => {
+      const html = renderToStaticMarkup(<CardDetail card={card} locale={locale} />);
+      const fees =
+        html.split('<section aria-labelledby="fees-heading">')[1]?.split("</section>")[0] ?? "";
+      const title = t("financialDisclaimer.title");
+      const body = t("financialDisclaimer.body");
+      expect(fees).toContain(title);
+      expect(fees).toContain(body);
+      expect(fees).toContain(`lang="${locale}" dir="${locale === "ar" ? "rtl" : "ltr"}"`);
+      expect(fees.indexOf(title)).toBeLessThan(fees.indexOf('<h2 id="fees-heading"'));
+      expect(fees.indexOf(body)).toBeLessThan(fees.indexOf("<dl"));
+      expect(fees).toContain("</svg> 0</span>");
+      expect(html.split(title)).toHaveLength(2);
+    });
 
     it(`shows seven fees, preserving zero, unknown and percentage precision in ${locale}`, () => {
       const html = renderToStaticMarkup(<CardDetail card={card} locale={locale} />);
@@ -125,6 +162,7 @@ describe("card detail content", () => {
           locale={locale}
           card={{
             ...card,
+            verifiedAt: new Date("2026-10-21T09:00:00Z"),
             rewardTiers: [
               {
                 id: "tier",
@@ -142,6 +180,11 @@ describe("card detail content", () => {
         />,
       );
       expect(html).toContain('id="reward-tiers-heading"');
+      expect(html).toContain('href="https://bank.example/cards/test"');
+      expect(html).toMatch(/datetime="2026-10-21T09:00:00.000Z"/i);
+      expect(html.indexOf(t("financialDisclaimer.body"))).toBeLessThan(
+        html.indexOf('<h2 id="fees-heading"'),
+      );
       expect(html).toContain(condition);
       expect(html).toContain("</svg> 200</span>");
       expect(html).toContain('id="fees-heading"');

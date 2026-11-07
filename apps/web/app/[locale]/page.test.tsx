@@ -27,7 +27,9 @@ describe("catalogue to detail navigation", () => {
         {
           id: "card_test",
           rewardType: "cashback",
-          bank: { nameAr: "بنك", nameEn: "Bank" },
+          bank: { nameAr: "بنك", nameEn: "Bank", entryUrls: [{ url: "https://bank.example/" }] },
+          source: { url: "https://bank.example/cards/test" },
+          verifiedAt: new Date("2026-10-21T09:00:00Z"),
           fee: null,
           translations: [{ name: locale === "ar" ? "بطاقة" : "Card" }],
           rewardTiers: [],
@@ -38,6 +40,9 @@ describe("catalogue to detail navigation", () => {
       );
       expect(html).toContain(`href="/${locale}/cards/card_test"`);
       expect(html).toContain(locale === "ar" ? "بطاقة</a>" : "Card</a>");
+      expect(html).toContain('href="https://bank.example/cards/test"');
+      expect(html).toMatch(/datetime="2026-10-21T09:00:00.000Z"/i);
+      expect(html).toContain(locale === "ar" ? "21 أكتوبر 2026" : "October 21, 2026");
     });
 
     for (const page of [1, 2]) {
@@ -46,7 +51,9 @@ describe("catalogue to detail navigation", () => {
         const rows: PublishedCardRow[] = Array.from({ length: 8 }, (_, index) => ({
           id: `card_${index + 1}`,
           rewardType: "cashback",
-          bank: { nameAr: "بنك", nameEn: "Bank" },
+          bank: { nameAr: "بنك", nameEn: "Bank", entryUrls: [{ url: "https://bank.example/" }] },
+          source: { url: "https://bank.example/cards/test" },
+          verifiedAt: new Date("2026-10-21T09:00:00Z"),
           translations: [{ name: (locale === "ar" ? "بطاقة " : "Card ") + (index + 1) }],
           fee: { annualFee: decimal((index + 1) * 10) },
           rewardTiers: [
@@ -101,6 +108,12 @@ describe("catalogue to detail navigation", () => {
         }
         expect(html.match(/<li /g)).toHaveLength(page === 1 ? 6 : 2);
         expect(html).toContain(t("catalogue.filters.matchCount", { count: 8 }));
+        expect(html.match(/datetime="2026-10-21T09:00:00.000Z"/gi)).toHaveLength(
+          page === 1 ? 6 : 2,
+        );
+        expect(html.split('href="https://bank.example/cards/test"').length - 1).toBe(
+          page === 1 ? 6 : 2,
+        );
         const otherPage = page === 1 ? 2 : 1;
         expect(html).toContain(
           `href="${pageHref(locale, query, otherPage).replaceAll("&", "&amp;")}"`,

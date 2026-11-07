@@ -10,10 +10,12 @@ import {
 /** One card as the public card list shows it. */
 export interface CardListItem {
   id: string;
+  rewardType: RewardType;
   name: string;
   bankName: string;
-  /** The card's main reward type, shown as its headline reward (`none` = no rewards). */
-  rewardType: RewardType;
+  registeredSiteUrls: string[];
+  sourceUrl: string;
+  verifiedAt: Date | null;
   /** SAR per year. `null` = the bank has not published it (never shown as 0). */
   annualFee: number | null;
   /** Highest and base rate in the card's headline unit. `null` = no reward tiers published. */
@@ -29,7 +31,9 @@ type DecimalLike = { toString(): string };
 export interface CardListRow {
   id: string;
   rewardType: RewardType;
-  bank: { nameAr: string; nameEn: string };
+  bank: { nameAr: string; nameEn: string; entryUrls: { url: string }[] };
+  source: { url: string };
+  verifiedAt: Date | null;
   fee: { annualFee: DecimalLike | null } | null;
   translations: { name: string }[];
   rewardTiers: {
@@ -61,9 +65,12 @@ export function toCardList(
     if (!name) continue;
     items.push({
       id: row.id,
+      rewardType: row.rewardType,
       name,
       bankName: locale === "ar" ? row.bank.nameAr : row.bank.nameEn,
-      rewardType: row.rewardType,
+      registeredSiteUrls: row.bank.entryUrls.map((entry) => entry.url),
+      sourceUrl: row.source.url,
+      verifiedAt: row.verifiedAt,
       annualFee: toNumber(row.fee?.annualFee),
       rewardRate: summarizeRewardRate(
         row.rewardTiers.map((tier) => ({
