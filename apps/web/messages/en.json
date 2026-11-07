@@ -5,7 +5,8 @@
   },
   "common": {
     "logoAlt": "Sift logo",
-    "riyal": "Saudi riyal"
+    "riyal": "Saudi riyal",
+    "lastUpdated": "Last updated: {date}"
   },
   "localeSwitch": {
     "label": "العربية",
@@ -55,6 +56,8 @@
       "showing": "Cards {start} to {end} of {total}"
     },
     "filters": {
+      "searchLabel": "Search by card or bank name",
+      "searchPlaceholder": "Enter a name in English or Arabic",
       "heading": "Filter cards",
       "rewardLegend": "Reward type",
       "rewardHint": "Pick one or more. A card that offers several types appears under each.",

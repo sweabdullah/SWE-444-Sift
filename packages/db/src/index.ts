@@ -8,6 +8,7 @@ export { prisma } from "./client.js";
 export {
   countPublishedCards,
   findPublishedCardById,
+  findPublishedCardNames,
   findPublishedCardsForList,
   type PublishedCardDetailRow,
   type PublishedCardRow,

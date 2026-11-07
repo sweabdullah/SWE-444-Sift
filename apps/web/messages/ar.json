@@ -5,7 +5,8 @@
   },
   "common": {
     "logoAlt": "شعار سِفت",
-    "riyal": "ريال سعودي"
+    "riyal": "ريال سعودي",
+    "lastUpdated": "آخر تحديث: {date}"
   },
   "localeSwitch": {
     "label": "English",
@@ -55,6 +56,8 @@
       "showing": "البطاقات {start} إلى {end} من {total}"
     },
     "filters": {
+      "searchLabel": "البحث باسم البطاقة أو البنك",
+      "searchPlaceholder": "أدخل اسماً بالعربية أو الإنجليزية",
       "heading": "تصفية البطاقات",
       "rewardLegend": "نوع المكافأة",
       "rewardHint": "اختر نوعًا أو أكثر. البطاقة التي تقدّم أكثر من نوع تظهر تحت كل نوع منها.",

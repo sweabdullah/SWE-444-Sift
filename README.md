@@ -37,6 +37,8 @@ Run `pnpm check` before you open a pull request.
 
 ## Repository layout
 
+**Internationalisation.** How to add a translated string and format amounts, percentages and dates: [`docs/i18n.md`](docs/i18n.md).
+
 ```
 apps/
   web/        Public web app (Next.js) — catalogue, comparison, accounts, admin

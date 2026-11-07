@@ -24,6 +24,20 @@ export function CatalogueFiltersForm({ locale, filters, sort }: Props) {
         {t("catalogue.filters.heading")}
       </h2>
 
+      <label className="flex flex-col gap-1">
+        <span className="text-start text-label font-semibold">
+          {t("catalogue.filters.searchLabel")}
+        </span>
+        <input
+          type="search"
+          name={FILTER_PARAMS.search}
+          defaultValue={filters.search}
+          placeholder={t("catalogue.filters.searchPlaceholder")}
+          dir="auto"
+          className="min-h-11 rounded-md border border-line bg-white ps-3 pe-3 text-start"
+        />
+      </label>
+
       <fieldset className="flex flex-col gap-2">
         <legend className="text-start text-label font-semibold">
           {t("catalogue.filters.rewardLegend")}
