@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { toCardList, type CardListRow } from "./catalogue";
+import { cardHref, toCardList, type CardListRow } from "./catalogue";
 
 const decimal = (s: string) => ({ toString: () => s });
 
 const sab: CardListRow = {
   id: "card_sab",
+  rewardType: "cashback",
   bank: { nameAr: "البنك السعودي الأول", nameEn: "Saudi Awwal Bank (SAB)" },
   fee: { annualFee: decimal("350.00") },
   translations: [{ name: "SAB Cashback" }],
@@ -15,6 +16,7 @@ const rows: CardListRow[] = [
   sab,
   {
     id: "card_riyad_b",
+    rewardType: "points",
     bank: { nameAr: "بنك الرياض", nameEn: "Riyad Bank" },
     fee: { annualFee: decimal("0.00") },
     translations: [{ name: "Titanium" }],
@@ -22,6 +24,7 @@ const rows: CardListRow[] = [
   },
   {
     id: "card_riyad_a",
+    rewardType: "none",
     bank: { nameAr: "بنك الرياض", nameEn: "Riyad Bank" },
     fee: null,
     translations: [{ name: "Cashback Signature" }],
@@ -97,5 +100,23 @@ describe("toCardList", () => {
       "card_sab",
       "card_riyad_a",
     ]);
+  });
+
+  it("carries each card's main reward type as its headline reward", () => {
+    const byId = new Map(toCardList(rows, "en").map((c) => [c.id, c.rewardType]));
+    expect(byId.get("card_sab")).toBe("cashback");
+    expect(byId.get("card_riyad_b")).toBe("points");
+    expect(byId.get("card_riyad_a")).toBe("none");
+  });
+});
+
+describe("cardHref", () => {
+  it("points at the detail page in the same locale", () => {
+    expect(cardHref("ar", "card_sab")).toBe("/ar/cards/card_sab");
+    expect(cardHref("en", "card_sab")).toBe("/en/cards/card_sab");
+  });
+
+  it("escapes characters that are not safe in a path segment", () => {
+    expect(cardHref("en", "a/b c")).toBe("/en/cards/a%2Fb%20c");
   });
 });
