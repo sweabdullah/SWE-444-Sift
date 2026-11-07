@@ -7,7 +7,7 @@ import { CatalogueFiltersForm } from "@/components/CatalogueFilters";
 import { CataloguePagination } from "@/components/CataloguePagination";
 import { RewardRateValue } from "@/components/RewardRateValue";
 import { Riyal } from "@/components/Riyal";
-import { toCardList } from "@/lib/catalogue";
+import { cardHref, toCardList } from "@/lib/catalogue";
 import {
   buildCardWhere,
   buildUnknownFeeWhere,
@@ -152,7 +152,14 @@ export default async function HomePage({
                     className="flex flex-col gap-4 rounded-md border border-line bg-white p-5"
                   >
                     <div className="flex flex-col gap-1">
-                      <h3 className="text-start font-semibold">{card.name}</h3>
+                      <h3 className="text-start font-semibold">
+                        <Link
+                          href={cardHref(locale, card.id)}
+                          className="underline underline-offset-4"
+                        >
+                          {card.name}
+                        </Link>
+                      </h3>
                       <p className="text-label text-start text-platinum-deep">{card.bankName}</p>
                     </div>
                     <dl className="mt-auto flex flex-col gap-2 border-t border-line pt-3">
