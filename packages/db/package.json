@@ -15,7 +15,8 @@
     "db:studio": "prisma studio",
     "db:seed": "prisma db seed",
     "db:seed:check": "tsx prisma/seed-check.ts",
-    "db:seed:catalogue": "tsx prisma/seed-catalogue.ts"
+    "db:seed:catalogue": "tsx prisma/seed-catalogue.ts",
+    "db:source:check": "tsx prisma/source-constraints-check.ts"
   },
   "dependencies": {
     "@prisma/client": "6.19.3"

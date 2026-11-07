@@ -47,7 +47,13 @@ describe("card detail route", () => {
     async (locale) => {
       vi.mocked(findPublishedCardById).mockResolvedValue({
         id: "card",
-        bank: { nameAr: "بنك الاختبار", nameEn: "Test bank" },
+        bank: {
+          nameAr: "بنك الاختبار",
+          nameEn: "Test bank",
+          entryUrls: [{ url: "https://bank.example/" }],
+        },
+        source: { url: "https://bank.example/cards/test" },
+        verifiedAt: new Date("2026-10-21T09:00:00Z"),
         fee: null,
         minMonthlyIncome: null,
         translations: [
@@ -68,6 +74,8 @@ describe("card detail route", () => {
         html.split('<section aria-labelledby="fees-heading">')[1]?.split("</section>")[0] ?? "";
       const footer = html.split("<footer")[1] ?? "";
       const t = getTranslator(locale);
+      expect(html).toContain('href="https://bank.example/cards/test"');
+      expect(html).toMatch(/datetime="2026-10-21T09:00:00.000Z"/i);
       for (const key of ["financialDisclaimer.title", "financialDisclaimer.body"] as const) {
         const copy = t(key);
         expect(fees).toContain(copy);
@@ -84,7 +92,9 @@ describe("card detail route", () => {
     it(`requires a name in the requested locale (${JSON.stringify(name)})`, async () => {
       const card = {
         id: "card",
-        bank: { nameAr: "بنك", nameEn: "Bank" },
+        bank: { nameAr: "بنك", nameEn: "Bank", entryUrls: [{ url: "https://bank.example/" }] },
+        source: { url: "https://bank.example/cards/test" },
+        verifiedAt: null,
         fee: null,
         minMonthlyIncome: null,
         translations:

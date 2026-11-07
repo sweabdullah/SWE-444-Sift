@@ -6,6 +6,7 @@ import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { CatalogueFiltersForm } from "@/components/CatalogueFilters";
 import { CataloguePagination } from "@/components/CataloguePagination";
 import { RewardRateValue } from "@/components/RewardRateValue";
+import { CardProvenance } from "@/components/CardProvenance";
 import { Riyal } from "@/components/Riyal";
 import { cardHref, toCardList } from "@/lib/catalogue";
 import {
@@ -204,6 +205,12 @@ export default async function HomePage({
                         </dd>
                       </div>
                     </dl>
+                    <CardProvenance
+                      sourceUrl={card.sourceUrl}
+                      registeredSiteUrls={card.registeredSiteUrls}
+                      verifiedAt={card.verifiedAt}
+                      locale={locale}
+                    />
                   </li>
                 ))}
               </ul>

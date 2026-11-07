@@ -109,6 +109,12 @@
     "error": "Card details could not be loaded. Please try again.",
     "retry": "Try again"
   },
+  "provenance": {
+    "source": "Official bank product source",
+    "verified": "Last verified",
+    "sourceUnavailable": "Official source unavailable",
+    "dateUnavailable": "Verification date not published"
+  },
   "notFound": {
     "title": "Page not found",
     "home": "Back to the home page"

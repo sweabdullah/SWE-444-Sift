@@ -12,10 +12,16 @@ vi.mock("@sift/db", () => db);
 vi.mock("@/components/LocaleSwitch", () => ({ LocaleSwitch: () => null }));
 import HomePage from "../app/[locale]/page";
 
-const bank = { nameEn: "Riyad Bank", nameAr: "بنك الرِّيَاض" };
+const bank = {
+  nameEn: "Riyad Bank",
+  nameAr: "بنك الرِّيَاض",
+  entryUrls: [{ url: "https://bank.example/" }],
+};
 const rows = Array.from({ length: 8 }, (_, i) => ({
   id: `card-${i}`,
   bank,
+  source: { url: `https://bank.example/cards/${i}` },
+  verifiedAt: new Date("2026-10-21T09:00:00Z"),
   translations: [{ name: `Gold ${i}` }],
   rewardType: "cashback" as const,
   fee: { annualFee: String(80 - i * 10) },
@@ -79,6 +85,10 @@ describe("catalogue search page", () => {
       expect(html).toContain(second);
       expect(html).not.toContain(absent);
       expect(html.indexOf(first)).toBeLessThan(html.indexOf(second));
+      expect(html).toContain(`href="https://bank.example/cards/${first.split(" ")[1]}"`);
+      expect(html).toContain(`href="https://bank.example/cards/${second.split(" ")[1]}"`);
+      expect(html).not.toContain(`href="https://bank.example/cards/${absent.split(" ")[1]}"`);
+      expect(html.match(/datetime="2026-10-21T09:00:00.000Z"/gi)).toHaveLength(2);
       expect(html).toContain("q=%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6");
     },
   );

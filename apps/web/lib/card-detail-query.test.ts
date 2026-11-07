@@ -16,6 +16,9 @@ describe("public detail database query", () => {
       expect(findFirst).toHaveBeenCalledWith({
         where: { id: "private-card", status: "published" },
         select: expect.objectContaining({
+          source: { select: { url: true } },
+          verifiedAt: true,
+          bank: { select: { nameAr: true, nameEn: true, entryUrls: { select: { url: true } } } },
           fee: {
             select: {
               annualFee: true,

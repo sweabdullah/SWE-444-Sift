@@ -1,5 +1,6 @@
 import type { PublishedCardDetailRow } from "@sift/db";
 import { Riyal } from "@/components/Riyal";
+import { CardProvenance } from "@/components/CardProvenance";
 import { FinancialDisclaimer } from "@/components/FinancialDisclaimer";
 import { formatNumber } from "@/lib/format";
 import { getTranslator, type Locale } from "@/lib/i18n";
@@ -30,6 +31,12 @@ export function CardDetail({ card, locale }: { card: PublishedCardDetailRow; loc
           {locale === "ar" ? card.bank.nameAr : card.bank.nameEn}
         </p>
       </div>
+      <CardProvenance
+        sourceUrl={card.source.url}
+        registeredSiteUrls={card.bank.entryUrls.map((entry) => entry.url)}
+        verifiedAt={card.verifiedAt}
+        locale={locale}
+      />
       <section aria-labelledby="fees-heading">
         <div className="mb-4 rounded-md border border-line bg-white p-4">
           <FinancialDisclaimer locale={locale} />
