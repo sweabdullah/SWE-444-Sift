@@ -5,6 +5,7 @@ import { countPublishedCards, findPublishedCardsForList } from "@sift/db";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { CatalogueFiltersForm } from "@/components/CatalogueFilters";
 import { Riyal } from "@/components/Riyal";
+import { CardProvenance } from "@/components/CardProvenance";
 import { toCardList } from "@/lib/catalogue";
 import {
   buildCardWhere,
@@ -179,6 +180,12 @@ export default async function HomePage({
                       </dd>
                     </div>
                   </dl>
+                  <CardProvenance
+                    sourceUrl={card.sourceUrl}
+                    registeredSiteUrls={card.registeredSiteUrls}
+                    verifiedAt={card.verifiedAt}
+                    locale={locale}
+                  />
                 </li>
               ))}
             </ul>

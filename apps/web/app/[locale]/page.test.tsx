@@ -12,7 +12,9 @@ describe("catalogue to detail navigation", () => {
       vi.mocked(findPublishedCardsForList).mockResolvedValue([
         {
           id: "card_test",
-          bank: { nameAr: "بنك", nameEn: "Bank" },
+          bank: { nameAr: "بنك", nameEn: "Bank", entryUrls: [{ url: "https://bank.example/" }] },
+          source: { url: "https://bank.example/cards/test" },
+          verifiedAt: new Date("2026-10-21T09:00:00Z"),
           fee: null,
           translations: [{ name: locale === "ar" ? "بطاقة" : "Card" }],
           rewardTiers: [],
@@ -23,6 +25,9 @@ describe("catalogue to detail navigation", () => {
       );
       expect(html).toContain(`href="/${locale}/cards/card_test"`);
       expect(html).toContain(locale === "ar" ? "بطاقة</a>" : "Card</a>");
+      expect(html).toContain('href="https://bank.example/cards/test"');
+      expect(html).toMatch(/datetime="2026-10-21T09:00:00.000Z"/i);
+      expect(html).toContain(locale === "ar" ? "21 أكتوبر 2026" : "October 21, 2026");
     });
   }
 });

@@ -10,7 +10,13 @@ describe("card detail content", () => {
     const t = getTranslator(locale);
     const card: PublishedCardDetailRow = {
       id: "card_test",
-      bank: { nameAr: "بنك الاختبار", nameEn: "Test bank" },
+      bank: {
+        nameAr: "بنك الاختبار",
+        nameEn: "Test bank",
+        entryUrls: [{ url: "https://bank.example/" }],
+      },
+      source: { url: "https://bank.example/cards/test" },
+      verifiedAt: null,
       minMonthlyIncome: null,
       fee: {
         annualFee: new Prisma.Decimal(0),
@@ -33,6 +39,18 @@ describe("card detail content", () => {
     };
     const translation = card.translations[0];
     if (!translation) throw new Error("Test card requires a translation");
+
+    it(`includes the official source and genuine verification date on the detail page in ${locale}`, () => {
+      const html = renderToStaticMarkup(
+        <CardDetail
+          card={{ ...card, verifiedAt: new Date("2026-10-21T09:00:00Z") }}
+          locale={locale}
+        />,
+      );
+      expect(html).toContain('href="https://bank.example/cards/test"');
+      expect(html).toContain(t("provenance.verified"));
+      expect(html).toContain(locale === "ar" ? "21 أكتوبر 2026" : "October 21, 2026");
+    });
 
     it(`shows seven fees, preserving zero, unknown and percentage precision in ${locale}`, () => {
       const html = renderToStaticMarkup(<CardDetail card={card} locale={locale} />);

@@ -40,7 +40,9 @@ describe("card detail route", () => {
     it(`requires a name in the requested locale (${JSON.stringify(name)})`, async () => {
       const card = {
         id: "card",
-        bank: { nameAr: "بنك", nameEn: "Bank" },
+        bank: { nameAr: "بنك", nameEn: "Bank", entryUrls: [{ url: "https://bank.example/" }] },
+        source: { url: "https://bank.example/cards/test" },
+        verifiedAt: null,
         fee: null,
         minMonthlyIncome: null,
         translations:

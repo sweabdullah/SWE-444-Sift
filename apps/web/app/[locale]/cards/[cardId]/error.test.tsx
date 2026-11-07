@@ -16,7 +16,13 @@ describe("card detail server-render retry", () => {
     it(`refreshes the server render and recovers from a transient failure in ${locale}`, async () => {
       const card: PublishedCardDetailRow = {
         id: "card_test",
-        bank: { nameAr: "بنك الاختبار", nameEn: "Test bank" },
+        bank: {
+          nameAr: "بنك الاختبار",
+          nameEn: "Test bank",
+          entryUrls: [{ url: "https://bank.example/" }],
+        },
+        source: { url: "https://bank.example/cards/test" },
+        verifiedAt: null,
         minMonthlyIncome: null,
         fee: null,
         translations: [

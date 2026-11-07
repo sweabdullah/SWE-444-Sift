@@ -72,6 +72,11 @@ jobs:
           pnpm --filter @sift/db db:seed:catalogue | tee seed-2.log
           grep -q "Catalogue seed skipped" seed-2.log
 
+      - name: Official source constraints (isolated PostgreSQL; test writes roll back)
+        run: pnpm --filter @sift/db db:source:check
+        env:
+          SIFT_TEST_DATABASE: "1"
+
       - name: Format check, lint, build
         run: pnpm check
 

@@ -5,7 +5,13 @@ const decimal = (s: string) => ({ toString: () => s });
 
 const sab: CardListRow = {
   id: "card_sab",
-  bank: { nameAr: "البنك السعودي الأول", nameEn: "Saudi Awwal Bank (SAB)" },
+  bank: {
+    nameAr: "البنك السعودي الأول",
+    nameEn: "Saudi Awwal Bank (SAB)",
+    entryUrls: [{ url: "https://www.sab.com/" }],
+  },
+  source: { url: "https://www.sab.com/cards/test" },
+  verifiedAt: new Date("2026-10-21T09:00:00Z"),
   fee: { annualFee: decimal("350.00") },
   translations: [{ name: "SAB Cashback" }],
   rewardTiers: [],
@@ -15,14 +21,26 @@ const rows: CardListRow[] = [
   sab,
   {
     id: "card_riyad_b",
-    bank: { nameAr: "بنك الرياض", nameEn: "Riyad Bank" },
+    bank: {
+      nameAr: "بنك الرياض",
+      nameEn: "Riyad Bank",
+      entryUrls: [{ url: "https://www.riyadbank.com/" }],
+    },
+    source: { url: "https://www.riyadbank.com/cards/test" },
+    verifiedAt: null,
     fee: { annualFee: decimal("0.00") },
     translations: [{ name: "Titanium" }],
     rewardTiers: [],
   },
   {
     id: "card_riyad_a",
-    bank: { nameAr: "بنك الرياض", nameEn: "Riyad Bank" },
+    bank: {
+      nameAr: "بنك الرياض",
+      nameEn: "Riyad Bank",
+      entryUrls: [{ url: "https://www.riyadbank.com/" }],
+    },
+    source: { url: "https://www.riyadbank.com/cards/test" },
+    verifiedAt: null,
     fee: null,
     translations: [{ name: "Cashback Signature" }],
     rewardTiers: [],
@@ -30,6 +48,12 @@ const rows: CardListRow[] = [
 ];
 
 describe("toCardList", () => {
+  it("carries actual provenance through without filling in missing dates", () => {
+    const byId = new Map(toCardList(rows, "en").map((c) => [c.id, c]));
+    expect(byId.get("card_sab")?.sourceUrl).toBe(sab.source.url);
+    expect(byId.get("card_sab")?.verifiedAt).toBe(sab.verifiedAt);
+    expect(byId.get("card_riyad_a")?.verifiedAt).toBeNull();
+  });
   it("sorts by bank name, then card name, in the locale's alphabet", () => {
     expect(toCardList(rows, "en").map((c) => c.id)).toEqual([
       "card_riyad_a",

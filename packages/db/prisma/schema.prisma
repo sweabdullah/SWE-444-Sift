@@ -152,6 +152,7 @@ model Bank {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   entryUrls       BankEntryUrl[]
+  sourceGuard     BankSourceGuard?
   cards           Card[]
   sources         Source[]
   crawlRuns       CrawlRun[]
@@ -159,6 +160,15 @@ model Bank {
 
   @@index([active])
   @@map("bank")
+}
+
+/// Private serialization state used only by publication integrity triggers.
+model BankSourceGuard {
+  bankId   String @id @map("bank_id")
+  revision BigInt @default(0)
+  bank     Bank   @relation(fields: [bankId], references: [id], onDelete: Cascade)
+
+  @@map("bank_source_guard")
 }
 
 /// An official URL registered for a bank (S-28). The crawler starts only from these.
@@ -190,6 +200,8 @@ model Source {
   fieldSources    CardFieldSource[]
   pendingRequests PendingRequest[]
 
+  // SFT-21 also validates URL syntax and bank origin in SQL (see SCHEMA.md).
+  @@unique([id, bankId])
   @@index([bankId, url])
   @@map("source")
 }
@@ -223,7 +235,7 @@ model Card {
   updatedAt           DateTime     @updatedAt @map("updated_at")
 
   bank            Bank              @relation(fields: [bankId], references: [id], onDelete: Restrict)
-  source          Source            @relation(fields: [sourceId], references: [id], onDelete: Restrict)
+  source          Source            @relation(fields: [sourceId, bankId], references: [id, bankId], onDelete: Restrict, onUpdate: NoAction)
   fee             Fee?
   translations    CardTranslation[]
   rewardTiers     RewardTier[]

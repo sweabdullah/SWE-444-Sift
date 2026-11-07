@@ -11,6 +11,58 @@ Prisma models are PascalCase (`CardTranslation`); Postgres tables and columns ar
 3. **Prose once per language.** Card and reward prose lives in a `*_translation` table with a `locale` (`ar` | `en`) and a unique `(parent_id, locale)` pair. The `card` and `reward_tier` tables hold only language-neutral facts. One exception: a bank's name is a short, fixed pair stored as two columns, `bank.name_ar` and `bank.name_en`, not in a translation table.
 4. **Filterable values are enums.** Anything a visitor can filter or sort by is a Postgres enum or a typed numeric column, never free text. Enum labels are translated once in the UI.
 
+## Official source contract (SFT-21)
+
+This shared contract affects catalogue, bank registration, publishing and ingestion.
+Review the new migration, Prisma model/query changes and shared URL helper separately
+from the UI, and coordinate them with the owners of those lanes before merging.
+
+- Only exact HTTP(S) origins registered in `BankEntryUrl` authorize product sources.
+  Display homepages grant no authority. Register alternate language sites, subdomains,
+  schemes or non-default ports explicitly; there is no implicit www or suffix trust.
+- `normalizeSourceUrl` uses the browser URL parser, including percent encoding Arabic
+  paths. Normalize URLs before storing them for publication. Credentials, IP literals,
+  malformed escapes, whitespace and backslashes are rejected. The supported host policy
+  is ASCII DNS: IDN/A-label hosts fail closed pending a reviewed SQL IDNA implementation.
+  SQL checks normalized persisted URLs; shared vectors exercise browser/SQL parity.
+- Deferred constraint triggers validate final transaction state for **published cards**:
+  the same-bank product source must have an approved HTTP(S) origin and the card must
+  have a non-null, finite `verifiedAt`. Draft and archived source URLs remain editable.
+  Registry/source domain moves can happen atomically in either order. No date is invented:
+  publishing must supply a genuine human verification time. A database cannot prove that
+  the verification occurred. Fetch times, publication times and the clock are not substitutes.
+- A private `bank_source_guard` revision row serializes card, source and registry writes.
+  Narrow security-definer trigger functions use fixed `pg_catalog, public` search paths;
+  direct PUBLIC access to the guard and trigger functions is revoked. Source writers need
+  no bank UPDATE permission and gain no authority-editing rights. Deployment owners must
+  review their actual role grants; no application privileges are granted by this migration.
+  Concurrent multi-bank transactions may need ordinary deadlock/serialization retries.
+- The composite card/source foreign key prevents cross-bank references. It is deferred
+  for coordinated edits; source deletion stays restricted. Product sources and per-figure
+  PDF citations remain separate. URL checks do not verify reachability, redirects or page
+  contents: the registered domains and actual product page still require human review.
+- The UI uses the stored verification timestamp and existing locale-aware `formatDate`.
+  Legacy missing/invalid dates display an explicit unavailable label without fabrication.
+
+The new `20261107000000_official_card_sources` migration adds the private guard model
+and constraints without changing earlier migrations, rewriting records or backfilling dates.
+It locks participating tables with bounded lock/statement timeouts, and preflights existing
+published cards. Invalid published data aborts the transaction; an owner must genuinely
+verify/correct it before retrying. Draft URLs are not a deployment blocker. Review legacy
+published records, registered origins and the cross-bank foreign key before deployment.
+If deployment fails, the database owner must confirm rollback and resolve Prisma's failed
+migration record before retrying. Reverting application code does not remove constraints;
+prefer a reviewed forward migration over weakening publication integrity.
+
+Run `SIFT_TEST_DATABASE=1 pnpm --filter @sift/db db:source:check` only against an isolated
+local test database after applying migrations (PowerShell: set `$env:SIFT_TEST_DATABASE='1'`).
+The checker explicitly flushes deferred constraints before rolling back every scenario.
+It covers URL policy, verification dates, draft/archive edits, publication, domain transitions,
+source deletion and restricted writer privileges. Its transactional test roles require
+CREATEROLE (available on CI's disposable PostgreSQL 16 service). No test roles or fixture
+writes survive rollback. Local live database, deployment upgrade and concurrent-session
+verification remain required where PostgreSQL infrastructure is available.
+
 ## Card identity
 
 A card is identified by **`(bank_id, canonical_url)`** — unique constraint on `card`. When a bank moves a page, the pipeline falls back to **`(bank_id, normalised_name)`** (indexed, not unique) to recognise the same card (S-47). `normalised_name` is the English name lower-cased with punctuation and whitespace collapsed; the normalising function belongs to the pipeline, not the database.
