@@ -1,4 +1,4 @@
-import type { RateUnit } from "@sift/db";
+import type { RateUnit, RewardType } from "@sift/db";
 import type { Locale } from "@sift/schema";
 import {
   compareCards,
@@ -10,6 +10,7 @@ import {
 /** One card as the public card list shows it. */
 export interface CardListItem {
   id: string;
+  rewardType: RewardType;
   name: string;
   bankName: string;
   registeredSiteUrls: string[];
@@ -29,6 +30,7 @@ type DecimalLike = { toString(): string };
  */
 export interface CardListRow {
   id: string;
+  rewardType: RewardType;
   bank: { nameAr: string; nameEn: string; entryUrls: { url: string }[] };
   source: { url: string };
   verifiedAt: Date | null;
@@ -63,6 +65,7 @@ export function toCardList(
     if (!name) continue;
     items.push({
       id: row.id,
+      rewardType: row.rewardType,
       name,
       bankName: locale === "ar" ? row.bank.nameAr : row.bank.nameEn,
       registeredSiteUrls: row.bank.entryUrls.map((entry) => entry.url),
@@ -80,4 +83,12 @@ export function toCardList(
     });
   }
   return items.sort(compareCards(sort, locale));
+}
+
+/**
+ * The address of a card's detail page (SFT-19). The list and the detail page both use this, so
+ * the route is agreed in one place: /ar/cards/<card id> and /en/cards/<card id>.
+ */
+export function cardHref(locale: Locale, id: string): string {
+  return `/${locale}/cards/${encodeURIComponent(id)}`;
 }

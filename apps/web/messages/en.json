@@ -32,6 +32,13 @@
     "annualFee": "Annual fee",
     "notPublished": "Not published by the bank",
     "rewardRate": "Reward rate",
+    "rewardTypeLabel": "Reward type",
+    "rewardType": {
+      "cashback": "Cashback",
+      "points": "Points",
+      "miles": "Miles",
+      "none": "No rewards"
+    },
     "rate": {
       "upToBase": "Up to {max} · Base {base}",
       "percent": "{rate}%",
@@ -40,6 +47,13 @@
       "notPublished": "Reward rate not published"
     },
     "empty": "No cards are published yet.",
+    "pagination": {
+      "label": "Card pages",
+      "previous": "Previous",
+      "next": "Next",
+      "status": "Page {page} of {pages}",
+      "showing": "Cards {start} to {end} of {total}"
+    },
     "filters": {
       "heading": "Filter cards",
       "rewardLegend": "Reward type",
