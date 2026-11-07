@@ -1,4 +1,4 @@
-import type { RateUnit } from "@sift/db";
+import type { RateUnit, RewardType } from "@sift/db";
 import type { Locale } from "@sift/schema";
 import {
   compareCards,
@@ -12,6 +12,8 @@ export interface CardListItem {
   id: string;
   name: string;
   bankName: string;
+  /** The card's main reward type, shown as its headline reward (`none` = no rewards). */
+  rewardType: RewardType;
   /** SAR per year. `null` = the bank has not published it (never shown as 0). */
   annualFee: number | null;
   /** Highest and base rate in the card's headline unit. `null` = no reward tiers published. */
@@ -26,6 +28,7 @@ type DecimalLike = { toString(): string };
  */
 export interface CardListRow {
   id: string;
+  rewardType: RewardType;
   bank: { nameAr: string; nameEn: string };
   fee: { annualFee: DecimalLike | null } | null;
   translations: { name: string }[];
@@ -60,6 +63,7 @@ export function toCardList(
       id: row.id,
       name,
       bankName: locale === "ar" ? row.bank.nameAr : row.bank.nameEn,
+      rewardType: row.rewardType,
       annualFee: toNumber(row.fee?.annualFee),
       rewardRate: summarizeRewardRate(
         row.rewardTiers.map((tier) => ({
@@ -72,4 +76,12 @@ export function toCardList(
     });
   }
   return items.sort(compareCards(sort, locale));
+}
+
+/**
+ * The address of a card's detail page (SFT-19). The list and the detail page both use this, so
+ * the route is agreed in one place: /ar/cards/<card id> and /en/cards/<card id>.
+ */
+export function cardHref(locale: Locale, id: string): string {
+  return `/${locale}/cards/${encodeURIComponent(id)}`;
 }
