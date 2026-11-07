@@ -8,6 +8,10 @@
     "riyal": "Saudi riyal",
     "lastUpdated": "Last updated: {date}"
   },
+  "financialDisclaimer": {
+    "title": "This is not financial advice.",
+    "body": "Sift provides information only. Verify figures and terms directly with the bank before applying."
+  },
   "localeSwitch": {
     "label": "العربية",
     "ariaLabel": "التبديل إلى العربية"

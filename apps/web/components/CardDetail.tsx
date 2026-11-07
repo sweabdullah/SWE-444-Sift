@@ -1,5 +1,6 @@
 import type { PublishedCardDetailRow } from "@sift/db";
 import { Riyal } from "@/components/Riyal";
+import { FinancialDisclaimer } from "@/components/FinancialDisclaimer";
 import { formatNumber } from "@/lib/format";
 import { getTranslator, type Locale } from "@/lib/i18n";
 
@@ -30,6 +31,9 @@ export function CardDetail({ card, locale }: { card: PublishedCardDetailRow; loc
         </p>
       </div>
       <section aria-labelledby="fees-heading">
+        <div className="mb-4 rounded-md border border-line bg-white p-4">
+          <FinancialDisclaimer locale={locale} />
+        </div>
         <h2 id="fees-heading" className="text-h2">
           {t("cardDetail.fees")}
         </h2>
