@@ -4,7 +4,6 @@ import { requireUser, AccessDenied, type Identity } from "@/lib/auth/guards";
 import { authHref } from "@/lib/auth/return-to";
 import { getMessages, isLocale } from "@/lib/i18n";
 import { AuthShell } from "@/components/auth/AuthShell";
-import { AuthNotice } from "@/components/auth/AuthNotice";
 import { AuthIcon } from "@/components/auth/AuthIcon";
 import { primaryButton, secondaryButton } from "@/components/auth/styles";
 export const dynamic = "force-dynamic";
@@ -26,9 +25,9 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
       copy={copy}
       title={copy.account}
       description={copy.accountDescription}
+      showCatalogueLink={false}
     >
-      <AuthNotice tone="success">{copy.signedIn}</AuthNotice>
-      <div className="mt-6 flex min-w-0 items-start gap-4 rounded-md border border-line p-4">
+      <div className="flex min-w-0 items-start gap-4 rounded-md border border-line p-4">
         <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-mist text-platinum-deep">
           <AuthIcon kind="lock" className="h-6 w-6" />
         </span>
@@ -39,18 +38,6 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
           </p>
         </div>
       </div>
-      <dl className="mt-6 divide-y divide-line rounded-md border border-line px-4">
-        <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 py-4">
-          <dt className="text-sm text-platinum-deep">{copy.roleLabel}</dt>
-          <dd className="text-sm font-medium">
-            {identity.role === "admin" ? copy.roleAdmin : copy.roleUser}
-          </dd>
-        </div>
-        <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 py-4">
-          <dt className="text-sm text-platinum-deep">{copy.accountStatus}</dt>
-          <dd className="text-sm font-medium">{copy.activeSession}</dd>
-        </div>
-      </dl>
       <nav aria-label={copy.navigation} className="mt-6 grid gap-3 sm:grid-cols-2">
         <Link className={primaryButton} href={`/${locale}`}>
           {copy.catalogue}

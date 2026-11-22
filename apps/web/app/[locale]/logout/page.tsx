@@ -3,7 +3,6 @@ import { auth } from "@/lib/auth/server";
 import { getMessages, isLocale } from "@/lib/i18n";
 import { safeReturnTo, authHref } from "@/lib/auth/return-to";
 import { AuthShell } from "@/components/auth/AuthShell";
-import { AuthNotice } from "@/components/auth/AuthNotice";
 import { LogoutForm } from "@/components/LogoutForm";
 import { logoutAction } from "./actions";
 export const dynamic = "force-dynamic";
@@ -27,9 +26,6 @@ export default async function LogoutPage({
       title={copy.logoutQuestion}
       description={copy.logoutDescription}
     >
-      <div className="mb-6">
-        <AuthNotice>{copy.accountSecurity}</AuthNotice>
-      </div>
       <LogoutForm action={logoutAction.bind(null, locale)} copy={copy} returnTo={returnTo} />
     </AuthShell>
   );

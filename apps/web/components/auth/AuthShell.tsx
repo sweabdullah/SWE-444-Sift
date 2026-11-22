@@ -12,12 +12,14 @@ export function AuthShell({
   title,
   description,
   children,
+  showCatalogueLink = true,
 }: {
   locale: Locale;
   copy: Messages["auth"];
   title: string;
   description: string;
   children: ReactNode;
+  showCatalogueLink?: boolean;
 }) {
   return (
     <div className="auth-surface mx-auto flex w-full max-w-page flex-1 flex-col px-5 sm:px-8">
@@ -87,11 +89,13 @@ export function AuthShell({
           </h1>
           <p className="mt-3 text-body text-platinum-deep">{description}</p>
           <div className="mt-7">{children}</div>
-          <div className="mt-7 border-t border-line pt-5 text-sm">
-            <Link className={textLink} href={`/${locale}`}>
-              {copy.browseWithoutAccount}
-            </Link>
-          </div>
+          {showCatalogueLink && (
+            <div className="mt-7 border-t border-line pt-5 text-sm">
+              <Link className={textLink} href={`/${locale}`}>
+                {copy.browseWithoutAccount}
+              </Link>
+            </div>
+          )}
         </section>
       </main>
     </div>

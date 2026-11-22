@@ -181,3 +181,24 @@ Linear mutation or team learning sign-off occurs here.
 - No unresolved authentication failure remains from the executed tests. Native PostgreSQL,
   hosted infrastructure, manual assistive-technology testing, team learning sign-off and release
   abuse controls remain outside this local verification. The disposable preview was shut down.
+
+## Final delivery UX follow-up
+
+The approved delivery pass removes account role/session rows and repeated signed-in notices,
+keeps email and Browse Cards/Sign Out, and suppresses its duplicate catalogue footer link.
+Logout now has a short localized heading and one sentence about other devices. Registration
+uses brief natural guidance; server policy remains 8–128 Unicode code points, the common-password
+checks and versioned scrypt/legacy bcrypt verifier remain unchanged.
+
+SFT-41's proposed comment explicitly mentions argon2id or bcrypt. New registrations use scrypt;
+this is a documented difference requiring team acknowledgment, not a claim of literal agreement
+with that proposal. The human learning outcome and approved summary link remain outstanding.
+SFT-38/39/40 retain their locally verified implementation coverage. No production, native
+PostgreSQL, dependency remediation or human sign-off is claimed.
+
+Delivery verification: six focused complete AR/EN journeys passed at mobile/tablet/desktop;
+46 targeted password/registration/redirect tests passed, one optional DB test skipped. Prior
+415-test/19-browser results remain evidence for unchanged persistence and broader security paths.
+Formatting, lint/logical CSS, production build and all workspace typechecks passed. Initial
+build failed due to the running preview's Windows Prisma DLL lock; stopping that preview resolved
+it. Fresh account/logout screenshots were inspected. No backend security logic changed.
