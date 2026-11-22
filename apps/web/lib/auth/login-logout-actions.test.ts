@@ -2,8 +2,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { CredentialsSignin } from "next-auth";
 import { loginAction } from "@/app/[locale]/login/actions";
 import { logoutAction } from "@/app/[locale]/logout/actions";
-const mocks = vi.hoisted(() => ({ signIn: vi.fn(), signOut: vi.fn(), redirect: vi.fn() }));
+const mocks = vi.hoisted(() => ({
+  signIn: vi.fn(),
+  signOut: vi.fn(),
+  redirect: vi.fn(),
+  requireUser: vi.fn(),
+}));
 vi.mock("@/lib/auth/server", () => ({ signIn: mocks.signIn, revokeAndSignOut: mocks.signOut }));
+vi.mock("@/lib/auth/guards", () => ({ requireUser: mocks.requireUser }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
 function form() {
   const f = new FormData();
@@ -45,4 +51,10 @@ describe("login and confirmed logout actions", () => {
       "/en/login?signedOut=1&returnTo=%2Fen%2Fcards%2Fa%3Ffrom%3Dshortlist",
     );
   });
+});
+
+it("re-checks server identity inside the logout action before revocation", async () => {
+  mocks.requireUser.mockRejectedValue(new Error("UNAUTHENTICATED"));
+  expect(await logoutAction("en", { error: null }, form())).toEqual({ error: "unavailable" });
+  expect(mocks.signOut).not.toHaveBeenCalled();
 });
