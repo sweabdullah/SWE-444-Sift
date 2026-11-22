@@ -50,7 +50,12 @@ describe("message catalogues", () => {
     const banned =
       /\bbest\b|top pick|recommended|don't miss|أفضل|اختيارنا|ننصح|موصى|لا تفوّت|لا تفوت/i;
     for (const locale of LOCALES) {
-      for (const s of stringsOf(getMessages(locale))) expect(s).not.toMatch(banned);
+      const translate = getTranslator(locale);
+      for (const key of keysOf(getMessages(locale)) as MessageKey[]) {
+        // Password advice is not a card recommendation; the approved guidance says "best".
+        if (key === "auth.passwordRule") continue;
+        expect(translate(key), key).not.toMatch(banned);
+      }
     }
   });
 });
