@@ -1,9 +1,10 @@
-import { safeReturnTo } from "@/lib/auth/return-to";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
-import { getMessages, getTranslator, isLocale } from "@/lib/i18n";
-import { LocaleSwitch } from "@/components/LocaleSwitch";
+import { safeReturnTo, authHref } from "@/lib/auth/return-to";
+import { getMessages, isLocale } from "@/lib/i18n";
+import { AuthShell } from "@/components/auth/AuthShell";
+import { textLink } from "@/components/auth/styles";
 import { RegistrationForm } from "@/components/RegistrationForm";
 import { registerAction } from "./actions";
 export const dynamic = "force-dynamic";
@@ -20,29 +21,24 @@ export default async function RegisterPage({
   const returnTo = safeReturnTo((await searchParams).returnTo, locale);
   if (await auth()) redirect(returnTo);
   const copy = getMessages(locale).auth;
-  const t = getTranslator(locale);
   return (
-    <main className="mx-auto max-w-lg space-y-6 px-5 py-8">
-      <LocaleSwitch
-        locale={locale}
-        label={t("localeSwitch.label")}
-        ariaLabel={t("localeSwitch.ariaLabel")}
-      />
-      <h1 className="text-2xl font-bold">{copy.registerTitle}</h1>
+    <AuthShell
+      locale={locale}
+      copy={copy}
+      title={copy.registerTitle}
+      description={copy.registerDescription}
+    >
       <RegistrationForm
         action={registerAction.bind(null, locale)}
         copy={copy}
         returnTo={returnTo}
       />
-      <Link
-        className="inline-block underline"
-        href={`/${locale}/login?returnTo=${encodeURIComponent(returnTo)}`}
-      >
-        {copy.signIn}
-      </Link>
-      <Link className="inline-block underline" href={`/${locale}`}>
-        {copy.catalogue}
-      </Link>
-    </main>
+      <p className="mt-6 flex flex-wrap justify-center gap-x-2 gap-y-1 text-sm text-platinum-deep">
+        <span>{copy.alreadyAccount}</span>
+        <Link className={textLink} href={authHref("login", returnTo, locale)}>
+          {copy.signIn}
+        </Link>
+      </p>
+    </AuthShell>
   );
 }

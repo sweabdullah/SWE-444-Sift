@@ -1,3 +1,4 @@
+import { AuthUiProvider } from "@/components/auth/AuthUiProvider";
 import { AccountLinks } from "@/components/AccountLinks";
 import { getMessages } from "@/lib/i18n";
 import type { Metadata } from "next";
@@ -37,9 +38,11 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <html lang={locale} dir={directionOf(locale)} className={fontVariables}>
-      <body className="min-h-dvh bg-mist font-sans text-body text-graphite antialiased">
-        <AccountLinks locale={locale} copy={getMessages(locale).auth} />
-        {children}
+      <body className="flex min-h-dvh flex-col bg-mist font-sans text-body text-graphite antialiased">
+        <AuthUiProvider locale={locale} copy={getMessages(locale).auth}>
+          <AccountLinks locale={locale} copy={getMessages(locale).auth} />
+          {children}
+        </AuthUiProvider>
         <SiteFooter locale={locale} />
       </body>
     </html>

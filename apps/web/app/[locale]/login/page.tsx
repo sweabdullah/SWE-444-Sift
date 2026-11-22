@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
-import { getMessages, getTranslator, isLocale } from "@/lib/i18n";
-import { safeReturnTo } from "@/lib/auth/return-to";
-import { LocaleSwitch } from "@/components/LocaleSwitch";
+import { getMessages, isLocale } from "@/lib/i18n";
+import { safeReturnTo, authHref } from "@/lib/auth/return-to";
+import { AuthShell } from "@/components/auth/AuthShell";
+import { AuthNotice } from "@/components/auth/AuthNotice";
+import { textLink } from "@/components/auth/styles";
 import { LoginForm } from "@/components/LoginForm";
 import { loginAction } from "./actions";
 export const dynamic = "force-dynamic";
@@ -13,31 +15,42 @@ export default async function LoginPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ returnTo?: string; signedOut?: string }>;
+  searchParams: Promise<{ returnTo?: string; signedOut?: string; reason?: string; error?: string }>;
 }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const query = await searchParams;
   const returnTo = safeReturnTo(query.returnTo, locale);
   if (await auth()) redirect(returnTo);
-  const copy = getMessages(locale).auth,
-    t = getTranslator(locale);
+  const copy = getMessages(locale).auth;
   return (
-    <main className="mx-auto max-w-lg space-y-6 px-5 py-8">
-      <LocaleSwitch
-        locale={locale}
-        label={t("localeSwitch.label")}
-        ariaLabel={t("localeSwitch.ariaLabel")}
+    <AuthShell
+      locale={locale}
+      copy={copy}
+      title={copy.loginTitle}
+      description={copy.loginDescription}
+    >
+      {query.signedOut === "1" ? (
+        <div className="mb-6">
+          <AuthNotice tone="success">{copy.signedOut}</AuthNotice>
+        </div>
+      ) : query.reason === "signin" ? (
+        <div className="mb-6">
+          <AuthNotice>{copy.sessionRequired}</AuthNotice>
+        </div>
+      ) : null}
+      <LoginForm
+        action={loginAction.bind(null, locale)}
+        copy={copy}
+        returnTo={returnTo}
+        initialError={query.error ? "invalidCredentials" : null}
       />
-      <h1 className="text-2xl font-bold">{copy.loginTitle}</h1>
-      {query.signedOut === "1" && <p role="status">{copy.signedOut}</p>}
-      <LoginForm action={loginAction.bind(null, locale)} copy={copy} returnTo={returnTo} />
-      <Link
-        className="inline-block underline"
-        href={`/${locale}/register?returnTo=${encodeURIComponent(returnTo)}`}
-      >
-        {copy.register}
-      </Link>
-    </main>
+      <p className="mt-6 flex flex-wrap justify-center gap-x-2 gap-y-1 text-sm text-platinum-deep">
+        <span>{copy.newAccount}</span>
+        <Link className={textLink} href={authHref("register", returnTo, locale)}>
+          {copy.register}
+        </Link>
+      </p>
+    </AuthShell>
   );
 }
