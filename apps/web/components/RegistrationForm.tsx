@@ -6,11 +6,13 @@ import type { Messages } from "@/lib/i18n";
 type Props = {
   action: (previous: FormState, form: FormData) => Promise<FormState>;
   copy: Messages["auth"];
+  returnTo: string;
 };
-export function RegistrationForm({ action, copy }: Props) {
+export function RegistrationForm({ action, copy, returnTo }: Props) {
   const [state, submit, pending] = useActionState(action, { error: null });
   return (
     <form action={submit} className="space-y-5">
+      <input type="hidden" name="returnTo" value={returnTo} />
       {state.error && (
         <p role="alert" aria-live="polite">
           {copy.errors[state.error]}

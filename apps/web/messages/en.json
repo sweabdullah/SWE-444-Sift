@@ -185,7 +185,17 @@
       "passwordRule": "Use at least 15 characters, within 72 UTF-8 bytes. Arabic letters usually use 2 bytes.",
       "duplicateEmail": "This email is already registered.",
       "unavailable": "Unable to complete the request. Please try again.",
-      "createdLoginFailed": "Your account was created, but sign-in failed. Please sign in with your new account."
-    }
+      "createdLoginFailed": "Your account was created, but sign-in failed. Please sign in with your new account.",
+      "invalidCredentials": "Email or password is incorrect."
+    },
+    "navigation": "Account navigation",
+    "loginTitle": "Sign in",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "confirmSignOut": "Confirm sign out",
+    "logoutTitle": "Sign out",
+    "logoutQuestion": "Sign out of this browser session?",
+    "cancel": "Cancel",
+    "signedOut": "You are signed out."
   }
 }

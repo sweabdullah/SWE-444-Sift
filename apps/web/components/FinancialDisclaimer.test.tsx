@@ -46,3 +46,5 @@ describe.each(["ar", "en"] as const)("financial disclaimer in %s", (locale) => {
     expect(html).toContain(copy[locale].body);
   });
 });
+
+vi.mock("@/components/AccountLinks", () => ({ AccountLinks: () => null }));

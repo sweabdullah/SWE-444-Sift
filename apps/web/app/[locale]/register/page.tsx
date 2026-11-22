@@ -1,3 +1,4 @@
+import { safeReturnTo } from "@/lib/auth/return-to";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
@@ -7,10 +8,17 @@ import { RegistrationForm } from "@/components/RegistrationForm";
 import { registerAction } from "./actions";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-export default async function RegisterPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function RegisterPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ returnTo?: string }>;
+}) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  if (await auth()) redirect(`/${locale}/account`);
+  const returnTo = safeReturnTo((await searchParams).returnTo, locale);
+  if (await auth()) redirect(returnTo);
   const copy = getMessages(locale).auth;
   const t = getTranslator(locale);
   return (
@@ -21,7 +29,17 @@ export default async function RegisterPage({ params }: { params: Promise<{ local
         ariaLabel={t("localeSwitch.ariaLabel")}
       />
       <h1 className="text-2xl font-bold">{copy.registerTitle}</h1>
-      <RegistrationForm action={registerAction.bind(null, locale)} copy={copy} />
+      <RegistrationForm
+        action={registerAction.bind(null, locale)}
+        copy={copy}
+        returnTo={returnTo}
+      />
+      <Link
+        className="inline-block underline"
+        href={`/${locale}/login?returnTo=${encodeURIComponent(returnTo)}`}
+      >
+        {copy.signIn}
+      </Link>
       <Link className="inline-block underline" href={`/${locale}`}>
         {copy.catalogue}
       </Link>
