@@ -1,4 +1,5 @@
 "use server";
+import { requireUser } from "@/lib/auth/guards";
 import { redirect } from "next/navigation";
 import { revokeAndSignOut } from "@/lib/auth/server";
 import type { FormState } from "@/lib/auth/register";
@@ -11,6 +12,7 @@ export async function logoutAction(
 ): Promise<FormState> {
   if (!isLocale(locale)) return { error: "unavailable" };
   try {
+    await requireUser();
     await revokeAndSignOut();
   } catch {
     return { error: "unavailable" };

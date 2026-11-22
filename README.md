@@ -38,6 +38,8 @@ Run `pnpm check` before you open a pull request.
 **Authentication learning (SFT-41).** Local Auth.js demonstration, session revocation design,
 password hashing, and protected-route exercise: [`docs/auth-learning.md`](docs/auth-learning.md).
 
+**Sprint 3 accounts.** Local registration, sessions, role guards, branch review order, and a disposable browser preview: [`docs/sprint3-accounts.md`](docs/sprint3-accounts.md).
+
 ## Repository layout
 
 **Internationalisation.** How to add a translated string and format amounts, percentages and dates: [`docs/i18n.md`](docs/i18n.md).
