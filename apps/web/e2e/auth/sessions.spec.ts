@@ -25,6 +25,7 @@ for (const locale of ["ar", "en"]) {
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto(`/${locale}/register`);
+    await expect(page.locator("form")).toHaveAttribute("data-hydrated", "true");
     await page
       .getByLabel(locale === "ar" ? "البريد الإلكتروني" : "Email", { exact: true })
       .fill(email);
@@ -38,7 +39,7 @@ for (const locale of ["ar", "en"]) {
       })
       .click();
     await expect(page).toHaveURL(new RegExp(`/${locale}/account$`));
-    await expect(page.locator("main")).toContainText(email);
+    await expect(page.locator("main:visible")).toContainText(email);
     expect(
       await db.user.findUnique({
         where: { email },
@@ -67,6 +68,7 @@ for (const locale of ["ar", "en"]) {
     expect(await replay.json()).toBeNull();
     expect(errors).toEqual([]);
     await page.goto(`/${locale}/register`);
+    await expect(page.locator("form")).toHaveAttribute("data-hydrated", "true");
     await page
       .getByLabel(locale === "ar" ? "البريد الإلكتروني" : "Email", { exact: true })
       .fill(email);
@@ -79,7 +81,7 @@ for (const locale of ["ar", "en"]) {
         exact: true,
       })
       .click();
-    await expect(page.locator("main").getByRole("alert")).toContainText(
+    await expect(page.locator("main:visible").getByRole("alert")).toContainText(
       locale === "ar" ? "مسجل بالفعل" : "already registered",
     );
   });
@@ -95,6 +97,7 @@ test("survives an actual Chromium restart and returns to the originating detail 
   try {
     let page = context.pages()[0] ?? (await context.newPage());
     await page.goto("/en/register");
+    await expect(page.locator("form")).toHaveAttribute("data-hydrated", "true");
     await page.getByLabel("Email", { exact: true }).fill(email);
     await page.getByLabel("Password", { exact: true }).fill(password);
     await page.getByRole("button", { name: "Create account", exact: true }).click();
@@ -108,7 +111,7 @@ test("survives an actual Chromium restart and returns to the originating detail 
     context = await chromium.launchPersistentContext(profile, { headless: true, baseURL });
     page = context.pages()[0] ?? (await context.newPage());
     await page.goto("/en/account");
-    await expect(page.locator("main")).toContainText(email);
+    await expect(page.locator("main:visible")).toContainText(email);
     await page.getByRole("link", { name: "Sign out", exact: true }).click();
     await page.getByRole("button", { name: "Confirm sign out", exact: true }).click();
     await expect(page).toHaveURL(/signedOut=1/);

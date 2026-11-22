@@ -86,23 +86,18 @@ on the SFT-38/39 interface; consumers should not import spike modules as product
 
 ## Password hashing
 
-Existing development users use **bcrypt**, via `bcryptjs`, at cost 10. The spike verifies
-those hashes unchanged; tests use the same algorithm. The missing-account dummy hash uses
-cost 12. It avoids the obvious no-hash fast path, but does not promise constant-time account
-privacy across different hash costs or database timing.
+The preserved SFT-41 branch originally demonstrated legacy bcrypt. The full stack now shares
+`lib/auth/password.ts`: new accounts use versioned Node scrypt, and existing bcrypt hashes
+remain readable with a strict 72-byte verification limit. See
+[the finalization decision](auth-finalization.md#password-decision) for parameters, resource
+bounds, Unicode policy, and rollback compatibility. No schema change or bulk rewrite is needed.
 
-Bcrypt is a salted, one-way password hash, not reversible encryption. Its work factor makes
-guessing expensive, and its encoded hash stores the salt/cost for verification. Registration
-in SFT-38 should choose and benchmark its production policy (proposed bcrypt cost 12, with
-compatible verification of older hashes), enforce it on the server, and state the password
-rules in both locales. Argon2id is another option if the team chooses it and verifies deployment
-support; it is not required merely to read existing bcrypt seeds.
-
-Bcrypt truncates beyond **72 UTF-8 bytes**, so this spike rejects oversized passwords before
-comparison, including multibyte passwords. Do not trim or normalize a password. Email lookup
-is trimmed/lowercased to match the existing seed convention; SFT-38 owns the final email
-normalization and duplicate policy. Null `passwordHash` accounts cannot sign in with credentials.
-Errors remain generic. No passwords or hashes are returned to the browser or put in JWTs.
+The product policy is 8–128 Unicode code points, with no composition rule and a local common
+password blocklist. Arabic and long passphrases are supported without silent bcrypt truncation.
+Passwords are never trimmed or normalized. Missing-account verification performs dummy scrypt
+work, but mixed legacy costs and database timing do not promise constant-time account privacy.
+Hashing is one-way, salted, and deliberately expensive; it is not reversible encryption.
+No password, hash, or database session identifier belongs in browser-readable session JSON.
 
 ## Where authorization happens
 

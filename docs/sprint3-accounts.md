@@ -2,6 +2,8 @@
 
 No branch is pushed, deployed, or merged by this work. Linear records stay unchanged.
 
+**Current finalization:** review `codex/sprint-3-auth-finalization` and [auth-finalization.md](auth-finalization.md). The four preserved worktrees below remain historical review baselines; the finalization branch contains the current policy and polished UI.
+
 | Issue  | Branch                     | Parent                     | Worktree                                          |
 | ------ | -------------------------- | -------------------------- | ------------------------------------------------- |
 | SFT-41 | codex/sft-41-auth-learning | origin/main at 673f488     | C:/Users/fkbr1/Documents/Sift-sft41-auth-learning |
@@ -28,7 +30,7 @@ outside the authorized local-only work. Local implementation readiness is report
 
 `/[locale]/register` validates email and password on the server, creates a normal unverified
 user, and signs it in to `/:locale/account`. Emails are trimmed/lowercased. Passwords are not
-trimmed or normalized: at least 15 Unicode characters and at most 72 UTF-8 bytes, bcrypt cost 12.
+trimmed or normalized: 8–128 Unicode code points, with common/repeated passwords rejected. New accounts use versioned scrypt (N=32768, r=8, p=3); legacy bcrypt verification keeps its strict 72-byte safety boundary.
 Existing bcrypt seed hashes continue to verify. The DB unique constraint handles duplicate races;
 no user-submitted role, verification or notification preference is accepted. `emailVerified=null`
 and `digestOptIn=false` preserve SFT-86's boundary. A failure to sign in after creation is reported
@@ -118,8 +120,8 @@ retry can complete the local check; do not treat a successful retry as fixing th
 Resolve the dependency findings separately before deployment. No upgrade or security setting
 change is performed by this launcher.
 
-1. Visit http://127.0.0.1:3144/en/register and create a unique account using at least 15
-   characters within 72 UTF-8 bytes. You should reach My account already signed in.
+1. Visit http://127.0.0.1:3144/en/register and create a unique account using 8–128 Unicode
+   characters. Prefer a long unique passphrase. You should reach My account already signed in.
 2. Open /en/logout, cancel once to verify no revocation, then confirm. Try registering the
    same email again to see duplicate feedback. Repeat /ar/register at phone width.
 3. Browse /en/cards/card_riyad_titanium?from=preview while signed out, click Sign in, and use
@@ -184,7 +186,7 @@ DB tests unless their localhost-only environment variables are supplied.
 
 No hosted CI or deployment was run. Native PostgreSQL 16 concurrency, hosted HTTPS behavior,
 production rate/body limits, and team learning sign-off remain unverified. Password policy
-currently enforces the documented length/byte bounds; no breached-password service is configured.
+uses the documented Unicode bounds and local common-password blocklist; no external breached-password service is configured.
 The build emits the existing framework security reminder and a Prisma CommonJS-export warning;
 local checks pass after the framework's reminder retry, without any dependency security fix.
 All four branches are ready for separate local code review in dependency order; this does not
