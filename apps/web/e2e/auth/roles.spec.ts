@@ -10,7 +10,7 @@ if (
 )
   throw new Error("Use a disposable localhost *_auth_spike_test database");
 const db = new PrismaClient({ datasourceUrl: url });
-const password = "correct horse battery staple";
+const password = "River stone lantern meadow!";
 async function signIn(request: APIRequestContext, email: string, baseURL: string) {
   const csrf = (await (await request.get("/api/auth/csrf")).json()) as { csrfToken: string };
   const response = await request.post("/api/auth/callback/credentials", {

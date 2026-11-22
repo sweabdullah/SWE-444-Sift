@@ -242,12 +242,12 @@ describe("Auth.js Credentials with a revocable Prisma session", () => {
     expect(state.sessions.size).toBe(0);
   });
 
-  it("rejects bcrypt truncation and malformed inputs before querying users", async () => {
+  it("rejects legacy bcrypt truncation and malformed inputs without issuing sessions", async () => {
     await client.login("user@sift.local", "a".repeat(73));
     await client.login("user@sift.local", "ع".repeat(37));
     await client.login("x".repeat(255), "password");
     await client.login("user@sift.local", "");
-    expect(state.userFind).not.toHaveBeenCalled();
+    expect(state.userFind).toHaveBeenCalledTimes(2);
     expect(state.sessions.size).toBe(0);
   });
 

@@ -123,3 +123,9 @@
 @utility nums-tabular {
   font-variant-numeric: tabular-nums lining-nums;
 }
+
+.auth-surface a:focus-visible,
+.auth-surface button:focus-visible {
+  outline: 2px solid var(--sift-graphite);
+  outline-offset: 4px;
+}

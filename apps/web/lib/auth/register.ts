@@ -1,9 +1,16 @@
 import { Prisma, type PrismaClient } from "@sift/db";
 import { z } from "zod";
-import { hashPassword, validPasswordLength } from "./password";
+import { hashPassword } from "./password";
+import { passwordIssue } from "./policy";
 import type { Locale } from "@/lib/locale";
 
-export type RegistrationError = "invalidEmail" | "passwordRule" | "duplicateEmail" | "unavailable";
+export type RegistrationError =
+  | "invalidEmail"
+  | "passwordRule"
+  | "passwordTooLong"
+  | "commonPassword"
+  | "duplicateEmail"
+  | "unavailable";
 export type FormState = {
   error: RegistrationError | "createdLoginFailed" | "invalidCredentials" | null;
 };
@@ -15,8 +22,9 @@ export async function registerAccount(
 ): Promise<{ ok: true; email: string } | { ok: false; error: RegistrationError }> {
   const email = typeof input.email === "string" ? input.email.trim().toLowerCase() : "";
   if (!emailSchema.safeParse(email).success) return { ok: false, error: "invalidEmail" };
-  if (typeof input.password !== "string" || !validPasswordLength(input.password))
-    return { ok: false, error: "passwordRule" };
+  if (typeof input.password !== "string") return { ok: false, error: "passwordRule" };
+  const issue = passwordIssue(input.password);
+  if (issue) return { ok: false, error: issue };
   try {
     const passwordHash = await hashPassword(input.password);
     // Explicit fields prevent a submitted role/emailVerified/digest preference from being trusted.

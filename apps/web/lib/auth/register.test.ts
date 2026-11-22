@@ -1,9 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import { Prisma, PrismaClient } from "@sift/db";
-import { compare, getRounds } from "bcryptjs";
 import { randomUUID } from "node:crypto";
 import { registerAccount } from "./register";
-import { hashPassword, PASSWORD_COST } from "./password";
+import { hashPassword, verifyPassword } from "./password";
 
 function database() {
   const create = vi.fn().mockResolvedValue({ id: "new-user" });
@@ -15,7 +14,7 @@ describe("registration boundary", () => {
     expect(
       await registerAccount(db, {
         email: "  PERSON@Example.com  ",
-        password: "correct horse battery staple",
+        password: "River stone lantern meadow!",
         locale: "ar",
       }),
     ).toEqual({ ok: true, email: "person@example.com" });
@@ -32,20 +31,23 @@ describe("registration boundary", () => {
     expect(Object.keys(data).sort()).toEqual(
       ["email", "passwordHash", "locale", "role", "emailVerified", "digestOptIn"].sort(),
     );
-    expect(data.passwordHash).not.toBe("correct horse battery staple");
-    expect(getRounds(data.passwordHash)).toBe(PASSWORD_COST);
-    expect(await compare("correct horse battery staple", data.passwordHash)).toBe(true);
+    expect(data.passwordHash).not.toBe("River stone lantern meadow!");
+    expect(data.passwordHash).toMatch(/^\$sift\$scrypt\$v1\$/);
+    expect(await verifyPassword("River stone lantern meadow!", data.passwordHash)).toBe(true);
   });
-  it.each(["short", "a".repeat(14), "a".repeat(73), "ع".repeat(37), null])(
-    "rejects invalid password %j before a write",
-    async (password) => {
-      const { db, create } = database();
-      expect(
-        await registerAccount(db, { email: "person@example.com", password, locale: "en" }),
-      ).toEqual({ ok: false, error: "passwordRule" });
-      expect(create).not.toHaveBeenCalled();
-    },
-  );
+  it.each([
+    ["short", "passwordRule"],
+    ["a".repeat(129), "passwordTooLong"],
+    ["password123", "commonPassword"],
+    ["ع".repeat(16), "commonPassword"],
+    [null, "passwordRule"],
+  ])("rejects invalid password %j before a write", async (password, error) => {
+    const { db, create } = database();
+    expect(
+      await registerAccount(db, { email: "person@example.com", password, locale: "en" }),
+    ).toEqual({ ok: false, error });
+    expect(create).not.toHaveBeenCalled();
+  });
   it.each(["bad", "a@", "a b@example.com", null, "a".repeat(255) + "@example.com"])(
     "rejects invalid email %j",
     async (email) => {
@@ -53,7 +55,7 @@ describe("registration boundary", () => {
       expect(
         await registerAccount(db, {
           email,
-          password: "correct horse battery staple",
+          password: "River stone lantern meadow!",
           locale: "en",
         }),
       ).toEqual({ ok: false, error: "invalidEmail" });
@@ -72,7 +74,7 @@ describe("registration boundary", () => {
     expect(
       await registerAccount(db, {
         email: "person@example.com",
-        password: "correct horse battery staple",
+        password: "River stone lantern meadow!",
         locale: "en",
       }),
     ).toEqual({ ok: false, error: "duplicateEmail" });
@@ -83,7 +85,7 @@ describe("registration boundary", () => {
     expect(
       await registerAccount(db, {
         email: "person@example.com",
-        password: "correct horse battery staple",
+        password: "River stone lantern meadow!",
         locale: "en",
       }),
     ).toEqual({ ok: false, error: "unavailable" });
@@ -93,8 +95,8 @@ describe("registration boundary", () => {
     const a = await hashPassword(password),
       b = await hashPassword(password);
     expect(a).not.toBe(b);
-    expect(await compare(password, a)).toBe(true);
-    expect(await compare(password.trim(), a)).toBe(false);
+    expect(await verifyPassword(password, a)).toBe(true);
+    expect(await verifyPassword(password.trim(), a)).toBe(false);
   });
 });
 
@@ -112,10 +114,10 @@ it.skipIf(!process.env.SIFT_AUTH_TEST_DATABASE_URL)(
     const email = `sft38-${randomUUID()}@example.com`;
     try {
       const results = await Promise.all([
-        registerAccount(db, { email, password: "correct horse battery staple", locale: "ar" }),
+        registerAccount(db, { email, password: "River stone lantern meadow!", locale: "ar" }),
         registerAccount(db, {
           email: email.toUpperCase(),
-          password: "correct horse battery staple",
+          password: "River stone lantern meadow!",
           locale: "ar",
         }),
       ]);
@@ -128,7 +130,9 @@ it.skipIf(!process.env.SIFT_AUTH_TEST_DATABASE_URL)(
         digestOptIn: false,
         locale: "ar",
       });
-      expect(await compare("correct horse battery staple", user.passwordHash ?? "")).toBe(true);
+      expect(await verifyPassword("River stone lantern meadow!", user.passwordHash ?? "")).toBe(
+        true,
+      );
     } finally {
       await db.user.deleteMany({ where: { email } });
       await db.$disconnect();

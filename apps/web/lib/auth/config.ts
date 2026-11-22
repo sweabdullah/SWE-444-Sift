@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto";
 import type { PrismaClient } from "@sift/db";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { supportedPassword } from "./policy";
 import { verifyPassword } from "./password";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -52,8 +53,7 @@ export function createAuthConfig(db: PrismaClient, options: AuthOptions = {}): N
             typeof email !== "string" ||
             typeof password !== "string" ||
             email.length > 254 ||
-            password.length === 0 ||
-            Buffer.byteLength(password, "utf8") > 72
+            !supportedPassword(password)
           )
             return null;
 
