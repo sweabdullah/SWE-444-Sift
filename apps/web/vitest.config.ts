@@ -11,6 +11,8 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    // Auth.js uses Next.js extensionless imports; let Vite resolve them as Next does.
+    server: { deps: { inline: ["next-auth"] } },
     include: ["**/*.test.{ts,tsx,mjs}"],
     exclude: ["node_modules/**", ".next/**"],
   },

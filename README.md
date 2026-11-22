@@ -35,6 +35,9 @@ Run `pnpm check` before you open a pull request.
 
 **Deployment.** Pull requests get a Vercel preview, and merges to `main` deploy to production, in both cases only after the `ci` workflow passes in GitHub Actions. Setup, environment variables, rollback and verification: [`docs/deploy.md`](docs/deploy.md).
 
+**Authentication learning (SFT-41).** Local Auth.js demonstration, session revocation design,
+password hashing, and protected-route exercise: [`docs/auth-learning.md`](docs/auth-learning.md).
+
 ## Repository layout
 
 **Internationalisation.** How to add a translated string and format amounts, percentages and dates: [`docs/i18n.md`](docs/i18n.md).
