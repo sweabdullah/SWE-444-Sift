@@ -1,4 +1,5 @@
 "use server";
+import { safeReturnTo } from "@/lib/auth/return-to";
 import { AuthError } from "next-auth";
 import { prisma } from "@sift/db";
 import { isLocale, type Locale } from "@/lib/locale";
@@ -21,7 +22,7 @@ export async function registerAction(
     await signIn("credentials", {
       email: result.email,
       password: form.get("password"),
-      redirectTo: `/${locale}/account`,
+      redirectTo: safeReturnTo(form.get("returnTo"), locale),
     });
   } catch (error) {
     if (error instanceof AuthError) return { error: "createdLoginFailed" };

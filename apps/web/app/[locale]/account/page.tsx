@@ -8,7 +8,8 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const session = await auth();
-  if (!session?.user.id) redirect(`/${locale}/register`);
+  if (!session?.user.id)
+    redirect(`/${locale}/login?returnTo=${encodeURIComponent(`/${locale}/account`)}`);
   const copy = getMessages(locale).auth;
   return (
     <main className="mx-auto max-w-lg space-y-6 px-5 py-8">
@@ -16,9 +17,14 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
       <p>
         {copy.signedIn}: <bdi>{session.user.email}</bdi>
       </p>
-      <Link className="underline" href={`/${locale}`}>
-        {copy.catalogue}
-      </Link>
+      <nav aria-label={copy.navigation} className="flex flex-wrap gap-4">
+        <Link className="underline" href={`/${locale}/logout`}>
+          {copy.signOut}
+        </Link>
+        <Link className="underline" href={`/${locale}`}>
+          {copy.catalogue}
+        </Link>
+      </nav>
     </main>
   );
 }

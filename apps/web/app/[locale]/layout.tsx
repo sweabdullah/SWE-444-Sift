@@ -1,3 +1,5 @@
+import { AccountLinks } from "@/components/AccountLinks";
+import { getMessages } from "@/lib/i18n";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
@@ -36,6 +38,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} dir={directionOf(locale)} className={fontVariables}>
       <body className="min-h-dvh bg-mist font-sans text-body text-graphite antialiased">
+        <AccountLinks locale={locale} copy={getMessages(locale).auth} />
         {children}
         <SiteFooter locale={locale} />
       </body>

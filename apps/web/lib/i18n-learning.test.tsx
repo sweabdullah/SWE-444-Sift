@@ -84,3 +84,5 @@ describe("SFT-26: reuse Sift's server-side internationalisation", () => {
     expect(() => getTranslator("ar")("common.missing" as MessageKey)).toThrow(/Missing message/);
   });
 });
+
+vi.mock("@/components/AccountLinks", () => ({ AccountLinks: () => null }));

@@ -39,3 +39,30 @@ opt-in wrapper with its own cookie and 24-hour expiry. Account sessions use a se
 30-day absolute server expiry, and `/api/auth`; they never trust a JWT without its Session row.
 No Prisma schema, migrations, or shared package exports change. The public session access API is
 `auth()` from `lib/auth/server.ts`; forthcoming SFT-40 guards build on that validated identity.
+
+## SFT-39 sessions
+
+`/[locale]/login` accepts a validated internal `returnTo` path. Navigation captures the current
+page and query, including a card detail page; auth pages cannot redirect back into themselves.
+Locale switches rewrite an internal return path to the chosen locale. External URLs, protocol
+relative URLs, backslashes, control characters and encoded path separators are rejected.
+
+A persistent encrypted HttpOnly cookie identifies a mandatory DB Session row with a 30-day
+absolute expiry. Reads check the current user/role and row every time. `/[locale]/logout` is a
+confirmation screen; GET never revokes. Its server action first revokes the decoded cookie's
+matching user/session row, then clears cookies with Auth.js. If revocation fails, it returns a
+localized retry error and retains the cookie. The raw Auth.js POST endpoint validates CSRF and
+returns 503 if its sign-out event fails; it does not forward a misleading successful response.
+Use `auth()` for identity, never the revocation decoder. Wrong passwords and missing emails use
+the same localized credential error. No recovery, verification-email or admin-entry UI is added.
+
+Browser regression tests are in `apps/web/e2e/auth`. With a disposable localhost database named
+`*_auth_spike_test`, set `SIFT_AUTH_TEST_DATABASE_URL` for assertions and set the web server's
+`DATABASE_URL` to the same database. Apply existing migrations and use only the non-destructive
+catalogue seed. Start the app on 127.0.0.1:3144 with a fresh AUTH_SECRET, set
+`SIFT_AUTH_E2E_URL=http://127.0.0.1:3144`, install Chromium with
+`corepack pnpm --filter @sift/web exec playwright install chromium`, then run
+`corepack pnpm --filter @sift/web test:auth:e2e`. Tests use their own browser profiles and create
+unique disposable users. They check real Chromium process close/reopen, cookie replay, return
+to a card detail URL with its query string, duplicate feedback, and both phone-width locales.
+The default Vitest run does not start a browser or silently use an app database.

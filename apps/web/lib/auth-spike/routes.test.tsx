@@ -97,3 +97,5 @@ describe("server component demo", () => {
     expect(serverMocks.auth).not.toHaveBeenCalled();
   });
 });
+
+vi.mock("@/components/AccountLinks", () => ({ AccountLinks: () => null }));

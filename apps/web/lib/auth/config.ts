@@ -6,6 +6,11 @@ import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
 export const AUTH_MAX_AGE = 30 * 24 * 60 * 60;
+export function sessionCookieName() {
+  return process.env.NODE_ENV === "production"
+    ? "__Secure-sift.session-token"
+    : "sift.session-token";
+}
 export type AuthOptions = {
   enabled?: () => boolean;
   basePath?: string;
@@ -28,18 +33,14 @@ export function createAuthConfig(db: PrismaClient, options: AuthOptions = {}): N
     // Credentials does not support Auth.js's native database session strategy.
     cookies: {
       sessionToken: {
-        name:
-          options.cookieName ??
-          (process.env.NODE_ENV === "production"
-            ? "__Secure-sift.session-token"
-            : "sift.session-token"),
+        name: options.cookieName ?? sessionCookieName(),
         options: { httpOnly: true, sameSite: "lax", path: "/" },
       },
     },
     session: { strategy: "jwt", maxAge },
     pages: {
-      signIn: options.signInPage ?? "/ar/register",
-      error: options.signInPage ?? "/ar/register",
+      signIn: options.signInPage ?? "/ar/login",
+      error: options.signInPage ?? "/ar/login",
     },
     providers: [
       Credentials({

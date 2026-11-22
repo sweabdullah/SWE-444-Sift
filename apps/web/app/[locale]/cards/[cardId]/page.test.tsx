@@ -119,3 +119,5 @@ describe("card detail route", () => {
     });
   }
 });
+
+vi.mock("@/components/AccountLinks", () => ({ AccountLinks: () => null }));

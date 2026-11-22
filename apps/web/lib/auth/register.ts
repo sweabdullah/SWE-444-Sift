@@ -4,7 +4,9 @@ import { hashPassword, validPasswordLength } from "./password";
 import type { Locale } from "@/lib/locale";
 
 export type RegistrationError = "invalidEmail" | "passwordRule" | "duplicateEmail" | "unavailable";
-export type FormState = { error: RegistrationError | "createdLoginFailed" | null };
+export type FormState = {
+  error: RegistrationError | "createdLoginFailed" | "invalidCredentials" | null;
+};
 const emailSchema = z.email().max(254);
 
 export async function registerAccount(
