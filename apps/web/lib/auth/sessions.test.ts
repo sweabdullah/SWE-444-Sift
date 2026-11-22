@@ -98,13 +98,13 @@ it.skipIf(!process.env.SIFT_AUTH_TEST_DATABASE_URL)(
         (
           await registerAccount(db, {
             email,
-            password: "correct horse battery staple",
+            password: "River stone lantern meadow!",
             locale: "en",
           })
         ).ok,
       ).toBe(true);
       const client = authClient(createAuthConfig(db));
-      const response = await client.login(email, "correct horse battery staple");
+      const response = await client.login(email, "River stone lantern meadow!");
       expect(response.headers.getSetCookie().join(";")).toContain("Expires=");
       const user = await db.user.findUniqueOrThrow({ where: { email } });
       const row = await db.session.findFirstOrThrow({ where: { userId: user.id } });

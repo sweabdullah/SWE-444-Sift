@@ -7,7 +7,7 @@ vi.mock("@/lib/auth/server", () => ({ signIn: mocks.signIn }));
 function form() {
   const data = new FormData();
   data.set("email", "person@example.com");
-  data.set("password", "correct horse battery staple");
+  data.set("password", "River stone lantern meadow!");
   data.set("role", "admin");
   return data;
 }
@@ -22,7 +22,7 @@ describe("registration action", () => {
     await expect(registerAction("ar", { error: null }, form())).rejects.toBe(redirect);
     expect(mocks.signIn).toHaveBeenCalledWith("credentials", {
       email: "person@example.com",
-      password: "correct horse battery staple",
+      password: "River stone lantern meadow!",
       redirectTo: "/ar/account",
     });
     expect(mocks.register.mock.calls[0]?.[1]).not.toHaveProperty("role");

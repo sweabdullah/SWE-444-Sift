@@ -37,7 +37,7 @@ export function RegistrationForm({ action, copy, returnTo }: Props) {
           name="password"
           type="password"
           autoComplete="new-password"
-          minLength={15}
+          minLength={8}
           required
           aria-describedby="password-rule"
           dir="ltr"

@@ -11,7 +11,7 @@ if (
   throw new Error("Use a disposable localhost *_auth_spike_test database");
 const db = new PrismaClient({ datasourceUrl: url });
 const createdEmails: string[] = [];
-const password = "correct horse battery staple";
+const password = "River stone lantern meadow!";
 test.afterAll(async () => {
   await db.user.deleteMany({ where: { email: { in: createdEmails } } });
   await db.$disconnect();
